@@ -13,6 +13,7 @@ Fed up with the lack of automated tools to properly crop and scale post thumbnai
 To meet the needs of themes where the post-thumbnails have random and capricious sizes (which causes wordpress to crop images simply from the middle (either chopping off the top and bottom or chopping off the sides), this plugin attempts to give the users an interface to manually fix those thumbnail and random images.
 
 **Use**:
+
 1. Open Media Library
 2. Pick the image to edit
 3. Click "Edit Image"

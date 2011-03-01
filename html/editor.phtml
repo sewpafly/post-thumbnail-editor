@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <title>Editor</title>
+<?php
+wp_print_styles();
+wp_print_scripts();
+?>
+<script type="text/javascript" charset="utf-8">
+   
+   jQuery(document).ready(function($){
+      var timeout = 5;
+
+      function countdown(){
+         if (timeout-- <= 0){
+            parent.jQuery.fancybox.close();
+            return;
+         }
+         else {
+            $("h1").html("Closing in " + timeout + " seconds.");
+            window.setTimeout(countdown, 1000);
+         }
+      }
+
+      window.setTimeout(countdown, 1000);
+   });
+</script>
+   </head>
+   <body>
+      <h1>BOOM</h1>
+   </body>
+</html>

@@ -1,0 +1,18 @@
+#pte-display {
+   display: none;
+   width: 600px;
+}
+
+#pte-edit {
+   width: 400px;
+   float: left;
+   padding-right: 10px;
+}
+
+#pte-current img {
+   width: 190px;
+}
+
+#pte-controls { clear: both; margin-top: 10px}
+#pte-controls #pte-save { margin-left: 20px; }
+

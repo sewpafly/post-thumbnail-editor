@@ -1,0 +1,3 @@
+[submodule "apps/fancybox"]
+	path = apps/fancybox
+	url = git@github.com:sewpafly/fancy-box.git
