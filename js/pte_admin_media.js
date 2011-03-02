@@ -14,6 +14,26 @@ jQuery(document).ready(function($){
    var pte_max_attempts = 5;
    var ias_instance = null;
 
+   function imgDebug(img, s){
+      $('#pte-debug').html( "x1: " + s.x1 + "<br />"
+                          + "y1: " + s.y1 + "<br />"
+                          + "x2: " + s.x2 + "<br />"
+                          + "y2: " + s.y2 + "<br />"
+                          + "width: " + s.width + "<br />"
+                          + "height: " + s.height + "<br />");
+   }
+
+   function closeImgAreaSelect(){
+      if (ias_instance){
+      ias_instance.setOptions({ show: false
+         , disable: true
+         , hide: true
+         , remove: true
+         });
+      ias_instance.update();
+      }
+   }
+
    // http://en.wikipedia.org/wiki/Euclidean_algorithm#Implementations
    function gcd(a, b){
       if (a == 0) return b
@@ -48,10 +68,10 @@ jQuery(document).ready(function($){
                  , 'pte_action': 'resize-img'
                  , 'id': id
                  , 'size': size
-                 , 'x1': selection.x1/scale_factor
-                 , 'y1': selection.y1/scale_factor
-                 , 'x2': selection.x2/scale_factor
-                 , 'y2': selection.y2/scale_factor
+                 , 'x': Math.floor(selection.x1/scale_factor)
+                 , 'y': Math.floor(selection.y1/scale_factor)
+                 , 'w': Math.floor(selection.width/scale_factor)
+                 , 'h': Math.floor(selection.height/scale_factor)
                  , '_ajax_nonce': $('body').data('nonce')
                  }
       console.log(data);
@@ -59,29 +79,50 @@ jQuery(document).ready(function($){
            , data
            , function(data, txtstatus, xhr){
               console.log(data);
+              if (data.error){
+                alert("Sorry, we encountered an issue: " + data.error);
+              }
+              if (data.url){
+                 closeImgAreaSelect();
+                 $('#pte-display').html('<strong>Updated image</strong>: <br/>'
+                    + '<img src="'+data.url+'?'+randomness()+'"/><br>'
+                    + 'Reload your cache (Shift+F5 on the page you want to see the changes)'
+                    + ' and everything should work...');
+              }
+              else
+                $.fancybox.close();
            }
-           , 'text'
+           , 'json'
       );
    }
 
    function createPteDisplay(){
-      var pte_display = $('#pte-display');
-      if (pte_display.size() > 0){
-         pte_display.find('#pte-edit').empty();
-         pte_display.find('#pte-current').empty();
-         return;
-      }
-      var pte_display_html = $('<div id="pte-display">'
-         + '<div id="pte-edit"></div>'
+      var pte_display = $('#pte-display')
+         .find('#pte-edit').empty().end()
+         .find('#pte-current').empty().end();
+      var pte_display_html = '<div id="pte-edit"></div>'
          + '<div id="pte-info">Currently: (it\'s scaled to fit horizontally)...</div>'
          + '<div id="pte-current"></div>'
+         + '<div id="pte-debug"></div>'
          + '<div id="pte-controls">'
          + '<input type="button" id="pte-stop" name="pte-stop" class="button" value="Cancel"/>'
          + '<input type="button" id="pte-save" name="pte-save" class="button-primary" value="Save"/>'
-         + '</div></div>')
-      .appendTo($('body'))
-      .find("#pte-stop").click($.fancybox.close).end()
-      .find("#pte-save").click(savePostThumbnail)
+         + '</div>'
+      if (pte_display.length > 0){ // Exists
+         pte_display.html(pte_display_html);
+      }
+      else { // Doesn't exist
+         pte_display = $('<div id="pte-display">')
+            .html(pte_display_html)
+            .appendTo($('body'))
+      }
+      pte_display
+         .find("#pte-stop").click($.fancybox.close).end()
+         .find("#pte-save").click(savePostThumbnail)
+   }
+
+   function randomness(){
+      return Math.floor(Math.random()*1000001).toString(16);
    }
 
    function getID(){
@@ -131,6 +172,7 @@ jQuery(document).ready(function($){
                          , zIndex: 1200
                          , instance: true
                          , aspectRatio: ar
+                         , onSelectEnd: imgDebug
                          });
 
       $.get( ajaxurl
@@ -142,7 +184,7 @@ jQuery(document).ready(function($){
          , function(data,txt,xhr){
             console.log(data);
             $('body').data('nonce', data.nonce);
-            var img = $('<img src="' + data.url + '">').appendTo('#pte-current');
+            var img = $('<img src="' + data.url + '?' + randomness() + '">').appendTo('#pte-current');
             var img_width = sizes[size]['width'];
             if (img_width < parseInt(img.width())){
                console.log("Smallen [sic] the width");
@@ -159,16 +201,7 @@ jQuery(document).ready(function($){
                 $.fancybox.center();
               }
               , 'onClosed': function(){ 
-                if (ias_instance){
-                  //ias_instance.setOptions({show: false});
-                  ias_instance.setOptions({ show: false
-                      , disable: true
-                      , hide: true
-                      , remove: true
-                  });
-                  //ias_instance.setSelection(null);
-                  ias_instance.update();
-                }
+                closeImgAreaSelect();
                 $('#pte-display').hide()
               }
             }

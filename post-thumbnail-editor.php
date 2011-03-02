@@ -41,7 +41,7 @@ define( PTE_PLUGINPATH, dirname(__FILE__) . "/");
 /* Hook into the Edit Image page */
 function pte_admin_media_styles(){
    wp_enqueue_style('fancybox',
-      PTE_PLUGINURL . 'apps/fancybox/fancybox/jquery.fancybox-1.3.4.css');
+      PTE_PLUGINURL . 'apps/fancybox/jquery.fancybox-1.3.4.css');
    wp_enqueue_style('pte',
       PTE_PLUGINURL . 'css/pte.css');
 }
@@ -49,7 +49,7 @@ function pte_admin_media_styles(){
 function pte_admin_media_scripts(){
    wp_enqueue_script('imgareaselect');
    wp_enqueue_script('fancybox',
-      PTE_PLUGINURL . 'apps/fancybox/fancybox/jquery.fancybox-1.3.4.min.js',
+      PTE_PLUGINURL . 'apps/fancybox/jquery.fancybox-1.3.4.min.js',
       array('jquery')
    );
    wp_enqueue_script('pte',
@@ -67,20 +67,30 @@ function pte_ajax(){
          pte_get_alternate_sizes();
          break;
       case "get-image-data":
-         pte_get_image_data($_GET['id'], $_GET['size']);
+         if ( is_numeric( $_GET['id'] ) ){
+            pte_get_image_data($_GET['id'], $_GET['size']);
+         }
          break;
       case "resize-img":
-         check_ajax_referer("pte-{$_GET['id']}-{$_GET['size']}");
-         pte_resize_img($_GET['id'], 
-             $_GET['size'],
-             $_GET['x1'],
-             $_GET['y1'],
-             $_GET['x2'],
-             $_GET['y2']
-         );
+         // Check that the parameters are digits
+         if ( is_numeric($_GET['id']) &&
+            is_numeric($_GET['x']) &&
+            is_numeric($_GET['y']) &&
+            is_numeric($_GET['w']) &&
+            is_numeric($_GET['h'])
+         ) {
+            check_ajax_referer("pte-{$_GET['id']}-{$_GET['size']}");
+            pte_resize_img($_GET['id'], 
+               $_GET['size'],
+               $_GET['x'],
+               $_GET['y'],
+               $_GET['w'],
+               $_GET['h']
+            );
+         }
          break;
    }
-   die(0);
+   die(-1);
 }
 
 add_action('admin_print_styles-media.php', 'pte_admin_media_styles');
