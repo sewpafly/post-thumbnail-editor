@@ -4,7 +4,7 @@ Donate link:
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image
 Requires at least: 3.1
 Tested up to: 3.1
-Stable tag: 0.1
+Stable tag: trunk
 
 Fed up with the lack of automated tools to properly crop and scale post thumbnails? Maybe this plugin can help.
 
@@ -38,7 +38,8 @@ No, thanks for asking. But let me know if you're having problems and I'll see wh
 
 == Screenshots ==
 
-= Coming Soon =
+1. In the Edit subpage for media locate the box title "Edit Post Thumbnails", and select the image size you wish to modify.
+2. Crop the image as you see fit and click "Save".
 
 == Changelog ==
 = 0.1 =
