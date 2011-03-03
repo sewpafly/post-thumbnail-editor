@@ -14,6 +14,18 @@ jQuery(document).ready(function($){
    var pte_max_attempts = 5;
    var ias_instance = null;
 
+   /* 
+    * Entry to our code
+    * Override the imgEdit.open function
+    */
+   if (imageEdit.open){
+      imageEdit.oldopen = imageEdit.open;
+      imageEdit.open = function(id, nonce){
+         getImageEditor();
+         imageEdit.oldopen(id,nonce);
+      }
+   }
+     
    function imgDebug(img, s){
       $('#pte-debug').html( "x1: " + s.x1 + "<br />"
                           + "y1: " + s.y1 + "<br />"
@@ -281,8 +293,8 @@ jQuery(document).ready(function($){
    }
 
    // Listens for "Edit" event
-   $('input[id^="imgedit-open"]').bind('click', function(){
-      console.log("pushed the button");
-      getImageEditor();
-   });
+   //$('input[id^="imgedit-open"]').bind('click', function(){
+   //   console.log("pushed the button");
+   //   getImageEditor();
+   //});
 });

@@ -93,10 +93,15 @@ function pte_ajax(){
    die(-1);
 }
 
+/* This is the main admin media page */
 add_action('admin_print_styles-media.php', 'pte_admin_media_styles');
-add_action('admin_print_styles-media-upload-popup', 'pte_admin_media_styles');
 add_action('admin_print_scripts-media.php', 'pte_admin_media_scripts');
+
+/* This is for the popup media page */
+add_action('admin_print_styles-media-upload-popup', 'pte_admin_media_styles');
 add_action('admin_print_scripts-media-upload-popup', 'pte_admin_media_scripts');
+
+/* For all purpose needs */
 add_action('wp_ajax_pte_ajax', 'pte_ajax');
 
 ?>
