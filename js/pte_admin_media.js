@@ -1,4 +1,4 @@
-// Console.log
+// log
 if (!window.console && !console.firebug)
 {
     var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml",
@@ -8,10 +8,16 @@ if (!window.console && !console.firebug)
     for (var i = 0; i < names.length; ++i)
         window.console[names[i]] = function() {}
 }
+if (!console) console = window.console;
+
+function log(obj){
+   //console.log(obj);
+   //alert(obj);
+}
 
 jQuery(document).ready(function($){
    var pte_timeout = 1000;
-   var pte_max_attempts = 5;
+   var pte_max_attempts = 50;
    var ias_instance = null;
 
    /* 
@@ -64,13 +70,13 @@ jQuery(document).ready(function($){
    function savePostThumbnail(){
       if (!ias_instance) return;
       var selection = ias_instance.getSelection();
-      console.log(selection);
+      log(selection);
 
       var id = getID();
       if (!id) return false;
 
       var size = $("#pte-thumb").val()
-      console.log("Clicked: " + size);
+      log("Clicked: " + size);
       if (!size || size == "" || size.length == 0) return false;
 
       // Our script needs to know the REAL x1, y1 and x2, y2
@@ -86,11 +92,11 @@ jQuery(document).ready(function($){
                  , 'h': Math.floor(selection.height/scale_factor)
                  , '_ajax_nonce': $('body').data('nonce')
                  }
-      console.log(data);
+      log(data);
       $.get( ajaxurl
            , data
            , function(data, txtstatus, xhr){
-              console.log(data);
+              log(data);
               if (data.error){
                 alert("Sorry, we encountered an issue: " + data.error);
               }
@@ -141,11 +147,11 @@ jQuery(document).ready(function($){
       try{
          //var id = "pte-" + $(".image-editor").attr("id");
          var id = /\d+$/.exec($(".image-editor").attr("id"))[0];
-         console.log(id);
+         log(id);
          return id;
       }
       catch(e){
-         console.log("oops");
+         log("oops");
       }
       return null;
    }
@@ -153,7 +159,7 @@ jQuery(document).ready(function($){
    // sent from click on pte-submit event
    function createPostThumbnailEdit(event){
       var size = $("#pte-thumb").val()
-      console.log("Clicked: " + size);
+      log("Clicked: " + size);
       if (!size || size == "" || size.length == 0) return false;
 
       var id = getID();
@@ -194,12 +200,12 @@ jQuery(document).ready(function($){
            , 'size': size
          }
          , function(data,txt,xhr){
-            console.log(data);
+            log(data);
             $('body').data('nonce', data.nonce);
             var img = $('<img src="' + data.url + '?' + randomness() + '">').appendTo('#pte-current');
             var img_width = sizes[size]['width'];
             if (img_width < parseInt(img.width())){
-               console.log("Smallen [sic] the width");
+               log("Smallen [sic] the width");
                img.css('width', img_width);
             }
          }
@@ -207,21 +213,23 @@ jQuery(document).ready(function($){
       );
 
       $('<a class="inline" href="#pte-display">Gnarly</a>')
-         .fancybox(
-            { 'onStart': function(){ 
-                $('#pte-display').show();
-                $.fancybox.center();
-              }
-              , 'onClosed': function(){ 
-                closeImgAreaSelect();
-                $('#pte-display').hide()
-              }
+      .fancybox( { 
+            // Fix for issue #1... IE8 & fancybox inline workaround...
+            'href': '#pte-display'
+            , 'onStart': function(){ 
+               $('#pte-display').show();
+               $.fancybox.center();
             }
-         )
-         .trigger('click')
+            , 'onClosed': function(){ 
+               closeImgAreaSelect();
+               $('#pte-display').hide()
+            }
+         }
+      )
+      .trigger('click')
       //$('<a class="inline" href="#pte-display">Gnarly</a>').fancybox().trigger('click');
 
-      console.log("done with create Edit");
+      log("done with create Edit");
       return false;
    }
 
@@ -236,19 +244,19 @@ jQuery(document).ready(function($){
       + "<input class='button-primary' type='submit' name='pte-edit-thumb' id='pte-submit' value='Edit'/>"
       + "</div");
 
-      console.log("Attempts remaining: " + pte_max_attempts);
+      log("Attempts remaining: " + pte_max_attempts);
       var editor = $(".imgedit-settings");
       if (editor.size() < 1 && pte_max_attempts-- < 0){
-         console.log("Tried too many times, stopping");
+         log("Tried too many times, stopping");
          return;
       }
       else if (editor.size() < 1){
-         console.log("No editor... Try again.");
+         log("No editor... Try again.");
          window.setTimeout(getImageEditor, pte_timeout);
          return;
       }
       
-      console.log("Found: " + editor.size());
+      log("Found: " + editor.size());
 
       // Action: create image pop-up
       // Used when the user selects a post thumbnail to edit
@@ -263,17 +271,17 @@ jQuery(document).ready(function($){
       // Add the above HTML to the image-editor GUI
       editor.append(editbox)
       $('.imgedit-submit input.button').click(function(e){
-        console.log("Removing that bastard");
+        log("Removing that bastard");
         editbox.remove().find("#pte-thumb").empty();
       });
 
       // Get list of available sizes
-      console.log("ADMINAJAX: " + ajaxurl);
+      log("ADMINAJAX: " + ajaxurl);
       $.get(ajaxurl 
          , { 'action': 'pte_ajax' 
            , 'pte_action': 'get-alternate-sizes'} 
          , function(data, status, xhr){
-            console.log(data);
+            log(data);
             $('body').data('sizes',data.sizes);
             try {
                $.each(data.sizes, function(i,elem){
@@ -285,7 +293,7 @@ jQuery(document).ready(function($){
                })
             }
             catch(e){
-               console.log("ERROR: " + e);
+               log("ERROR: " + e);
             }
          }
          , 'json'
@@ -294,7 +302,7 @@ jQuery(document).ready(function($){
 
    // Listens for "Edit" event
    //$('input[id^="imgedit-open"]').bind('click', function(){
-   //   console.log("pushed the button");
+   //   log("pushed the button");
    //   getImageEditor();
    //});
 });
