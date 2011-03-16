@@ -3,7 +3,7 @@
    Plugin URI: http://github.com/sewpafly/post-thumbnail-editor
    Author: sewpafly
    Author URI: http://sewpafly.github.com/
-   Version: 0.1
+   Version: 0.1.1
    Description: Individually manage your post thumbnails
    Max WP Version: 3.1
 
@@ -29,7 +29,6 @@
 
 /* 
  * Useful constants  
- * - TODO: See if you can condense 
  */
 define( PTE_PLUGINURL, plugins_url(basename( dirname(__FILE__))) . "/");
 define( PTE_PLUGINPATH, dirname(__FILE__) . "/");
