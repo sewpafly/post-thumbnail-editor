@@ -58,7 +58,6 @@ function pte_admin_media_scripts(){
    wp_enqueue_script( 'pte'
        , PTE_PLUGINURL . 'js/pte_admin_media.js'
        , array('jquery')
-       , false
        , PTE_VERSION
    );
 }
