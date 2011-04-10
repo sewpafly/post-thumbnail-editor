@@ -58,7 +58,6 @@ function pte_get_alternate_sizes($return_php = false){
    //wp_enqueue_scripts('jquery');
    //include(dirname(__FILE__) . "/html/editor.phtml");
 
-// TODO: Check your inputs...
 function pte_get_image_data($id, $size){
 
    $fullsizepath = get_attached_file( $id );
@@ -66,7 +65,6 @@ function pte_get_image_data($id, $size){
 
    $size_information = pte_get_alternate_sizes(true);
    if (! array_key_exists( $size, $size_information ) ){
-      print_r($size_information);
       pte_error("Invalid size: {$size}");
    }
 
@@ -74,11 +72,10 @@ function pte_get_image_data($id, $size){
    $nonce = wp_create_nonce("pte-{$id}-{$size}");
 
    if ( $path_information && 
-      $path_information['width'] == $size_information[$size]['width'] &&
-      $path_information['height'] == $size_information[$size]['height'] &&
       @file_exists(dirname($fullsizepath)."/".$path_information['file']))
    {
       $path_information['nonce'] = $nonce;
+      //$path_information['debug'] = "Finished without regenerating image";
       die(json_encode($path_information));
    }
 
@@ -155,10 +152,45 @@ function pte_resize_img($id, $thumb_size, $x, $y, $w, $h, $save = true){
       $h <= 0 ){
       pte_error("Invalid input parameters: {$x} {$y} {$w} {$h}");
    }
+
+   // Set the output information
    $dst_x = 0;
    $dst_y = 0;
-   $dst_w = $size_information[$thumb_size]['width'];
-   $dst_h = $size_information[$thumb_size]['height'];
+
+   // ==============================
+   // Get Destination width & height
+   // ==============================
+   // When the crop isn't set the biggest dimension is accurate, 
+   // but the other dimension is wrong
+   if ($size_information[$thumb_size]['crop']){
+      $dst_w = $size_information[$thumb_size]['width'];
+      $dst_h = $size_information[$thumb_size]['height'];
+   }
+   // Crop isn't set so the height / width should be based on the biggest side
+   // Filename changes
+   // Update wp_attachment_metadata with the correct file/width/height
+   else if ($w > $h){
+      $dst_w = $size_information[$thumb_size]['width'];
+      $dst_h = round( ($dst_w/$w) * $h, 0, PHP_ROUND_HALF_DOWN );
+   }
+   else {
+      $dst_h = $size_information[$thumb_size]['height'];
+      $dst_w = round( ($dst_h/$h) * $w, 0, PHP_ROUND_HALF_DOWN );
+   }
+   // ==============================
+
+   // ================
+   // Get the filename
+   // ================
+   // See image_resize function in wp-includes/media.php to follow the same conventions
+   $info = pathinfo($file);
+   $dir = $info['dirname'];
+   $ext = $info['extension'];
+   $name = wp_basename($file, ".$ext");
+   $suffix = "{$dst_w}x{$dst_h}-pte";
+   $destfilename = "{$dir}/{$name}-{$suffix}.{$ext}";
+   // ================
+
    $src_x = $x;
    $src_y = $y;
    $src_w = $w;
@@ -172,7 +204,8 @@ function pte_resize_img($id, $thumb_size, $x, $y, $w, $h, $save = true){
    if ($save){
       $data = get_post_meta( $post->ID, 'pte-data', true );
       $data[$thumb_size] = compact('dst_x', 'dst_y', 'dst_w', 'dst_h', 'src_x', 'src_y', 'src_w', 'src_h');
-      add_post_meta($post->ID, 'pte-data', $data, true) or update_post_meta($post->ID, 'pte-data', $data);
+      //add_post_meta($post->ID, 'pte-data', $data, true) or update_post_meta($post->ID, 'pte-data', $data);
+      update_post_meta($post->ID, 'pte-data', $data);
    }
 
    imagecopyresampled( $newimage, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
@@ -183,9 +216,6 @@ function pte_resize_img($id, $thumb_size, $x, $y, $w, $h, $save = true){
 
    // we don't need the original in memory anymore
    imagedestroy( $image );
-
-   // Get the output filename
-   $destfilename = dirname($file)."/".$path_information['file'];
 
    if ( IMAGETYPE_GIF == $orig_type ) {
       if ( !imagegif( $newimage, $destfilename ) )
@@ -212,6 +242,16 @@ function pte_resize_img($id, $thumb_size, $x, $y, $w, $h, $save = true){
    $perms = $stat['mode'] & 0000666; //same permissions as parent folder, strip off the executable bits
    @ chmod( $destfilename, $perms );
 
+   // Update attachment metadata
+   $metadata = wp_get_attachment_metadata($id);
+   $metadata['sizes'][$thumb_size] = array( 'file' => "{$name}-{$suffix}.{$ext}"
+       , 'width' => $dst_w
+       , 'height' => $dst_h 
+   );
+   wp_update_attachment_metadata( $id, $metadata);
+   
+
+   $path_information = image_get_intermediate_size($id, $thumb_size);
    die(json_encode(array("url" => $path_information['url'])));
 }
 

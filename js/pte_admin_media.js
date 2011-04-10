@@ -1,6 +1,6 @@
 // log
 function log(obj){
-   if (!window.console || !console.firebug)
+   if (!window.console )
    {
       var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml",
           "group", "groupEnd", "time", "timeEnd", "count", "trace", "profile", "profileEnd"];
@@ -11,7 +11,10 @@ function log(obj){
    }
    if (!console) console = window.console;
 
-   //console.log(obj);
+   /*
+   * TODO: Comment this out when publishing to WORDPRESS.ORG
+   */
+   console.log(obj);
    //alert(obj);
 }
 
@@ -167,31 +170,38 @@ jQuery(document).ready(function($){
 
       // Find the aspect ratio
       var sizes = $('body').data('sizes');
-      var cd = gcd( parseInt(sizes[size]['width']) 
-                  , parseInt(sizes[size]['height']));
-      var ar = null;
-      if (cd){
-         ar = parseInt(sizes[size]['width']) / cd
-            + ":"
-            + parseInt(sizes[size]['height']) / cd;
-      }
-
 
       // Get the images (the fake one & the thumbnail)
       //var main_img_url = $('#image-preview-'+id).attr('src');
       createPteDisplay();
       var img_preview = $('#image-preview-'+id)
       ias_instance = img_preview
-         .clone(false)
-         .appendTo('#pte-edit')
-         .css({'height': img_preview.height()})
-         //.removeAttr('onload')
-         .imgAreaSelect( { handles: true
-                         , zIndex: 1200
-                         , instance: true
-                         , aspectRatio: ar
-                         , onSelectEnd: imgDebug
-                         });
+      .clone(false)
+      .appendTo('#pte-edit')
+      .css({'height': img_preview.height()})
+      //.removeAttr('onload')
+      .imgAreaSelect( { handles: true
+            , zIndex: 1200
+            , instance: true
+            , onSelectEnd: imgDebug
+      });
+      if (sizes[size]['crop'] != 0){
+         // set aspect ratio
+         log("Set aspect ratio: " + sizes[size]['crop']);
+         var ar = null;
+         var cd = gcd( parseInt(sizes[size]['width']) 
+            , parseInt(sizes[size]['height']));
+
+         if (cd){
+            ar = parseInt(sizes[size]['width']) / cd
+               + ":"
+               + parseInt(sizes[size]['height']) / cd;
+            var options = ias_instance.getOptions();
+            options['aspectRatio'] = ar;
+            ias_instance.setOptions(options);
+         }
+         //ias_instance.update(false);
+      }
 
       $.get( ajaxurl
          , { 'action': 'pte_ajax'
