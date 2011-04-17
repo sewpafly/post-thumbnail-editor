@@ -50,7 +50,7 @@ Not yet, Coming in the next release (0.3). However, I'm hopeful that any images 
 == Changelog ==
 
 = 0.2 =
-* Added support for non-crop type thumbnails (e.g. medium/large sizes).  This allows thumbnails without a crop setting to have any aspect ratio instead of the default square setting.
+* Added support to change thumbnails aspect ratio. Previously a square image was generated. (Only works for "medium" or "large" thumbnails by default. Will work for "thumbnail" size if the crop checkbox isn't checked under Media Settings).
 * Thumbnails are appended with "-pte" to differentiate images created with this plugin
 
 = 0.1.1 =
@@ -60,6 +60,9 @@ Not yet, Coming in the next release (0.3). However, I'm hopeful that any images 
 * Initial cut
 
 == Upgrade Notice ==
+
+= 0.2 =
+Change thumbnails aspect ratio (only works for medium/large. Will work for thumbnail if the crop checkbox isn't checked under Media Settings)
 
 = 0.1.1 =
 This version fixes a IE8/firefox javascript error.
