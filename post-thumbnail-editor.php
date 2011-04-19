@@ -3,7 +3,7 @@
    Plugin URI: http://wordpress.org/extend/plugins/post-thumbnail-editor/
    Author: sewpafly
    Author URI: http://sewpafly.github.com/post-thumbnail-editor
-   Version: 0.2
+   Version: 0.3pre
    Description: Individually manage your post thumbnails
 
     LICENSE
@@ -31,7 +31,8 @@
  */
 define( PTE_PLUGINURL, plugins_url(basename( dirname(__FILE__))) . "/");
 define( PTE_PLUGINPATH, dirname(__FILE__) . "/");
-define( PTE_VERSION, "0.2");
+define( PTE_VERSION, "0.3pre");
+define( PTE_POST_DATA, "pte-data");
 
 /*
  * Put Hooks and immediate hook functions in this file
@@ -70,27 +71,16 @@ function pte_ajax(){
          pte_get_alternate_sizes();
          break;
       case "get-image-data":
-         if ( is_numeric( $_GET['id'] ) ){
-            pte_get_image_data($_GET['id'], $_GET['size']);
-         }
+         pte_get_image_data($_GET['id'], $_GET['size']);
          break;
       case "resize-img":
-         // Check that the parameters are digits
-         if ( is_numeric($_GET['id']) &&
-            is_numeric($_GET['x']) &&
-            is_numeric($_GET['y']) &&
-            is_numeric($_GET['w']) &&
-            is_numeric($_GET['h'])
-         ) {
-            check_ajax_referer("pte-{$_GET['id']}-{$_GET['size']}");
-            pte_resize_img($_GET['id'], 
-               $_GET['size'],
-               $_GET['x'],
-               $_GET['y'],
-               $_GET['w'],
-               $_GET['h']
-            );
-         }
+         pte_resize_img($_GET['id'], 
+            $_GET['size'],
+            $_GET['x'],
+            $_GET['y'],
+            $_GET['w'],
+            $_GET['h']
+         );
          break;
    }
    die(-1);
