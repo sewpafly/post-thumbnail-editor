@@ -216,11 +216,11 @@ function pte_resize_img($id, $thumb_size, $x, $y, $w, $h, $save = true){
    // Update wp_attachment_metadata with the correct file/width/height
    else if ($w > $h){
       $dst_w = $size_information[$thumb_size]['width'];
-      $dst_h = round( ($dst_w/$w) * $h, 0, PHP_ROUND_HALF_DOWN );
+      $dst_h = round( ($dst_w/$w) * $h, 0);
    }
    else {
       $dst_h = $size_information[$thumb_size]['height'];
-      $dst_w = round( ($dst_h/$h) * $w, 0, PHP_ROUND_HALF_DOWN );
+      $dst_w = round( ($dst_h/$h) * $w, 0);
    }
    // ==============================
 
