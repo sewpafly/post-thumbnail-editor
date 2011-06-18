@@ -1,0 +1,174 @@
+$width: 				 				750px;
+$wp-picture-width: 				400px;
+$pte-sizes-container-padding: 15px;
+$table-border:                #ddd;
+
+/* Generated variables */
+$pte-sizes-width: $width - $wp-picture-width - $pte-sizes-container-padding - 2 - 10;
+$pte-sizes-img-width: $pte-sizes-width - 50px;
+
+a.stage-navigation, a.stage-navigation:visited {
+	color: #38ab36;
+	font-family: 'Amaranth', serif; 
+	font-size: 0.8em;
+	font-style: italic; 
+	text-decoration: none;
+	text-shadow: none;
+	img {
+		vertical-align: bottom;
+	}
+}
+
+h1, { 
+	color: #2386e2;
+	font-family: 'Amaranth', serif; 
+	font-style: italic; 
+	font-size: 1.6em;
+	text-shadow: white 1px 1px 5px, 2px 2px 10px #999;
+}
+
+body { 
+	font-family: 'PT Serif', serif;
+	/*font-family: 'Puritan', serif;*/
+	/*overflow: auto;*/ 
+	overflow-x: hidden;
+	margin: auto; 
+	max-width: $width;
+	background-color: #efefef;
+	/*position: relative;*/
+}
+
+#pte-image { 
+	float:left;
+	margin-top: 5px;
+}
+
+@mixin button {
+	font-family: "Amaranth", Tahoma, sans-serif;
+	font-size: larger;
+	line-height: 130%;
+	margin: 10px auto;
+	padding: 10px;
+}
+#pte-buttons button  {
+	@include button;
+	width: 100%;
+}
+#pte-confirm {
+	@include button;
+	width: 75%;
+}
+
+#pte-sizes-container { 
+	overflow: auto;
+	padding-left: $pte-sizes-container-padding;
+}
+
+#pte-selectors, #pte-stage2-selectors{
+	margin-bottom: 10px;
+}
+
+#pte-sizes { 
+	overflow-x: hidden;
+	overflow-y: scroll;
+	border: 1px solid $table-border;
+	width: $pte-sizes-width;
+	img {
+			max-width: $pte-sizes-img-width;
+		}
+}
+
+table tr { 
+	border-bottom: 1px solid $table-border;
+	&.selected {
+		background-color: #fff;
+	}
+}
+
+table td { 
+	position: relative;
+	vertical-align: middle; 
+	padding: 15px 0;
+}
+	/*.col1 { */
+	/*width: 50px; */
+	/*}*/
+.col2 { 
+	padding-right: 20px; 
+}
+
+.pte-size-label {
+	/*background: #bcbcbc;*/
+	background: #cdcdcd;
+	bottom: 0;
+	font-family: 'Amaranth', serif; 
+	font-weight: bolder;
+	padding: 5px 0px 7px 5px;
+	/*padding: 5px;*/
+}
+
+.pte-edit-label { 
+	display: block 
+}
+
+@mixin full-screen {
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
+#pte-loading {
+	$opacity: 80;
+	$opacity_percent: $opacity/100;
+	@include full-screen;
+	#pte-loading-opaque {
+		background-color: #000;
+		@include full-screen;
+		opacity: $opacity_percent;
+		-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=" + $opacity + ")";
+		filter: alpha(opacity=$opacity);
+	}
+	#pte-loading-spinner {
+		position: relative;
+		top: 50%;
+		width: 200px;
+		margin: 0 auto;
+		text-align: center;
+	}
+}
+
+.stage {
+	float: left;
+	left: 0;
+	position: relative;
+	top: 0;
+	/*overflow: hidden;*/
+	/*width: $width;*/
+}
+
+#stage2, #stage3 {
+	display: none;
+	left: $width * 2;
+	width: $width;
+}
+
+#stage2 table {
+	width: 100%;
+}
+
+#stage2 img{
+	max-width: 100%;
+}
+
+#error {
+	color: #aa0000;
+	ul {
+		list-style: disc;
+		margin: 10px 0px 10px 20px;
+		/*li {                        */
+		/*   list-style-image: 'disc';*/
+		/*}                           */
+	}
+}

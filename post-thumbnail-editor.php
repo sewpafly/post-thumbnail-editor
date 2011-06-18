@@ -3,7 +3,7 @@
    Plugin URI: http://wordpress.org/extend/plugins/post-thumbnail-editor/
    Author: sewpafly
    Author URI: http://sewpafly.github.com/post-thumbnail-editor
-   Version: 0.3pre
+   Version: 1.0-alpha
    Description: Individually manage your post thumbnails
 
     LICENSE
@@ -24,15 +24,17 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+	 CREDITS
+	 =======
  */
 
 /* 
  * Useful constants  
  */
-define( PTE_PLUGINURL, plugins_url(basename( dirname(__FILE__))) . "/");
-define( PTE_PLUGINPATH, dirname(__FILE__) . "/");
-define( PTE_VERSION, "0.3pre");
-define( PTE_POST_DATA, "pte-data");
+define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
+define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
+define( 'PTE_VERSION', "1.0-alpha");
+define( 'PTE_POST_DATA', "pte-data");
 
 /*
  * Put Hooks and immediate hook functions in this file
@@ -50,16 +52,31 @@ function pte_admin_media_styles(){
 }
 
 function pte_admin_media_scripts(){
-   wp_enqueue_script('imgareaselect');
-   wp_enqueue_script('fancybox',
-      PTE_PLUGINURL . 'apps/fancybox/jquery.fancybox-1.3.4.min.js',
-      array('jquery')
-   );
-   wp_enqueue_script( 'pte'
-       , PTE_PLUGINURL . 'js/pte_admin_media.js'
-       , array('jquery')
-       , PTE_VERSION
-   );
+	//wp_enqueue_script('imgareaselect');
+	//wp_enqueue_script('fancybox',
+	//   PTE_PLUGINURL . 'apps/fancybox/jquery.fancybox-1.3.4.min.js',
+	//   array('jquery')
+	//);
+	//wp_enqueue_script( 'pte'
+	//    , PTE_PLUGINURL . 'js/pte_admin_media.js'
+	//    , array('jquery')
+	//    , PTE_VERSION
+	//);
+	wp_register_script( 'pte-log'
+		, PTE_PLUGINURL . 'js/log.js'
+		, false
+		, PTE_VERSION
+	);
+	wp_enqueue_script( 'pte'
+		, PTE_PLUGINURL . 'js/pte_admin.js'
+		//, array('jquery','imgareaselect')
+		, array('pte-log')
+		, PTE_VERSION
+	);
+	wp_localize_script('pte'
+		, 'objectL10n'
+		, array('PTE' => __('Post Thumbnail Editor'))
+	);
 }
 
 function pte_ajax(){
@@ -67,34 +84,38 @@ function pte_ajax(){
    require_once(PTE_PLUGINPATH . 'pte_functions.php');
    switch ($_GET['pte_action'])
    {
-      case "get-alternate-sizes":
-         pte_get_alternate_sizes();
-         break;
-      case "get-image-data":
-         pte_get_image_data($_GET['id'], $_GET['size']);
-         break;
-      case "resize-img":
-         pte_resize_img($_GET['id'], 
-            $_GET['size'],
-            $_GET['x'],
-            $_GET['y'],
-            $_GET['w'],
-            $_GET['h']
-         );
-         break;
+      case "launch":
+			pte_launch();
+			break;
+      case "resize_images":
+			pte_resize_images();
+			break;
+      case "confirm_images":
+			pte_confirm_images();
+			break;
    }
    die(-1);
 }
 
+function pte_media_row_actions($actions, $post, $detached){
+	$pte_url = admin_url('admin-ajax.php') 
+		. "?action=pte_ajax&pte_action=launch&id=" 
+		. $post->ID;
+	$actions['pte'] = "<a href='${pte_url}' title='Edit Thumbnails'>Thumbnails</a>";
+	return $actions;
+}
+
 /* This is the main admin media page */
-add_action('admin_print_styles-media.php', 'pte_admin_media_styles');
+//add_action('admin_print_styles-media.php', 'pte_admin_media_styles');
 add_action('admin_print_scripts-media.php', 'pte_admin_media_scripts');
 
 /* This is for the popup media page */
-add_action('admin_print_styles-media-upload-popup', 'pte_admin_media_styles');
+//add_action('admin_print_styles-media-upload-popup', 'pte_admin_media_styles');
 add_action('admin_print_scripts-media-upload-popup', 'pte_admin_media_scripts');
 
 /* For all purpose needs */
 add_action('wp_ajax_pte_ajax', 'pte_ajax');
+
+add_filter('media_row_actions', 'pte_media_row_actions', 10, 3);
 
 ?>

@@ -15,7 +15,7 @@ function log(obj){
    /*
    * TODO: Comment this out when publishing to WORDPRESS.ORG
    */
-   //console.log(obj);
+	console.log(obj);
 }
 
 jQuery(document).ready(function($){
@@ -45,16 +45,16 @@ jQuery(document).ready(function($){
       //                    + "height: " + s.height + "<br />");
    }
 
-   function closeImgAreaSelect(){
-      if (ias_instance){
-      ias_instance.setOptions({ show: false
-         , disable: true
-         , hide: true
-         , remove: true
-         });
-      ias_instance.update();
-      }
-   }
+	function closeImgAreaSelect(){
+		if (ias_instance){
+			ias_instance.setOptions({ show: false
+					, disable: true
+					, hide: true
+					, remove: true
+			});
+			ias_instance.update();
+		}
+	}
 
    // http://en.wikipedia.org/wiki/Euclidean_algorithm#Implementations
    function gcd(a, b){

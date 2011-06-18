@@ -1,0 +1,112 @@
+###
+  POST-THUMBNAIL-EDITOR Script for Wordpress
+
+  Hooks into the Wordpress Media Library
+###
+
+# Handle to the IMGAREASELECT plugin
+log = (obj) ->
+	if !window.console
+		names = [
+			"log"  , "debug"   , "info"   , "warn"
+			"error", "assert"  , "dir"    , "dirxml"
+			"group", "groupEnd", "time"   , "timeEnd"
+			"count", "trace"   , "profile", "profileEnd"
+		]
+		window.console[name] = alert for name in names
+	console = window.console if !console
+	console.log obj
+
+jQuery(document).ready ($) ->
+	timeout 			= 250
+	thumbnail_info = null
+	defaultOptions = null
+
+	# Let the user quickly check/uncheck all the items
+	# TODO: This might need to be fixed for jQuery 1.6
+	uncheckAllSizes = (e) ->
+		e.preventDefault()
+		$('.pte-size').removeAttr 'checked'
+		#sizeCheckHandler()
+
+	checkAllSizes = (e) ->
+		e.preventDefault()
+		$('.pte-size').attr 'checked', true
+		#sizeCheckHandler()
+
+	## sizeClickHandler
+	## Do something when a size is clicked
+	#sizeCheckHandler = (e) ->
+	#   #log $('.pte-size:checked').size()
+	#   selected_elements = $ '.pte-size:checked'
+	#   if selected_elements.size() is 1
+	#      # Set the AR
+	#      {crop, width, height} = thumbnail_info[selected_elements.val()]
+	#      log "Setting the aspect ratio to #{width}:#{height}"
+	#      imageEdit.iasapi.setOptions
+	#         aspectRatio: "#{width}:#{height}"
+	#   else # selected elements <> 1
+	#      log "Reset the options..."
+	#      imageEdit.iasapi.setOptions 
+	#         aspectRatio: defaultOptions.aspectRatioOld
+	#   imageEdit.iasapi.update()
+	#   true
+
+	# Used to add item to the Menu
+	addLabel = (editmenu, label, info) ->
+		editmenu.append("""
+			<label class="imgedit-label">
+				<input class="pte-size" type="checkbox" 
+					name="pte-function[]" value="#{ label }">
+				#{ label }</label>
+			""")
+		true
+
+	# 
+	# Entry to our code
+	# Override the imgEdit.open function
+	#
+	injectPTE = ->
+		if imageEdit.open?
+			imageEdit.oldopen = imageEdit.open
+			imageEdit.open = (id, nonce) ->
+				imageEdit.oldopen id,nonce
+				do launchPTE
+		true
+
+	launchPTE = ->
+		name = value = text = null
+
+		callback_thumbnail_info = (data, status, xhr) ->
+			log data
+			thumbnail_info = data.sizes
+			editmenu.children('label').remove()
+			for label, info of thumbnail_info
+				do (label, info) ->
+					addLabel editmenu, label, info
+			#$('.pte-size').click sizeCheckHandler
+			true
+
+		# Check if elements are loaded
+		editmenu = $ 'p[id^="imgedit-save-target"]'
+		if not imageEdit.iasapi.getOptions? or editmenu.size() < 1
+			log "Edit Thumbnail Menu not visible, waiting for #{ timeout }ms"
+			window.setTimeout(launchPTE, timeout)
+			return false
+
+		# Add convenience functions to menu
+		editmenu.append $ """<span>#{ objectL10n.pte_select }: <a 
+			href="" class="all">#{ objectL10n.pte_all }</a> | <a 
+			href="" class="none">#{ objectL10n.pte_none }</a></span>"""
+		editmenu.find(".all").click(checkAllSizes)
+		editmenu.find(".none").click(uncheckAllSizes)
+
+		# Get thumbnail_info and display size information
+		log "Retrieving thumbnail information @ #{ ajaxurl }"
+		post_data =
+			action: "pte_ajax"
+			pte_action: "get-alternate-sizes"
+		$.get ajaxurl, post_data, callback_thumbnail_info, "json"
+
+	injectPTE()
+
