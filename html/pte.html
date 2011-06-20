@@ -162,7 +162,9 @@
 					<td><input checked class="pte-confirm" type="checkbox" name="pte_confirm[]" value="${$index}"/></td>
 					<td class="col2">
 						<div class="pte-size-label">${$index}</div>
-						<img src="${$value}?${randomness()}"/></td>
+						<img src="${$value.url}?${randomness()}"/>
+						<input id="pte-${$index}-file" type="hidden" value="${$value.file}"/>
+					</td>
 				</tr>
 			{{/each}}
 			</table>
@@ -170,7 +172,8 @@
 				<button id="pte-confirm">
 					Okay, these look good...
 				</button>&nbsp;
-				<a href="#back" onclick="goBack(); return false;" id="pte-cancel">
+				<a href="#back" id="pte-cancel" 
+						onclick="goBack(); return false;">
 					I'd rather start over...
 				</a>
 			</a>

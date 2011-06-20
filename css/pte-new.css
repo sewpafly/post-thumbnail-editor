@@ -9,6 +9,16 @@ a.stage-navigation, a.stage-navigation:visited {
   a.stage-navigation img, a.stage-navigation:visited img {
     vertical-align: bottom; }
 
+a {
+  color: #444;
+  font-family: 'Amaranth', serif;
+  font-style: italic;
+  text-shadow: none; }
+  a:visited {
+    color: #black; }
+  a img {
+    vertical-align: bottom; }
+
 h1 {
   color: #2386e2;
   font-family: 'Amaranth', serif;

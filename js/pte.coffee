@@ -18,6 +18,7 @@ window.debugTmpl = (data) ->
 
 
 jQuery(document).ready ($) ->
+	### Callback for resizing images (Stage 1 to 2) ###
 	onResizeImages = (data, status, xhr) ->
 		### Evaluate data ###
 		log data
@@ -41,6 +42,11 @@ jQuery(document).ready ($) ->
 			true
 		false
 	
+	### Callback for Stage 2 to 3 ###
+	onConfirmImages = (data, status, xhr) ->
+		log data
+
+	# A little randomness will help us to not cache images...
 	randomness = ->
       Math.floor(Math.random()*1000001).toString(16)
 
@@ -102,13 +108,21 @@ jQuery(document).ready ($) ->
 	#pteCheckHandler = timerFunction (e) ->
 	pteCheckHandler = new TimerFunc ->
 		#log "# checked: #{ $('.pte-size:checked').size() }"
-		selected_elements = $('.pte-size:checked')
-		if selected_elements.size() is 1
-			# Set the AR
-			{crop, width, height} = thumbnail_info[selected_elements.val()]
-			iasSetAR width, height, crop
-		else # selected elements <> 1
-			iasSetAR()
+		ar = null
+		selected_elements = $('.pte-size:checked').each (i,elem) ->
+			{crop, width, height} = thumbnail_info[$(elem).val()]
+			crop = parseInt crop
+			width = parseInt width
+			height = parseInt height
+			if crop? and parseInt(crop) > 0
+				tmp_ar = if (width? > 0 and height? > 0) then "#{ width }:#{ height }" else null
+				if ar? and tmp_ar? and tmp_ar isnt ar
+					alert("2 images are trying to set aspect ratio, disabling...")
+					ar = null
+					return false
+				ar = tmp_ar
+		iasSetAR ar
+
 		ias_defaults.onSelectEnd null, ias_instance.getSelection()
 		true
 	, 50
@@ -120,10 +134,7 @@ jQuery(document).ready ($) ->
 	Enable imgareaselect plugin
 	###
 	ias_instance = $('#pte-image img').imgAreaSelect ias_defaults
-	iasSetAR = (width, height, crop) ->
-		ar = null
-		if crop != null and (crop is true or crop > 0)
-			ar = "#{ width }:#{ height }" if width? > 0 and height? > 0
+	iasSetAR = (ar) ->
 		log "setting aspectRatio: #{ ar }"
 		ias_instance.setOptions
 			aspectRatio: ar
@@ -175,17 +186,18 @@ jQuery(document).ready ($) ->
 	
 	$('#pte-confirm').live 'click', (e) ->
 		log "Confirming"
+		thumbnail_data = {}
+		$('.pte-confirm').filter(':checked').each (i, elem) ->
+			size = $(elem).val()
+			thumbnail_data[size] = $("\#pte-#{ size }-file").val()
 		submit_data =
 			'id':            $('#pte-post-id').val()
 			'action':        'pte_ajax'
 			'pte_action':    'confirm_images'
 			'pte_nonce':     $('#pte-nonce').val()
-			'pte-confirm[]': $('.pte-confirm').filter(':checked').map(->
-				$(this).val()
-			).get()
+			'pte-confirm':   thumbnail_data
 		log submit_data
-		if submit_data['pte-confirm[]']?.length < 1
-			done()
+		$.getJSON(ajaxurl, submit_data, onConfirmImages)
 
 
 	enableRowFeatures = ($elem) ->
@@ -219,8 +231,6 @@ jQuery(document).ready ($) ->
 			
 	#$('.stage').delegate '.stage-navigation', 'click', goBack
 
-	done = ->
-		alert "all done..."
 
 	# Finished jQuery
 	true

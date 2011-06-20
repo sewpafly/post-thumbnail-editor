@@ -21,7 +21,7 @@
     return true;
   };
   jQuery(document).ready(function($) {
-    var checkAllSizes, done, enableRowFeatures, iasSetAR, ias_defaults, ias_instance, onResizeImages, proxy_reflow, pteCheckHandler, randomness, reflow, uncheckAllSizes;
+    /* Callback for resizing images (Stage 1 to 2) */    var checkAllSizes, enableRowFeatures, iasSetAR, ias_defaults, ias_instance, onConfirmImages, onResizeImages, proxy_reflow, pteCheckHandler, randomness, reflow, uncheckAllSizes;
     onResizeImages = function(data, status, xhr) {
       /* Evaluate data */      log(data);
       if ((data.error != null) && !((data != null ? data.thumbnails : void 0) != null)) {
@@ -41,6 +41,10 @@
         return true;
       });
       return false;
+    };
+    /* Callback for Stage 2 to 3 */
+    onConfirmImages = function(data, status, xhr) {
+      return log(data);
     };
     randomness = function() {
       return Math.floor(Math.random() * 1000001).toString(16);
@@ -93,14 +97,25 @@
       selector: '.pte-confirm'
     }, uncheckAllSizes);
     pteCheckHandler = new TimerFunc(function() {
-      var crop, height, selected_elements, width, _ref;
-      selected_elements = $('.pte-size:checked');
-      if (selected_elements.size() === 1) {
-        _ref = thumbnail_info[selected_elements.val()], crop = _ref.crop, width = _ref.width, height = _ref.height;
-        iasSetAR(width, height, crop);
-      } else {
-        iasSetAR();
-      }
+      var ar, selected_elements;
+      ar = null;
+      selected_elements = $('.pte-size:checked').each(function(i, elem) {
+        var crop, height, tmp_ar, width, _ref;
+        _ref = thumbnail_info[$(elem).val()], crop = _ref.crop, width = _ref.width, height = _ref.height;
+        crop = parseInt(crop);
+        width = parseInt(width);
+        height = parseInt(height);
+        if ((crop != null) && parseInt(crop) > 0) {
+          tmp_ar = (width != null) > 0 && (height != null) > 0 ? "" + width + ":" + height : null;
+          if ((ar != null) && (tmp_ar != null) && tmp_ar !== ar) {
+            alert("2 images are trying to set aspect ratio, disabling...");
+            ar = null;
+            return false;
+          }
+          return ar = tmp_ar;
+        }
+      });
+      iasSetAR(ar);
       ias_defaults.onSelectEnd(null, ias_instance.getSelection());
       return true;
     }, 50);
@@ -109,14 +124,7 @@
     	Enable imgareaselect plugin
     	*/
     ias_instance = $('#pte-image img').imgAreaSelect(ias_defaults);
-    iasSetAR = function(width, height, crop) {
-      var ar;
-      ar = null;
-      if (crop !== null && (crop === true || crop > 0)) {
-        if ((width != null) > 0 && (height != null) > 0) {
-          ar = "" + width + ":" + height;
-        }
-      }
+    iasSetAR = function(ar) {
       log("setting aspectRatio: " + ar);
       ias_instance.setOptions({
         aspectRatio: ar
@@ -158,21 +166,23 @@
       return true;
     });
     $('#pte-confirm').live('click', function(e) {
-      var submit_data, _ref;
+      var submit_data, thumbnail_data;
       log("Confirming");
+      thumbnail_data = {};
+      $('.pte-confirm').filter(':checked').each(function(i, elem) {
+        var size;
+        size = $(elem).val();
+        return thumbnail_data[size] = $("\#pte-" + size + "-file").val();
+      });
       submit_data = {
         'id': $('#pte-post-id').val(),
         'action': 'pte_ajax',
         'pte_action': 'confirm_images',
         'pte_nonce': $('#pte-nonce').val(),
-        'pte-confirm[]': $('.pte-confirm').filter(':checked').map(function() {
-          return $(this).val();
-        }).get()
+        'pte-confirm': thumbnail_data
       };
       log(submit_data);
-      if (((_ref = submit_data['pte-confirm[]']) != null ? _ref.length : void 0) < 1) {
-        return done();
-      }
+      return $.getJSON(ajaxurl, submit_data, onConfirmImages);
     });
     enableRowFeatures = function($elem) {
       $elem.delegate('tr', 'click', function(e) {
@@ -204,9 +214,6 @@
         });
       });
       return true;
-    };
-    done = function() {
-      return alert("all done...");
     };
     return true;
   });

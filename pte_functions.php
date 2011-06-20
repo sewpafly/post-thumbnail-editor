@@ -1,10 +1,25 @@
 <?php
 
+function pte_require_json() {
+	if ( function_exists( 'ob_start' ) ){
+		ob_start();
+	}
+}
+
 /*
  * This is used to output JSON
  */
 function pte_json_encode($mixed = null){
 	global $pte_errors;
+	// If a buffer was started this will check for any residual output
+	// and add to the existing errors.
+	if ( function_exists( 'ob_get_flush' ) ){
+		$buffer = ob_get_clean();
+		if ( isset( $buffer ) && strlen( $buffer ) > 0 ){
+			pte_add_error("Buffered output: {$buffer}");
+		}
+	}
+
    if ( ! function_exists('json_encode') ){
       pte_add_error( "json_encode not available, upgrade your php" );
 		$messages = implode( "\r\n", $pte_errors );
@@ -148,7 +163,7 @@ function pte_generate_attachment($id, $size){
 function pte_get_image_data( $id, $size ){
 
    if ( !is_numeric( $id ) ) {
-		pte_add_error( "Parameter 'id' is not numeric" );
+		pte_add_error( "Parameter 'id': {$id} is not numeric" );
 		return;
 	}
 
@@ -363,23 +378,36 @@ function pte_write_image( $image, $orig_type, $destfilename ){
  * Take an array of sizes along with the associated resize data (w/h/x/y) 
  * and save the images to a temp directory
  * 
- * OUTPUT: JSON object like --> "{ [ 'url1-image1', 'url2-image2'] }"
+ * OUTPUT: JSON object 'size: url'
  */
 function pte_resize_images(){
 	global $pte_sizes;
 
-	// for each size saveThumbnailAs...
-	if ( ( !$id = pte_check_id( $_GET['id'] ) )
-		|| ( !$w = pte_check_int( $_GET['w'] ) )
-		|| ( !$h = pte_check_int( $_GET['h'] ) )
-		|| ( !$x = pte_check_int( $_GET['x'] ) )
-		|| ( !$y = pte_check_int( $_GET['y'] ) )
+	// Require JSON output
+	pte_require_json();
+
+	$id = pte_check_id( $_GET['id'] );
+	$w  = pte_check_int( $_GET['w'] );
+	$h  = pte_check_int( $_GET['h'] );
+	$x  = pte_check_int( $_GET['x'] );
+	$y  = pte_check_int( $_GET['y'] );
+
+	if ( $id === false
+		|| $w === false
+		|| $h === false
+		|| $x === false
+		|| $y === false
 	){
+		pte_add_error( "ResizeImages initialization failed: '{$id}-{$w}-{$h}-{$x}-{$y}'" );
 		return pte_json_encode();
 	}
 
+	// Get the sizes to process
 	$pte_sizes      = $_GET['pte-sizes'];
 	$sizes          = pte_get_all_alternate_size_information( $id );
+
+	// The following information is common to all sizes
+	// *** common-info
 	$dst_x          = 0;
 	$dst_y          = 0;
 	$original_file  = get_attached_file( $id );
@@ -392,6 +420,7 @@ function pte_resize_images(){
 	}
 
    list( $orig_w, $orig_h, $orig_type ) = $original_size;
+	// *** End common-info
 
 	foreach ( $sizes as $size => $data ){
 		// Get all the data needed to run image_create
@@ -423,19 +452,22 @@ function pte_resize_images(){
 		// === END CREATE IMAGE ===============
 
 		// URL: wp_upload_dir => base_url/subdir + /basename of $tmpfile
-		$urls[$size] = $tmpurl;
+		// This is for the output
+		$thumbnails[$size]['url'] = $tmpurl;
+		$thumbnails[$size]['file'] = $tmpfile;
 	}
 
 	// we don't need the original in memory anymore
 	imagedestroy( $original_image );
 
-	if ( count( $urls ) < 1 ){
+	// Did you process anything?
+	if ( count( $thumbnails ) < 1 ){
+		pte_add_error("No images processed");
 		return pte_json_encode();
 	}
 
-	//pte_json_encode( $thumbnails );
 	pte_json_encode( array( 
-		'thumbnails' => $urls,
+		'thumbnails' => $thumbnails,
 		'pte-nonce'  => wp_create_nonce( "pte-{$id}" )
 	) );
 }
@@ -450,6 +482,9 @@ function pte_resize_images(){
  */
 function pte_confirm_images(){
 	global $pte_sizes, $pte_errors;
+	
+	// Require JSON output
+	pte_require_json();
 
 	$id = pte_check_id( (int) $_GET['id'] );
 
@@ -459,14 +494,28 @@ function pte_confirm_images(){
 	}
 		
    // Get the available sizes
-	$pte_sizes = $_GET['pte-confirm'];
-	$sizes = pte_get_all_alternate_size_information( $id );
-
-	if ( count( $pte_errors ) > 0 ){
-		return pte_json_encode();
+	if ( is_array( $_GET['pte-confirm'] ) ){
+		$pte_sizes = array_keys( $_GET['pte-confirm'] );
+		$sizes = pte_get_all_alternate_size_information( $id );
+	}
+	else {
+		pte_add_error( "Invalid Parameters: can't find sizes" );
 	}
 
-	// Move good images
-	// Reset PTE/$id directory
+	// Did anything go wrong in initialization
+	if ( count( $pte_errors ) > 0 ){
+		pte_add_error( "ConfirmImages: initialization error" );
+		return pte_json_encode();
+	}
+	// === END INITIALIZATION ================================
+
+	// Foreach size:
+	//    Move good image
+	//    Delete old image
+	//    Update metadata
+	// Remove PTE/$id directory
+	foreach ( $sizes as $size => $data ){
+	}
+	
 	pte_json_encode( array( 'success' => "Yay!" ) );
 }
