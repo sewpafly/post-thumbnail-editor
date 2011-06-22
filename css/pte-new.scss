@@ -6,15 +6,17 @@ $table-border:                #ddd;
 /* Generated variables */
 $pte-sizes-width: $width - $wp-picture-width - $pte-sizes-container-padding - 2 - 10;
 $pte-sizes-img-width: $pte-sizes-width - 50px;
+$green: #38ab36;
 
 a.stage-navigation, a.stage-navigation:visited {
-	color: #38ab36;
+	color: $green;
 	font-family: 'Amaranth', serif; 
 	font-size: 0.8em;
 	font-style: italic; 
 	text-decoration: none;
 	text-shadow: none;
 	img {
+		border: none;
 		vertical-align: bottom;
 	}
 }
@@ -54,6 +56,7 @@ body {
 #pte-image { 
 	float:left;
 	margin-top: 5px;
+	width: $wp-picture-width + 2;
 }
 
 @mixin button {
@@ -75,6 +78,7 @@ body {
 #pte-sizes-container { 
 	overflow: auto;
 	padding-left: $pte-sizes-container-padding;
+	float: left;
 }
 
 #pte-selectors, #pte-stage2-selectors{
@@ -84,6 +88,7 @@ body {
 #pte-sizes { 
 	overflow-x: hidden;
 	overflow-y: scroll;
+	position: relative;
 	border: 1px solid $table-border;
 	width: $pte-sizes-width;
 	img {
@@ -172,7 +177,8 @@ table td {
 }
 
 #stage2 img{
-	max-width: 100%;
+	/*max-width: 100%;*/
+	max-width: 710px;
 }
 
 #error {
@@ -184,4 +190,9 @@ table td {
 		/*   list-style-image: 'disc';*/
 		/*}                           */
 	}
+}
+
+#success {
+	color: $green;
+	font-size: 1.5em;
 }

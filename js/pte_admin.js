@@ -6,7 +6,7 @@
   */  jQuery(document).ready(function($) {
     var injectPTE, launchPTE, pte_url, timeout;
     timeout = 300;
-    pte_url = "" + ajaxurl + "?action=pte_ajax&pte_action=launch&id=" + ($('#attachment_id').val());
+    pte_url = "" + ajaxurl + "?action=pte_ajax&pte-action=launch&id=" + ($('#attachment_id').val());
     injectPTE = function() {
       if (imageEdit.open != null) {
         imageEdit.oldopen = imageEdit.open;

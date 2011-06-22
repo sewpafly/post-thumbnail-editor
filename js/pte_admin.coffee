@@ -6,7 +6,7 @@
 
 jQuery(document).ready ($) ->
 	timeout = 300
-	pte_url = "#{ ajaxurl }?action=pte_ajax&pte_action=launch&id=#{ $('#attachment_id').val() }"
+	pte_url = "#{ ajaxurl }?action=pte_ajax&pte-action=launch&id=#{ $('#attachment_id').val() }"
 
 	# 
 	# Entry to our code

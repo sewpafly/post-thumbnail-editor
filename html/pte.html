@@ -147,11 +147,13 @@
 				alt="Return to Step 1" title="Return to Step 1">
 				<img src="<?php print( PTE_PLUGINURL . "images/back.gif" ); ?>"/> Back</a>
 			<h1 class="stage-header"> Post Thumbnail Editor - Step 2</h1>
-			{{if $data['error']}}{{each $data['error']}}
-			<div id="error"><ul>
-				<li>${$value}</li>
-			</ul></div>
-			{{/each}}{{/if}}
+			{{if $data['error']}}
+			<div id="error">We noticed some potential issues:
+				<ul>
+					{{each $data['error']}}<li>${$value}</li>{{/each}}
+				</ul>
+			</div>
+			{{/if}}
 			<div id="pte-stage2-selectors">
 				Select the images you want to keep: <a class="all" href="all">All</a> | <a class="none" href="none">None</a>
 			</div>
@@ -180,6 +182,21 @@
 		</script>
 		<div id="stage3" class="stage">
 		</div>
+		<script id="stage3template" type="text/x-jquery-tmpl">
+			<h1 class="stage-header"> Post Thumbnail Editor</h1>
+			{{if $data['success']}}
+			<div id="success">
+				Images were created successfully.
+			</div>
+				{{if $data['error']}}
+				<div id="error">We noticed some potential issues however:
+					<ul>
+						{{each $data['error']}}<li>${$value}</li>{{/each}}
+					</ul>
+				</div>
+				{{/if}}
+			{{/if}}
+		</script>
 		<div id="pte-loading"> 
 			<div id="pte-loading-opaque"></div>
 			<div id="pte-loading-spinner">

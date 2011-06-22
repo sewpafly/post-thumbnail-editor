@@ -82,15 +82,16 @@ function pte_admin_media_scripts(){
 function pte_ajax(){
    // Move all adjuntant functions to a separate file and include that here
    require_once(PTE_PLUGINPATH . 'pte_functions.php');
-   switch ($_GET['pte_action'])
+
+   switch ($_GET['pte-action'])
    {
       case "launch":
 			pte_launch();
 			break;
-      case "resize_images":
+      case "resize-images":
 			pte_resize_images();
 			break;
-      case "confirm_images":
+      case "confirm-images":
 			pte_confirm_images();
 			break;
    }
@@ -99,7 +100,7 @@ function pte_ajax(){
 
 function pte_media_row_actions($actions, $post, $detached){
 	$pte_url = admin_url('admin-ajax.php') 
-		. "?action=pte_ajax&pte_action=launch&id=" 
+		. "?action=pte_ajax&pte-action=launch&id=" 
 		. $post->ID;
 	$actions['pte'] = "<a href='${pte_url}' title='Edit Thumbnails'>Thumbnails</a>";
 	return $actions;

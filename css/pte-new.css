@@ -7,6 +7,7 @@ a.stage-navigation, a.stage-navigation:visited {
   text-decoration: none;
   text-shadow: none; }
   a.stage-navigation img, a.stage-navigation:visited img {
+    border: none;
     vertical-align: bottom; }
 
 a {
@@ -38,7 +39,8 @@ body {
 
 #pte-image {
   float: left;
-  margin-top: 5px; }
+  margin-top: 5px;
+  width: 402px; }
 
 #pte-buttons button {
   font-family: "Amaranth", Tahoma, sans-serif;
@@ -58,7 +60,8 @@ body {
 
 #pte-sizes-container {
   overflow: auto;
-  padding-left: 15px; }
+  padding-left: 15px;
+  float: left; }
 
 #pte-selectors, #pte-stage2-selectors {
   margin-bottom: 10px; }
@@ -66,6 +69,7 @@ body {
 #pte-sizes {
   overflow-x: hidden;
   overflow-y: scroll;
+  position: relative;
   border: 1px solid #dddddd;
   width: 323px; }
   #pte-sizes img {
@@ -139,7 +143,8 @@ table td {
   width: 100%; }
 
 #stage2 img {
-  max-width: 100%; }
+  /*max-width: 100%;*/
+  max-width: 710px; }
 
 #error {
   color: #aa0000; }
@@ -149,3 +154,7 @@ table td {
     /*li {                        */
     /*   list-style-image: 'disc';*/
     /*}                           */ }
+
+#success {
+  color: #38ab36;
+  font-size: 1.5em; }
