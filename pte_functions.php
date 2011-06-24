@@ -37,7 +37,8 @@ function pte_json_encode($mixed = null){
 		$mixed = array_merge_recursive( $mixed, array( 'error' => $pte_errors ) );
 	}
 
-	die( json_encode($mixed) );
+	print( json_encode($mixed) );
+	return true;
 }
 
 /*
@@ -178,7 +179,7 @@ function pte_get_image_data( $id, $size, $size_data ){
 function pte_get_all_alternate_size_information( $id ){
 	$sizes = pte_get_alternate_sizes();
 	foreach ( $sizes as $size => &$info ){
-		$info = array_merge( $info, (array)pte_get_image_data( $id, $size, $info ) );
+		$info['current'] = pte_get_image_data( $id, $size, $info );
 	}
 	return $sizes;
 }
@@ -207,7 +208,7 @@ function pte_launch(){
 		, PTE_VERSION
 	);
 	wp_enqueue_style( 'pte'
-		, PTE_PLUGINURL . 'css/pte-new.css'
+		, PTE_PLUGINURL . 'css/pte.css'
 		, array('imgareaselect')
 		, PTE_VERSION
 	);
@@ -447,8 +448,9 @@ function pte_resize_images(){
 	}
 
 	return pte_json_encode( array( 
-		'thumbnails' => $thumbnails,
-		'pte-nonce'  => wp_create_nonce( "pte-{$id}" )
+		'thumbnails'        => $thumbnails,
+		'pte-nonce'         => wp_create_nonce( "pte-{$id}" ),
+		'pte-delete-nonce'  => wp_create_nonce( "pte-delete-{$id}" )
 	) );
 }
 
@@ -542,4 +544,24 @@ function pte_confirm_images(){
 	// Delete tmpdir
 	unlink( $PTE_TMP_DIR );
 	return pte_json_encode( array( 'success' => "Yay!" ) );
+}
+
+function pte_delete_images()
+{
+	// Require JSON output
+	pte_require_json();
+
+	$id = pte_check_id( (int) $_GET['id'] );
+	if ( $id === false ){
+		return pte_json_error( "ID invalid: {$id}" );
+	}
+	// Check nonce
+	if ( !check_ajax_referer( "pte-delete-{$id}", 'pte-nonce', false ) ){
+		return pte_json_error( "CSRF Check failed" );
+	}
+	$uploads = wp_upload_dir();
+	$PTE_TMP_DIR = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR . $id;
+	// Delete tmpdir
+	unlink( $PTE_TMP_DIR );
+	return pte_json_encode( array( "success" => "Yay!" ) );
 }

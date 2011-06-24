@@ -1,5 +1,5 @@
 (function() {
-  var TimerFunc;
+  var TimerFunc, determineAspectRatio, gcd;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   TimerFunc = (function() {
     function TimerFunc(fn, timeout) {
@@ -22,8 +22,46 @@
     log(data);
     return true;
   };
+  gcd = function(a, b) {
+    if (a === 0) {
+      return b;
+    }
+    while (b > 0) {
+      if (a > b) {
+        a = a - b;
+      } else {
+        b = b - a;
+      }
+    }
+    if (a < 0 || b < 0) {
+      return null;
+    }
+    return a;
+  };
+  determineAspectRatio = function(current_ar, size) {
+    var crop, gc, height, tmp_ar, width, _ref;
+    _ref = thumbnail_info[size], crop = _ref.crop, width = _ref.width, height = _ref.height;
+    crop = +crop;
+    width = +width;
+    height = +height;
+    gc = gcd(width, height);
+    if ((crop != null) && crop > 0) {
+      tmp_ar = null;
+      if ((width != null) > 0 && (height != null) > 0) {
+        if (gc != null) {
+          tmp_ar = "" + (width / gc) + ":" + (height / gc);
+        } else {
+          tmp_ar = "" + width + ":" + height;
+        }
+      }
+      if ((current_ar != null) && (tmp_ar != null) && tmp_ar !== current_ar) {
+        throw "Too many Aspect Ratios. Disabling";
+      }
+      return current_ar = tmp_ar;
+    }
+  };
   jQuery(document).ready(function($) {
-    /* Callback for resizing images (Stage 1 to 2) */    var checkAllSizes, enableRowFeatures, gcd, iasSetAR, ias_defaults, ias_instance, onConfirmImages, onResizeImages, pteCheckHandler, randomness, reflow, uncheckAllSizes;
+    /* Callback for resizing images (Stage 1 to 2) */    var checkAllSizes, enableRowFeatures, iasSetAR, ias_defaults, ias_instance, onConfirmImages, onResizeImages, pteCheckHandler, reflow, uncheckAllSizes;
     $('#pte-submit').click(function(e) {
       var scale_factor, selection, submit_data;
       log("Clicked Submit...");
@@ -55,7 +93,7 @@
     });
     onResizeImages = function(data, status, xhr) {
       /* Evaluate data */      log(data);
-      if ((data.error != null) && !((data != null ? data.thumbnails : void 0) != null)) {
+      if ((data.error != null) && !(data.thumbnails != null)) {
         alert(data.error);
         return;
       }
@@ -109,9 +147,6 @@
       });
       return false;
     };
-    randomness = function() {
-      return Math.floor(Math.random() * 1000001).toString(16);
-    };
     /* Set the height of the options */
     reflow = new TimerFunc(function() {
       var offset, window_height;
@@ -121,48 +156,20 @@
       return $("#pte-sizes").height(window_height);
     }, 100);
     $(window).resize(reflow.doFunc).load(reflow.doFunc);
-    gcd = function(a, b) {
-      if (a === 0) {
-        return b;
-      }
-      while (b > 0) {
-        if (a > b) {
-          a = a - b;
-        } else {
-          b = b - a;
-        }
-      }
-      if (a < 0 || b < 0) {
-        return null;
-      }
-      return a;
-    };
     pteCheckHandler = new TimerFunc(function() {
       var ar, selected_elements;
       ar = null;
       selected_elements = $('.pte-size:checked').each(function(i, elem) {
-        var crop, gc, height, tmp_ar, width, _ref;
-        _ref = thumbnail_info[$(elem).val()], crop = _ref.crop, width = _ref.width, height = _ref.height;
-        crop = +crop;
-        width = +width;
-        height = +height;
-        gc = gcd(width, height);
-        if ((crop != null) && crop > 0) {
-          tmp_ar = null;
-          if ((width != null) > 0 && (height != null) > 0) {
-            if (gc != null) {
-              tmp_ar = "" + (width / gc) + ":" + (height / gc);
-            } else {
-              tmp_ar = "" + width + ":" + height;
-            }
+        try {
+          ar = determineAspectRatio(ar, $(elem).val());
+        } catch (error) {
+          ar = null;
+          if (ar !== ias_instance.getOptions().aspectRatio) {
+            alert(error);
           }
-          if ((ar != null) && (tmp_ar != null) && tmp_ar !== ar) {
-            alert("2 images are trying to set different aspect ratios, disabling...");
-            ar = null;
-            return false;
-          }
-          return ar = tmp_ar;
+          return false;
         }
+        return true;
       });
       iasSetAR(ar);
       ias_defaults.onSelectEnd(null, ias_instance.getSelection());
@@ -221,6 +228,7 @@
       return ias_instance.update();
     };
     $('#pte-loading').hide().ajaxStart(function() {
+      log("ajaxStart");
       return $(this).fadeIn(200);
     }).ajaxStop(function() {
       return $(this).fadeOut(200);
@@ -247,18 +255,38 @@
       if (e != null) {
         e.preventDefault();
       }
-      $('#stage2').animate({
+      return $('#stage2').animate({
         left: 1200
       }, 500, 'swing', function() {
         $(this).hide();
         return $('#stage1').show(0, function() {
-          $(this).animate({
+          return $(this).animate({
             left: 0
-          }, 500);
-          return true;
+          }, 500, 'swing', function() {
+            var delete_options;
+            log("okay cleanup");
+            delete_options = {
+              "id": $('#pte-post-id').val(),
+              'action': 'pte_ajax',
+              'pte-action': 'delete-images',
+              'pte-nonce': $('#pte-delete-nonce').val()
+            };
+            return $.ajax({
+              url: ajaxurl,
+              data: delete_options,
+              global: false,
+              dataType: "json",
+              success: function(data, status, xhr) {
+                if (data.error != null) {
+                  return log(data.error);
+                } else {
+                  return log("Deleted tmp files");
+                }
+              }
+            });
+          });
         });
       });
-      return true;
     };
     return true;
   });

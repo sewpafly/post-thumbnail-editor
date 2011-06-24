@@ -17,14 +17,14 @@ jQuery(document).ready ($) ->
 			imageEdit.oldopen = imageEdit.open
 			imageEdit.open = (id, nonce) ->
 				imageEdit.oldopen id,nonce
-				do launchPTE
+				launchPTE()
 		true
 
 	launchPTE = ->
 		# Check if elements are loaded
 		editmenu = $ 'p[id^="imgedit-save-target"]'
 		if editmenu?.size() < 1
-			log "Edit Thumbnail Menu not visible, waiting for #{ timeout }ms"
+			window.log "Edit Thumbnail Menu not visible, waiting for #{ timeout }ms"
 			window.setTimeout(launchPTE, timeout)
 			return false
 

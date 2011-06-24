@@ -5,91 +5,15 @@
 		<title>PTE</title>
 		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Amaranth:regular,italic,bold|Puritan|PT+Serif">
 		<style type="text/css" media="screen">
-			/* http://meyerweb.com/eric/tools/css/reset/ 
-			v2.0 | 20110126
-			License: none (public domain)
-			*/
-
-			html, body, div, span, applet, object, iframe,
-			h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-			a, abbr, acronym, address, big, cite, code,
-			del, dfn, em, img, ins, kbd, q, s, samp,
-			small, strike, strong, sub, sup, tt, var,
-			b, u, i, center,
-			dl, dt, dd, ol, ul, li,
-			fieldset, form, label, legend,
-			table, caption, tbody, tfoot, thead, tr, th, td,
-			article, aside, canvas, details, embed, 
-			figure, figcaption, footer, header, hgroup, 
-			menu, nav, output, ruby, section, summary,
-			time, mark, audio, video {
-				margin: 0;
-				padding: 0;
-				border: 0i
-				font-size: 100%;
-				font: inherit;
-				vertical-align: baseline;
-			}
-			/* HTML5 display-role reset for older browsers */
-			article, aside, details, figcaption, figure, 
-			footer, header, hgroup, menu, nav, section {
-				display: block;
-			}
-			body {
-				line-height: 1;
-			}
-			ol, ul {
-				list-style: none;
-			}
-			blockquote, q {
-				quotes: none;
-			}
-			blockquote:before, blockquote:after,
-			q:before, q:after {
-				content: '';
-				content: none;
-			}
-			table {
-				border-collapse: collapse;
-				border-spacing: 0;
-			}
-		</style>
-		<style type="text/css" media="screen">
-			.clearfix:after {
-				content: ".";
-				display: block;
-				clear: both;
-				visibility: hidden;
-				line-height: 0;
-				height: 0;
-			}
-
-			/*.clearfix {
-				display: inline-block;
-			}*/
-
-			html[xmlns] .clearfix {
-				display: block;
-			}
-
-			/* IE6 */
-			* html .clearfix {
-				height: 1%;
-			}
-			/* IE7 */
-			.clearfix {
-				min-height: 1px;
-			}
 		</style>
 		<?php wp_print_styles(); ?>
 		<?php wp_print_scripts(); ?>
 		<script type="text/javascript" charset="utf-8">
 			ajaxurl        = '<?php echo admin_url('admin-ajax.php'); ?>';
-			thumbnail_info = <?php print(json_encode($size_information)); ?>
+			thumbnail_info = <?php print(json_encode($size_information)); ?>;
 		</script>
 	</head>
 	<body>
-		<!--<h1 id="heading">Post Thumbnail Editor</h1>-->
 		<div id="stage1" class="stage">
 			<h1 class="stage-header">Post Thumbnail Editor - Step 1</h1>
 			<?php global $pte_errors;
@@ -101,7 +25,6 @@
 				}
 				?></ul></div>
 			<?php endif; ?>
-			<!--<code><pre><?php // print_r( $size_information ); ?></pre></code>-->
 			<div id="pte-image">
 				<input type="hidden" id="pte-sizer" value="<?php echo $sizer; ?>" />
 				<input type="hidden" id="pte-post-id" value="<?php echo $id; ?>" />
@@ -126,12 +49,13 @@
 							<input class="pte-size" id="pte-size-<?php print $size_label; ?>" type="checkbox" name="pte-size[]" value="<?php print $size_label; ?>">
 						</td>
 						<td class="col2">
-							<!--<label class=pte-edit-label for="pte-size-<?php print $size_label; ?>">-->
-								<div class="pte-size-label"><?php print $size_label; ?> (<?php
-								print("${size_array['width']}x${size_array[height]}");
-								?>)</div>
-								<img src="<?php print( $size_array['url'] ); ?>"/><br/>
-							<!--</label>-->
+								<div class="pte-size-label"><?php print $size_label; ?> <?php
+								print("(${size_array['width']}x${size_array[height]})");
+								print("<br><span class='actual'>Current image: "
+									. $size_array[current][width] . "x" 
+									. $size_array[current][height] . "</span>");
+								?></div>
+								<img src="<?php print( $size_array['current']['url'] . "?" . mt_rand() ); ?>"/><br/>
 						</td>
 					</tr>
 					<?php endforeach; ?>
@@ -158,6 +82,7 @@
 				Select the images you want to keep: <a class="all" href="all">All</a> | <a class="none" href="none">None</a>
 			</div>
 			<input type="hidden" name="pte-nonce" value="${$data['pte-nonce']}" id="pte-nonce" />
+			<input type="hidden" name="pte-delete-nonce" value="${$data['pte-delete-nonce']}" id="pte-delete-nonce" />
 			<table>
 			{{each $data.thumbnails}}
 				<tr class="selected">

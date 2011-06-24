@@ -4,7 +4,6 @@
 class TimerFunc
 	constructor: (@fn, @timeout) ->
 		@timer = null
-	#doFunc: (e) ->
 	doFunc: (e) =>
 		window.clearTimeout @timer
 		@timer = window.setTimeout @fn, @timeout
@@ -16,6 +15,39 @@ window.randomness = ->
 window.debugTmpl = (data) ->
 	log data
 	true
+
+gcd = (a, b) ->
+	return b if a is 0
+	while b > 0
+		if a > b 
+			a = a - b
+		else
+			b = b - a
+	if a < 0 or b < 0 then return null
+	a
+
+# functionally take a list of sizes
+# convert to crop/width/height
+# determine current ar and test against other ar's
+# throw exception if more than 1?
+# _(list).reduce( determineAspectRatio , ar)
+determineAspectRatio = (current_ar, size) ->
+	{crop, width, height} = thumbnail_info[size]
+	crop = +crop
+	width = +width
+	height = +height
+	gc = gcd width, height
+	if crop? and crop > 0
+		tmp_ar = null
+		if (width? > 0 and height? > 0) 
+			if gc?
+				tmp_ar = "#{ width / gc }:#{ height / gc }"
+			else
+				tmp_ar = "#{ width }:#{ height }"
+		if current_ar? and tmp_ar? and tmp_ar isnt current_ar
+			#alert "2 images are trying to set different aspect ratios, disabling..."
+			throw "Too many Aspect Ratios. Disabling"
+		current_ar = tmp_ar
 
 
 jQuery(document).ready ($) ->
@@ -55,9 +87,7 @@ jQuery(document).ready ($) ->
 	onResizeImages = (data, status, xhr) ->
 		### Evaluate data ###
 		log data
-		#$('#stage1').hide()
-		#$('#stage2').html($('#stage2template').tmpl(data)).show(500)
-		if data.error? and not data?.thumbnails?
+		if data.error? and not data.thumbnails?
 			alert(data.error)
 			return
 		
@@ -110,15 +140,10 @@ jQuery(document).ready ($) ->
 		false
 	# ===========================================================
 
-	# A little randomness will help us to not cache images...
-	randomness = ->
-      Math.floor(Math.random()*1000001).toString(16)
-
 	# ===========================================================
 	### Set the height of the options ###
 	# ===========================================================
 	# Sets a timeout to be a little bit more responsive
-	#reflow = timerFunction ->
 	reflow = new TimerFunc ->
 		log "reflow called..."
 		offset = $("#pte-sizes").offset()
@@ -126,53 +151,36 @@ jQuery(document).ready ($) ->
 		$("#pte-sizes").height window_height
 	, 100
 	# Add to the resize and load events
-	#proxy_reflow = $.proxy reflow.doFunc, reflow
 	$(window).resize(reflow.doFunc).load(reflow.doFunc)
 
 
 	# ===========================================================
 	# Setting aspectRatio
 	# This is what happens when a box is checked
+	# Functional call to reduce would work well here (underscore.js)
+	#
+	# TODO: Fix when ar is disabled, don't tell the user until you renable it 
+	#       and disable it again
 	# ===========================================================
-	gcd = (a, b) ->
-		return b if a is 0
-		while b > 0
-			if a > b 
-				a = a - b
-			else
-				b = b - a
-		if a < 0 or b < 0 then return null
-		a
-
-	#pteCheckHandler = timerFunction (e) ->
 	pteCheckHandler = new TimerFunc ->
 		#log "# checked: #{ $('.pte-size:checked').size() }"
 		ar = null
 		selected_elements = $('.pte-size:checked').each (i,elem) ->
-			{crop, width, height} = thumbnail_info[$(elem).val()]
-			crop = +crop
-			width = +width
-			height = +height
-			gc = gcd width, height
-			if crop? and crop > 0
-				tmp_ar = null
-				if (width? > 0 and height? > 0) 
-					if gc?
-						tmp_ar = "#{ width / gc }:#{ height / gc }"
-					else
-						tmp_ar = "#{ width }:#{ height }"
-				if ar? and tmp_ar? and tmp_ar isnt ar
-					alert "2 images are trying to set different aspect ratios, disabling..."
-					ar = null
-					return false # stops the each loop
-				ar = tmp_ar
+			try
+				ar = determineAspectRatio ar, $(elem).val()
+			catch error
+				ar = null
+				if ar isnt ias_instance.getOptions().aspectRatio
+					alert error
+				return false
+			true
 		iasSetAR ar
 
+		# Call our check to set the buttons' ability/disability
 		ias_defaults.onSelectEnd null, ias_instance.getSelection()
 		true
 	, 50
 	$('.pte-size').click pteCheckHandler.doFunc
-	#$('.pte-size').click $.proxy pteCheckHandler.doFunc, pteCheckHandler
 
 
 	# ===========================================================
@@ -234,6 +242,7 @@ jQuery(document).ready ($) ->
 	# ===========================================================
 	$('#pte-loading').hide()
 	.ajaxStart( ->
+		log "ajaxStart"
 		$(this).fadeIn 200
 	).ajaxStop( ->
 		$(this).fadeOut 200
@@ -273,19 +282,38 @@ jQuery(document).ready ($) ->
 		$('#stage2').animate
 			left: 1200
 		, 500, 'swing', ->
-			# this = stage2
+			# COMMENT: this = stage2
 			$(this).hide()
-			$('#stage1').show(0, ->
-				$(this).animate(
+			$('#stage1').show 0, ->
+				# this = stage1
+				$(this).animate
 					left: 0
-				, 500)
-				true
-			)
-		true
+				, 500, 'swing', ->
+					log "okay cleanup"
+					# send cleanup request
+					delete_options =
+						"id": $('#pte-post-id').val()
+						'action': 'pte_ajax'
+						'pte-action': 'delete-images'
+						'pte-nonce': $('#pte-delete-nonce').val()
+					# use ajax:global - false
+					$.ajax
+						url: ajaxurl,
+						data: delete_options
+						global: false
+						dataType: "json"
+						success: (data, status, xhr) -> 
+							if data.error?
+								log data.error
+							else
+								log "Deleted tmp files"
+					#$.getJSON ajaxurl, delete_options, ->
+		#         true
+		#      true
+		#   true
+		#true
 
 			
-	#$('.stage').delegate '.stage-navigation', 'click', goBack
-
 
 	# Finished
 	true

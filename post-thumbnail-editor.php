@@ -41,16 +41,6 @@ define( 'PTE_POST_DATA', "pte-data");
  */
 
 /* Hook into the Edit Image page */
-function pte_admin_media_styles(){
-   wp_enqueue_style('fancybox',
-      PTE_PLUGINURL . 'apps/fancybox/jquery.fancybox-1.3.4.css');
-   wp_enqueue_style( 'pte'
-       , PTE_PLUGINURL . 'css/pte.css'
-       , false
-       , PTE_VERSION
-   );
-}
-
 function pte_admin_media_scripts(){
 	//wp_enqueue_script('imgareaselect');
 	//wp_enqueue_script('fancybox',
@@ -69,7 +59,6 @@ function pte_admin_media_scripts(){
 	);
 	wp_enqueue_script( 'pte'
 		, PTE_PLUGINURL . 'js/pte_admin.js'
-		//, array('jquery','imgareaselect')
 		, array('pte-log')
 		, PTE_VERSION
 	);
@@ -94,6 +83,9 @@ function pte_ajax(){
       case "confirm-images":
 			pte_confirm_images();
 			break;
+      case "delete-images":
+			pte_delete_images();
+			break;
    }
    die(-1);
 }
@@ -107,16 +99,15 @@ function pte_media_row_actions($actions, $post, $detached){
 }
 
 /* This is the main admin media page */
-//add_action('admin_print_styles-media.php', 'pte_admin_media_styles');
 add_action('admin_print_scripts-media.php', 'pte_admin_media_scripts');
 
 /* This is for the popup media page */
-//add_action('admin_print_styles-media-upload-popup', 'pte_admin_media_styles');
 add_action('admin_print_scripts-media-upload-popup', 'pte_admin_media_scripts');
 
 /* For all purpose needs */
 add_action('wp_ajax_pte_ajax', 'pte_ajax');
 
+/* Adds the Thumbnail option to the media library list */
 add_filter('media_row_actions', 'pte_media_row_actions', 10, 3);
 
 ?>

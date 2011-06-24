@@ -21,7 +21,7 @@
       var editmenu;
       editmenu = $('p[id^="imgedit-save-target"]');
       if ((editmenu != null ? editmenu.size() : void 0) < 1) {
-        log("Edit Thumbnail Menu not visible, waiting for " + timeout + "ms");
+        window.log("Edit Thumbnail Menu not visible, waiting for " + timeout + "ms");
         window.setTimeout(launchPTE, timeout);
         return false;
       }
