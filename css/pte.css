@@ -1,9 +1,9 @@
-/* Generated variables */
-/** BEGIN CSS RESET **/
+
 /* http://meyerweb.com/eric/tools/css/reset/ 
 v2.0 | 20110126
 License: none (public domain)
 */
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -13,41 +13,41 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline; }
-
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
+article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
-  display: block; }
-
+	display: block;
+}
 body {
-  line-height: 1; }
-
+	line-height: 1;
+}
 ol, ul {
-  list-style: none; }
-
+	list-style: none;
+}
 blockquote, q {
-  quotes: none; }
-
+	quotes: none;
+}
 blockquote:before, blockquote:after,
 q:before, q:after {
-  content: '';
-  content: none; }
-
+	content: '';
+	content: none;
+}
 table {
-  border-collapse: collapse;
-  border-spacing: 0; }
-
-/* END RESET */
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* Generated variables */
 a.stage-navigation, a.stage-navigation:visited {
   color: #38ab36;
   font-family: 'Amaranth', serif;
@@ -84,12 +84,16 @@ body {
   margin: auto;
   max-width: 750px;
   background-color: #efefef;
-  /*position: relative;*/ }
+  /*position: relative;*/
+  /*border: 1px solid black;*/ }
 
 #pte-image {
   float: left;
   margin-top: 5px;
   width: 402px; }
+  #pte-image img {
+    display: block;
+    margin: auto; }
 
 #pte-buttons button {
   font-family: "Amaranth", Tahoma, sans-serif;
@@ -110,7 +114,8 @@ body {
 #pte-sizes-container {
   overflow: auto;
   padding-left: 15px;
-  float: left; }
+  float: left;
+  width: 331px; }
 
 #pte-selectors, #pte-stage2-selectors {
   margin-bottom: 10px; }
@@ -120,9 +125,10 @@ body {
   overflow-y: scroll;
   position: relative;
   border: 1px solid #dddddd;
-  width: 314px; }
+  /*width: $pte-sizes-width;*/
+  /*width: 100%;*/ }
   #pte-sizes img {
-    max-width: 264px; }
+    max-width: 296px; }
 
 table tr {
   border-bottom: 1px solid #dddddd; }
@@ -137,9 +143,9 @@ table td {
 /*.col1 { */
 /*width: 50px; */
 /*}*/
-.col2 {
-  padding-right: 20px; }
-
+/*.col2 { */
+/*   padding-right: 20px; */
+/*}*/
 .pte-size-label {
   /*background: #bcbcbc;*/
   background: #cdcdcd;
@@ -191,7 +197,7 @@ table td {
   left: 1500px;
   width: 750px; }
 
-#stage2 table {
+table {
   width: 100%; }
 
 #stage2 img {

@@ -1,6 +1,3 @@
-[submodule "apps/fancybox"]
-	path = apps/fancybox
-	url = git@github.com:sewpafly/fancy-box.git
 [submodule "apps/jquery-tmpl"]
 	path = apps/jquery-tmpl
 	url = git@github.com:sewpafly/jquery-tmpl.git

@@ -11,6 +11,10 @@
 		<script type="text/javascript" charset="utf-8">
 			ajaxurl        = '<?php echo admin_url('admin-ajax.php'); ?>';
 			thumbnail_info = <?php print(json_encode($size_information)); ?>;
+			jQuery(function(){ pte.editor(); });<?php
+			if ( PTE_DEBUG ) {
+				print( "debug_enabled = true;" );
+			} ?>
 		</script>
 	</head>
 	<body>
@@ -18,12 +22,16 @@
 			<h1 class="stage-header">Post Thumbnail Editor - Step 1</h1>
 			<?php global $pte_errors;
 			if ( isset( $pte_errors ) && count( $pte_errors ) > 0 ): ?>
-			<div id="error"><ul><?php 
+			<script type="text/javascript" charset="utf-8">
+				var pte_errors = <?php print( json_encode( $pte_errors ) ); ?>
+				log(pte_errors);
+			</script>
+			<!-- <div id="error"><ul><?php 
 					//print_r($pte_errors);
 				foreach ( $pte_errors as $error_message ){
 					print( "<li>${error_message}</li>\r\n" );
 				}
-				?></ul></div>
+				?></ul></div> -->
 			<?php endif; ?>
 			<div id="pte-image">
 				<input type="hidden" id="pte-sizer" value="<?php echo $sizer; ?>" />
@@ -111,7 +119,8 @@
 			<h1 class="stage-header"> Post Thumbnail Editor</h1>
 			{{if $data['success']}}
 			<div id="success">
-				Images were created successfully.
+				<p>Images were created successfully.</p>
+				<p>Click <a href="" onclick="window.location.reload();">here</a> to start over.</p>
 			</div>
 				{{if $data['error']}}
 				<div id="error">We noticed some potential issues however:
@@ -127,5 +136,6 @@
 			<div id="pte-loading-spinner">
 				<img src="<?php print PTE_PLUGINURL; ?>images/loading.gif" alt="Please wait" />
 		</div></div>
+		<div style='clear:both'></div>
 	</body>
 </html>

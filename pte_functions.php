@@ -192,26 +192,35 @@ function pte_get_all_alternate_size_information( $id ){
  * Requires post id as $_GET['id']
  */
 function pte_launch(){
-	wp_register_script( 'jquery-tmpl'
-		, PTE_PLUGINURL . 'apps/jquery-tmpl/jquery.tmpl.min.js'
-		, array('jquery')
-		, '1.0.0pre'
-	);
-	wp_register_script( 'pte-log'
-		, PTE_PLUGINURL . 'js/log.js'
-		, false
-		, PTE_VERSION
-	);
-	wp_enqueue_script( 'pte'
-		, PTE_PLUGINURL . 'js/pte.js'
-		, array('jquery','imgareaselect','pte-log', 'jquery-tmpl')
-		, PTE_VERSION
-	);
-	wp_enqueue_style( 'pte'
-		, PTE_PLUGINURL . 'css/pte.css'
-		, array('imgareaselect')
-		, PTE_VERSION
-	);
+	//wp_register_script( 'jquery-tmpl'
+	//   , PTE_PLUGINURL . 'apps/jquery-tmpl/jquery.tmpl.min.js'
+	//   , array('jquery')
+	//   , '1.0.0pre'
+	//);
+	if ( PTE_DEBUG ) {
+		wp_enqueue_script( 'pte'
+			, PTE_PLUGINURL . 'js/pte.full.js'
+			, array('jquery','imgareaselect')
+			, PTE_VERSION
+		);
+		wp_enqueue_style( 'pte'
+			, PTE_PLUGINURL . 'css/pte.css'
+			, array('imgareaselect')
+			, PTE_VERSION
+		);
+	}
+	else { // Minified versions
+		wp_enqueue_script( 'pte'
+			, PTE_PLUGINURL . 'js/pte.full.min.js'
+			, array('jquery','imgareaselect')
+			, PTE_VERSION
+		);
+		wp_enqueue_style( 'pte'
+			, PTE_PLUGINURL . 'css/pte.min.css'
+			, array('imgareaselect')
+			, PTE_VERSION
+		);
+	}
 
 	$id = pte_check_id((int) $_GET['id']);
 

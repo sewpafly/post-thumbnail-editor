@@ -4,60 +4,10 @@ $pte-sizes-container-padding: 15px;
 $table-border:                #ddd;
 
 /* Generated variables */
-$pte-sizes-width: $width - $wp-picture-width - $pte-sizes-container-padding - 2 - 19;
-$pte-sizes-img-width: $pte-sizes-width - 50px;
+$pte-sizes-width: $width - $wp-picture-width - $pte-sizes-container-padding - 4;
+$pte-sizes-img-width: $pte-sizes-width - 35px;
 $green: #38ab36;
 
-			/** BEGIN CSS RESET **/
-			/* http://meyerweb.com/eric/tools/css/reset/ 
-			v2.0 | 20110126
-			License: none (public domain)
-			*/
-
-			html, body, div, span, applet, object, iframe,
-			h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-			a, abbr, acronym, address, big, cite, code,
-			del, dfn, em, img, ins, kbd, q, s, samp,
-			small, strike, strong, sub, sup, tt, var,
-			b, u, i, center,
-			dl, dt, dd, ol, ul, li,
-			fieldset, form, label, legend,
-			table, caption, tbody, tfoot, thead, tr, th, td,
-			article, aside, canvas, details, embed, 
-			figure, figcaption, footer, header, hgroup, 
-			menu, nav, output, ruby, section, summary,
-			time, mark, audio, video {
-				margin: 0;
-				padding: 0;
-				border: 0;
-				font-size: 100%;
-				font: inherit;
-				vertical-align: baseline;
-			}
-			/* HTML5 display-role reset for older browsers */
-			article, aside, details, figcaption, figure, 
-			footer, header, hgroup, menu, nav, section {
-				display: block;
-			}
-			body {
-				line-height: 1;
-			}
-			ol, ul {
-				list-style: none;
-			}
-			blockquote, q {
-				quotes: none;
-			}
-			blockquote:before, blockquote:after,
-			q:before, q:after {
-				content: '';
-				content: none;
-			}
-			table {
-				border-collapse: collapse;
-				border-spacing: 0;
-			}
-			/* END RESET */
 
 a.stage-navigation, a.stage-navigation:visited {
 	color: $green;
@@ -102,12 +52,17 @@ body {
 	max-width: $width;
 	background-color: #efefef;
 	/*position: relative;*/
+	/*border: 1px solid black;*/
 }
 
 #pte-image { 
 	float:left;
 	margin-top: 5px;
 	width: $wp-picture-width + 2;
+	img {
+		display: block;
+		margin: auto;
+	}
 }
 
 @mixin button {
@@ -130,6 +85,7 @@ body {
 	overflow: auto;
 	padding-left: $pte-sizes-container-padding;
 	float: left;
+	width: $pte-sizes-width;
 }
 
 #pte-selectors, #pte-stage2-selectors{
@@ -141,10 +97,11 @@ body {
 	overflow-y: scroll;
 	position: relative;
 	border: 1px solid $table-border;
-	width: $pte-sizes-width;
+	/*width: $pte-sizes-width;*/
+	/*width: 100%;*/
 	img {
-			max-width: $pte-sizes-img-width;
-		}
+		max-width: $pte-sizes-img-width;
+	}
 }
 
 table tr { 
@@ -162,9 +119,9 @@ table td {
 	/*.col1 { */
 	/*width: 50px; */
 	/*}*/
-.col2 { 
-	padding-right: 20px; 
-}
+/*.col2 { */
+/*   padding-right: 20px; */
+/*}*/
 
 .pte-size-label {
 	/*background: #bcbcbc;*/
@@ -227,7 +184,7 @@ table td {
 	width: $width;
 }
 
-#stage2 table {
+table {
 	width: 100%;
 }
 
