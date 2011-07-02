@@ -551,7 +551,7 @@ function pte_confirm_images(){
 		}
 	}
 	// Delete tmpdir
-	unlink( $PTE_TMP_DIR );
+	rmdir( $PTE_TMP_DIR );
 	return pte_json_encode( array( 'success' => "Yay!" ) );
 }
 
