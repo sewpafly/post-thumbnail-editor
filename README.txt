@@ -3,7 +3,7 @@ Contributors: sewpafly
 Donate link: http://github.com/sewpafly/post-thumbnail-editor
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, awesome
 Requires at least: 3.1
-Tested up to: 3.1.4
+Tested up to: 3.2
 Stable tag: trunk
 
 Fed up with the lack of automated tools to properly crop and scale post thumbnails? Maybe this plugin can help.

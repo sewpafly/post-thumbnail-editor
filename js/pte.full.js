@@ -506,14 +506,17 @@
   */
   (function(pte) {
     return pte.admin = function() {
-      var checkExistingThickbox, fixThickbox, image_id, injectPTE, launchPTE, pte_url, thickbox, timeout;
+      var $getLink, checkExistingThickbox, fixThickbox, image_id, injectPTE, launchPTE, pte_url, thickbox, timeout;
       timeout = 300;
       thickbox = "&TB_iframe=true&height=" + pte_tb_height + "&width=" + pte_tb_width;
       image_id = null;
-      pte_url = function() {
+      pte_url = function(override_id) {
         var id;
-        id = image_id || $("#attachment-id").val();
+        id = override_id || image_id || $("#attachment-id").val();
         return "" + ajaxurl + "?action=pte_ajax&pte-action=launch&id=" + id + thickbox;
+      };
+      $getLink = function(id) {
+        return $("<a class=\"thickbox\" href=\"" + (pte_url(id)) + "\">" + objectL10n.PTE + "</a>");
       };
       fixThickbox = function(parent) {
         var height, p$, width;
@@ -541,10 +544,6 @@
         if (window.parent.frames.length > 0) {
           log("Modifying thickbox...");
           __bind(function() {
-            if (!(image_id != null)) {
-              log("Error finding ID...");
-              return;
-            }
             window.parent.tb_click();
             fixThickbox(window.parent);
             return true;
@@ -553,6 +552,14 @@
         }
       };
       injectPTE = function() {
+        $('.media-item').each(function(i, elem) {
+          var post_id;
+          post_id = elem.id.replace("media-item-", "");
+          return $getLink(post_id).css({
+            'font-size': '.8em',
+            'margin-left': '5px'
+          }).click(checkExistingThickbox).appendTo($('tr.image-size th.label', elem));
+        });
         if (imageEdit.open != null) {
           imageEdit.oldopen = imageEdit.open;
           imageEdit.open = function(id, nonce) {
@@ -565,14 +572,14 @@
       };
       launchPTE = function() {
         var $editmenu, selector;
-        selector = "p[id^=\"imgedit-save-target-" + image_id + "\"]";
+        selector = "#imgedit-save-target-" + image_id;
         $editmenu = $(selector);
         if (($editmenu != null ? $editmenu.size() : void 0) < 1) {
           window.log("Edit Thumbnail Menu not visible, waiting for " + timeout + "ms");
           window.setTimeout(launchPTE, timeout);
           return false;
         }
-        return $editmenu.append($("<a class=\"thickbox\" href=\"" + (pte_url()) + "\">" + objectL10n.PTE + "</a>").click(checkExistingThickbox));
+        return $editmenu.append($getLink().click(checkExistingThickbox));
       };
       return injectPTE();
     };
