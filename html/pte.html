@@ -58,10 +58,10 @@
 						</td>
 						<td class="col2">
 								<div class="pte-size-label"><?php print $size_label; ?> <?php
-								print("(${size_array['width']}x${size_array[height]})");
+								print("(${size_array['width']}x${size_array['height']})");
 								print("<br><span class='actual'>Current image: "
-									. $size_array[current][width] . "x" 
-									. $size_array[current][height] . "</span>");
+									. $size_array['current']['width'] . "x" 
+									. $size_array['current']['height'] . "</span>");
 								?></div>
 								<img src="<?php print( $size_array['current']['url'] . "?" . mt_rand() ); ?>"/><br/>
 						</td>
