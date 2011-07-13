@@ -405,7 +405,7 @@ function pte_resize_images(){
 	$original_size  = @getimagesize( $original_file );
 	$uploads 	    = wp_upload_dir();
 	$PTE_TMP_DIR    = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR;
-	$PTE_TMP_URL    = $uploads['baseurl'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR;
+	$PTE_TMP_URL    = $uploads['baseurl'] . "/ptetmp/";
 
 	if ( !$original_size ){
 		return pte_json_error("Could not read image size");
@@ -424,7 +424,7 @@ function pte_resize_images(){
 		$basename = pte_generate_filename( $original_file, $dst_w, $dst_h );
 		// Set the file and URL's - defines set in pte_ajax
 		$tmpfile  = "{$PTE_TMP_DIR}{$id}" . DIRECTORY_SEPARATOR . "{$basename}";
-		$tmpurl   = "{$PTE_TMP_URL}{$id}" . DIRECTORY_SEPARATOR . "{$basename}";
+		$tmpurl   = "{$PTE_TMP_URL}{$id}/{$basename}";
 
 		// === CREATE IMAGE ===================
 		$image = pte_create_image( $original_image, $orig_type,
