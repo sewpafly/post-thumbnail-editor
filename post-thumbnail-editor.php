@@ -114,6 +114,9 @@ function pte_ajax(){
 }
 
 function pte_media_row_actions($actions, $post, $detached){
+	if ( !current_user_can( 'edit_post', $post->ID ) ){
+		return actions;
+	}
 	$pte_url = admin_url('admin-ajax.php') 
 		. "?action=pte_ajax&pte-action=launch&id=" 
 		. $post->ID

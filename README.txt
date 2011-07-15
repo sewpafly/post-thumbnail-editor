@@ -25,6 +25,21 @@ To meet the needs of themes where the post-thumbnails have random and capricious
 
 == Frequently Asked Questions ==
 
+= Usage =
+
+1. Start with the Media Library
+	1. Open Media Library
+	2. Click the "Thumbnail" link in the rollover options.
+2. or start within image editor interface (when viewing image details)
+	1. Click "Edit Image"
+	2. Click the "Post Thumbnail Editor" link under the other thumbnail options.
+3. Using Post Thumbnail Editor Interface
+	1. Select the thumbnails you want to edit. If a thumbnail defines a specific aspect ratio it will be applied to the editor.  If you select thumbnails with more than 1 different aspect ratios, this feature is disabled.  Be careful or you might make some of your pictures look funny.
+	2. Select the cropped/scaled area, by clicking and dragging on the left-hand image. 
+	3. Click "Create Thumbnails" -- this button is only enabled if you have thumbnails selected and a crop area defined.
+	4. Thumbnail Preview: select all the thumbnails you want to keep and click "Okay, these look good".
+4. It's possible that you might have to refresh the cache (ctrl+f5 on the page) to see changes, but they should be there.
+
 = Did you even test this? =
 
 Yes. No. Sort of. Thanks for asking. But [let me know if you're having problems](https://github.com/sewpafly/post-thumbnail-editor/issues) and I'll see what I can do.
@@ -79,26 +94,4 @@ Change thumbnails aspect ratio (only works for medium/large. Will work for thumb
 
 = 0.1.1 =
 This version fixes a IE8/firefox javascript error.
-
-== Use ==
-
-= Use with the Media Library =
-
-1. Open Media Library
-2. Click the "Thumbnail" link in the rollover options.
-
-= Use with the Edit Image =
-
-This method works with both Edit Image methods (The main Media Library & the Post Editing Media Library)
-
-1. Click "Edit Image"
-2. Click the "Post Thumbnail Editor" link under the other thumbnail options.
-
-= Post Thumbnail Editor Interface =
-
-1. Select the thumbnails you want to edit. If a thumbnail defines a specific aspect ratio it will be applied to the editor.  If you select thumbnails with more than 1 different aspect ratios, this features is disabled.  Be careful or you might make some of your pictures look funny.
-2. After you select the cropped/scaled area, click "Create Thumbnails".
-3. Select all the thumbnails you want to keep and click "Okay, these look good".
-
-It's possible that you might have to refresh the cache (ctrl+f5 on the page) to see changes, but they should be there.
 

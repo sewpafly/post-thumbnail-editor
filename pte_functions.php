@@ -244,6 +244,10 @@ function pte_check_id( $id ){
 		pte_add_error( "Invalid id: {$id}" );
 		return false;
 	}
+	if ( !current_user_can( 'edit_post', $id ) ){
+		pte_add_error( "User does not have permission to edit this item" );
+		return false;
+	}
 	return $id;
 }
 
