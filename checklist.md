@@ -20,4 +20,7 @@
 5. Test on Firefox, Chrome, Safari, IE7/8/9 & Linux/Windows/Mac
    * Do the rows change color on selection?
    * Does the height get set correctly?
+6. Tag the git release
+   * `git tag [-a -m 'annotated tag'] version`
+	* `git push --tags`
 

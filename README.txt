@@ -3,7 +3,7 @@ Contributors: sewpafly
 Donate link: http://github.com/sewpafly/post-thumbnail-editor
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, awesome
 Requires at least: 3.1
-Tested up to: 3.2
+Tested up to: 3.2.1
 Stable tag: trunk
 
 Fed up with the lack of automated tools to properly crop and scale post thumbnails? Maybe this plugin can help.
@@ -62,7 +62,7 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Changelog ==
 
-= 1.0-beta =
+= 1.0.0 =
 * Total redesign of PHP/HTML interface
 * Allows editing multiple images
 * Switch from fancybox to wordpress' included thickbox
@@ -79,7 +79,7 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Upgrade Notice ==
 
-= 1.0-beta =
+= 1.0.0 =
 Now with more awesome.  Redesigned interface will challenge your perceptions of the universe.
 
 = 0.2.2 =
