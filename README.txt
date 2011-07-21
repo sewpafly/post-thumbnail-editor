@@ -1,6 +1,6 @@
 === Post Thumbnail Editor ===
 Contributors: sewpafly
-Donate link: http://github.com/sewpafly/post-thumbnail-editor
+Donate link: https://www.wepay.com/donate/34543
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, awesome
 Requires at least: 3.1
 Tested up to: 3.2.1
