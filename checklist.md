@@ -20,7 +20,9 @@
 5. Test on Firefox, Chrome, Safari, IE7/8/9 & Linux/Windows/Mac
    * Do the rows change color on selection?
    * Does the height get set correctly?
+   * Does enabling the ad rotate plugin cause any problems?
 6. Tag the git release
+   * `git commit -a -m "Commit msg"`
    * `git tag [-a -m 'annotated tag'] version`
-	* `git push --tags`
+   * `git push --tags`
 

@@ -3,7 +3,7 @@
    Plugin URI: http://wordpress.org/extend/plugins/post-thumbnail-editor/
    Author: sewpafly
    Author URI: http://sewpafly.github.com/post-thumbnail-editor
-   Version: 1.0.0
+   Version: 1.0.1-alpha
    Description: Individually manage your post thumbnails
 
     LICENSE
@@ -34,7 +34,7 @@
  */
 define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
 define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
-define( 'PTE_VERSION', "1.0.0");
+define( 'PTE_VERSION', "1.0.1-alpha");
 define( 'PTE_TB_WIDTH', 750 ); // Only edit this if you feel like living dangerously... Thar be dragons...
 define( 'PTE_TB_HEIGHT', 550 ); // This could go larger but I wouldn't go much smaller
 										  // Pictures take up 400px with the header and potential error space

@@ -9,12 +9,14 @@
 		<?php wp_print_styles(); ?>
 		<?php wp_print_scripts(); ?>
 		<script type="text/javascript" charset="utf-8">
-			ajaxurl        = '<?php echo admin_url('admin-ajax.php'); ?>';
-			thumbnail_info = <?php print(json_encode($size_information)); ?>;
-			jQuery(function(){ pte.editor(); });<?php
-			if ( PTE_DEBUG ) {
-				print( "debug_enabled = true;" );
+			var ajaxurl        = '<?php echo admin_url('admin-ajax.php'); ?>';
+			var thumbnail_info = <?php print(json_encode($size_information)); ?>;
+			var pte_tb_width   = <?php print( PTE_TB_WIDTH ); ?>;
+			var pte_tb_height  = <?php print( PTE_TB_HEIGHT ); ?>;
+			<?php if ( PTE_DEBUG ) {
+				print( "var debug_enabled = true;\n" );
 			} ?>
+			jQuery(function(){ pte.editor(); });
 		</script>
 	</head>
 	<body>

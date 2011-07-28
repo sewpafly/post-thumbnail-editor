@@ -488,6 +488,40 @@
   window = this;
   $ = window.jQuery;
   window.pte = pte = pte || {};
+  (function(pte) {
+    return pte.fixThickbox = function(parent) {
+      var $p, $thickbox, height, width;
+      $p = parent.jQuery;
+      if ($p === null || parent.frames.length < 1) {
+        return;
+      }
+      log("Fixing thickbox");
+      width = pte_tb_width + 30;
+      height = pte_tb_height + 38;
+      $thickbox = $p("#TB_window");
+      if ($thickbox.width() >= width && $thickbox.height() >= height) {
+        return;
+      }
+      log("THICKBOX: " + ($thickbox.width()) + " x " + ($thickbox.height()));
+      $thickbox.css({
+        'margin-left': 0 - (width / 2),
+        'width': width,
+        'height': height
+      }).children("iframe").css({
+        'width': width
+      });
+      return parent.setTimeout(function() {
+        if ($p("iframe", $thickbox).height() > height) {
+          return;
+        }
+        $p("iframe", $thickbox).css({
+          'height': height
+        });
+        log("THICKBOX: " + ($thickbox.width()) + " x " + ($thickbox.height()));
+        return true;
+      }, 1000);
+    };
+  })(pte);
   window.log = function(obj) {
     if (!window.debug_enabled) {
       return true;
@@ -506,7 +540,7 @@
   */
   (function(pte) {
     return pte.admin = function() {
-      var $getLink, checkExistingThickbox, fixThickbox, image_id, injectPTE, launchPTE, pte_url, thickbox, timeout;
+      var $getLink, checkExistingThickbox, image_id, injectPTE, launchPTE, pte_url, thickbox, timeout;
       timeout = 300;
       thickbox = "&TB_iframe=true&height=" + pte_tb_height + "&width=" + pte_tb_width;
       image_id = null;
@@ -518,34 +552,12 @@
       $getLink = function(id) {
         return $("<a class=\"thickbox\" href=\"" + (pte_url(id)) + "\">" + objectL10n.PTE + "</a>");
       };
-      fixThickbox = function(parent) {
-        var height, p$, width;
-        p$ = parent.jQuery;
-        if (p$ === null) {
-          return;
-        }
-        log("Got thickbox");
-        width = pte_tb_width + 40;
-        height = pte_tb_height;
-        thickbox = p$("#TB_window").css({
-          'margin-left': 0 - (width / 2),
-          'width': width
-        }).children("iframe").css({
-          'width': width
-        });
-        return parent.setTimeout(function() {
-          return p$("iframe", thickbox).css({
-            height: height + 100
-          });
-        }, 1000);
-      };
       checkExistingThickbox = function(e) {
         log("Start PTE...");
         if (window.parent.frames.length > 0) {
           log("Modifying thickbox...");
           __bind(function() {
             window.parent.tb_click();
-            fixThickbox(window.parent);
             return true;
           }, this)();
           return e.stopPropagation();
@@ -711,11 +723,13 @@
       reflow = new TimerFunc(function() {
         var offset, window_height;
         log("reflow called...");
+        pte.fixThickbox(window.parent);
         offset = $("#pte-sizes").offset();
         window_height = $(window).height() - offset.top - 2;
         return $("#pte-sizes").height(window_height);
       }, 100);
-      return $(window).resize(reflow.doFunc).load(reflow.doFunc);
+      $(window).resize(reflow.doFunc).load(reflow.doFunc);
+      return true;
     };
     addRowListeners = function() {
       var enableRowFeatures;

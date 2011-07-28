@@ -59,8 +59,12 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 3. In the Edit subpage for media locate the box titled "Thumbnail Settings", and click the link to "Post Thumbnail Editor".
 4. Crop the image as you see fit and click "Create Thumbnails".
 5. Verify you want to keep the resized/recropped images by clicking "Okay, these look good..."
+6. Shortcut to edit the thumbnails from the picture metadata screen.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed compatibility with other thickbox enabled plugins that called the wordpress media scripts.
 
 = 1.0.0 =
 * Total redesign of PHP/HTML interface
@@ -78,6 +82,9 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 * Initial cut
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Fixed incompatibility with other thickbox enabled plugins.
 
 = 1.0.0 =
 Now with more awesome.  Redesigned interface will challenge your perceptions of the universe.

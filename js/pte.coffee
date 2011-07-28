@@ -123,12 +123,14 @@ do (pte) ->
 	setPageHeight = ->
 		reflow = new TimerFunc ->
 			log "reflow called..."
+			pte.fixThickbox window.parent
 			offset = $("#pte-sizes").offset()
 			window_height = $(window).height() - offset.top - 2
 			$("#pte-sizes").height window_height
 		, 100
 		# Add to the resize and load events
 		$(window).resize(reflow.doFunc).load(reflow.doFunc)
+		true
 
 
 	# ===========================================================
