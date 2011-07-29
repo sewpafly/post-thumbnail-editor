@@ -65,6 +65,7 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 = 1.0.1 =
 * Fixed compatibility with other thickbox enabled plugins that called the wordpress media scripts.
+* Added Options screen (Settings -> Post Thumbnail Editor) to configure thickbox dimensions and enable/disable debugging.
 
 = 1.0.0 =
 * Total redesign of PHP/HTML interface
@@ -84,7 +85,7 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 == Upgrade Notice ==
 
 = 1.0.1 =
-Fixed incompatibility with other thickbox enabled plugins.
+Added options menu and fixed incompatibility with other thickbox enabled plugins.
 
 = 1.0.0 =
 Now with more awesome.  Redesigned interface will challenge your perceptions of the universe.

@@ -192,12 +192,13 @@ function pte_get_all_alternate_size_information( $id ){
  * Requires post id as $_GET['id']
  */
 function pte_launch(){
+	$options = pte_get_options();
 	//wp_register_script( 'jquery-tmpl'
 	//   , PTE_PLUGINURL . 'apps/jquery-tmpl/jquery.tmpl.min.js'
 	//   , array('jquery')
 	//   , '1.0.0pre'
 	//);
-	if ( PTE_DEBUG ) {
+	if ( $options['pte_debug'] ) {
 		wp_enqueue_script( 'pte'
 			, PTE_PLUGINURL . 'js/pte.full.js'
 			, array('jquery','imgareaselect')

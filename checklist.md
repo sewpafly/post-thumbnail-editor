@@ -10,7 +10,6 @@
    * concatenates into one file
 3. Update post-thumbnail-editor.php
    * Change the version information in 2 places
-   * Set `PTE_DEBUG` to false (switch from dev files to minified ones)
 4. Modify README.txt
    * Update the requires/tested version information
    * Update the Upgrade Notice

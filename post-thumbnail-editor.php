@@ -35,13 +35,32 @@
 define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
 define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
 define( 'PTE_VERSION', "1.0.1-alpha");
-define( 'PTE_TB_WIDTH', 750 ); // Only edit this if you feel like living dangerously... Thar be dragons...
-define( 'PTE_TB_HEIGHT', 550 ); // This could go larger but I wouldn't go much smaller
-										  // Pictures take up 400px with the header and potential error space
-										  // 600 seems the best safe number. 
-										  // Difficult to say with different screen heights
 
-define( 'PTE_DEBUG', false );  // Eventually add a control panel option for this
+
+function pte_get_option_name(){
+	global $current_user;
+	if ( ! isset( $current_user ) ){
+		get_currentuserinfo();
+	}
+	return "pte-option-{$current_user->ID}";
+}
+
+function pte_get_options(){
+	global $pte_options, $current_user;
+	if ( isset( $pte_options ) ){
+		return $pte_options;
+	}
+
+	$pte_options = get_option( pte_get_option_name() );
+
+	if ( !( is_array( $pte_options ) and count( $pte_options ) > 0 ) ){
+		$pte_options = array( 'pte_tb_width' => 750
+			, 'pte_tb_height' => 550
+			, 'pte_debug' => false
+		);
+	}
+	return $pte_options;
+}
 
 /*
  * Put Hooks and immediate hook functions in this file
@@ -55,8 +74,9 @@ function pte_enable_thickbox(){
 
 function pte_admin_media_scripts(){
 	pte_enable_thickbox();
+	$options = pte_get_options();
 
-	if ( PTE_DEBUG ){
+	if ( $options['pte_debug'] ){
 		wp_enqueue_script( 'pte'
 			, PTE_PLUGINURL . 'js/pte.full.js'
 			, array('jquery')
@@ -78,9 +98,11 @@ function pte_admin_media_scripts(){
 }
 
 function pte_enable_admin_js(){
-	$debug = PTE_DEBUG ? "var debug_enabled = true;" : "";
-	$pte_tb_width = PTE_TB_WIDTH;
-	$pte_tb_height = PTE_TB_HEIGHT;
+	$options = pte_get_options();
+	$debug = $options['pte_debug'] ? "var debug_enabled = true;" : "";
+	$options = pte_get_options();
+	$pte_tb_width = $options['pte_tb_width'];
+	$pte_tb_height = $options['pte_tb_height'];
 	echo <<<EOT
 		<script type="text/javascript">
 			{$debug}
@@ -114,16 +136,40 @@ function pte_ajax(){
 }
 
 function pte_media_row_actions($actions, $post, $detached){
+	// Add capability check
 	if ( !current_user_can( 'edit_post', $post->ID ) ){
 		return $actions;
 	}
+	$options = pte_get_options();
 	$pte_url = admin_url('admin-ajax.php') 
 		. "?action=pte_ajax&pte-action=launch&id=" 
 		. $post->ID
-		. "&TB_iframe=true&height=". PTE_TB_HEIGHT ."&width=". PTE_TB_WIDTH;
+		. "&TB_iframe=true&height={$options['pte_tb_height']}&width={$options['pte_tb_width']}";
 	$actions['pte'] = "<a class='thickbox' href='${pte_url}' title='Edit Thumbnails'>Thumbnails</a>";
 	return $actions;
 }
+
+function pte_admin_menu(){
+	add_options_page( __('Post Thumbnail Editor') . "-title",
+		__('Post Thumbnail Editor'),
+		'edit_posts', // Set the capability to null as every user can have different settings set
+		'pte',
+		function(){ require_once( PTE_PLUGINPATH . 'options.php' ); pte_options_page(); }
+	);
+}
+
+function pte_options(){
+	require_once( PTE_PLUGINPATH . 'options.php' );
+	pte_options_init();
+}
+
+/* Add Settings Page */
+add_action( 'admin_menu', 'pte_admin_menu' );
+add_action( 'settings_page_pte', 'pte_options' );
+add_action( 'load-options.php', 'pte_options' );
+//add_action( 'admin_init', 'pte_options' );
+/** End Settings Hooks **/
+
 
 /* This is the main admin media page */
 add_action('admin_print_styles-media.php', 'pte_admin_media_scripts');

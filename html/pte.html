@@ -11,9 +11,9 @@
 		<script type="text/javascript" charset="utf-8">
 			var ajaxurl        = '<?php echo admin_url('admin-ajax.php'); ?>';
 			var thumbnail_info = <?php print(json_encode($size_information)); ?>;
-			var pte_tb_width   = <?php print( PTE_TB_WIDTH ); ?>;
-			var pte_tb_height  = <?php print( PTE_TB_HEIGHT ); ?>;
-			<?php if ( PTE_DEBUG ) {
+			var pte_tb_width   = <?php print( $options['pte_tb_width'] ); ?>;
+			var pte_tb_height  = <?php print( $options['pte_tb_height'] ); ?>;
+			<?php if ( $options['pte_debug'] ) {
 				print( "var debug_enabled = true;\n" );
 			} ?>
 			jQuery(function(){ pte.editor(); });
