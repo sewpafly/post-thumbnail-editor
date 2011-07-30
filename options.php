@@ -6,7 +6,7 @@ function pte_options_init(){
 		pte_get_option_name(),
 		'pte_options_validate' );
 
-	add_settings_section( 'pte_main', __('Options'), '', 'pte' );
+	add_settings_section( 'pte_main', __('Options'), function(){}, 'pte' );
 	
 	add_settings_field( 'pte_dimensions', 
 		__('Thickbox dimensions'), 
