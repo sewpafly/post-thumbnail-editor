@@ -76,7 +76,9 @@ function pte_add_error($error){
  */
 function pte_filter_sizes( $element ){
 	global $pte_sizes;
-	if ( is_array( $pte_sizes ) && !in_array( $element, $pte_sizes )
+	$options = pte_get_options();
+	if ( ( is_array( $pte_sizes ) && !in_array( $element, $pte_sizes ) ) // is the element in the pte_sizes array
+		or ( in_array( $element, $options['pte_hidden_sizes'] ) )
 	){
 		return false;
 	}
@@ -93,12 +95,19 @@ function pte_filter_sizes( $element ){
  *
  * Thanks to the ajax_thumbnail_rebuild plugin
  */
-function pte_get_alternate_sizes(){
+function pte_get_alternate_sizes($filter=true){
 	//Put in some code to check if it's already been called...
 	global $_wp_additional_image_sizes, $pte_gas;
 	if ( !isset($pte_gas) ){
 		$pte_gas = array();
-		foreach (array_filter( get_intermediate_image_sizes(), 'pte_filter_sizes' ) as $s){
+		$sizes = array();
+		if ($filter){
+			$sizes = array_filter( get_intermediate_image_sizes(), 'pte_filter_sizes' );
+		}
+		else{
+			$sizes = get_intermediate_image_sizes();
+		}
+		foreach ($sizes as $s){
 			if ( isset( $_wp_additional_image_sizes[$s]['width'] ) ) // For theme-added sizes
 				$width = intval( $_wp_additional_image_sizes[$s]['width'] );
 			else                                                     // For default sizes set in options

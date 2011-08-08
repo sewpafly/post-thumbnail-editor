@@ -73,12 +73,13 @@ determineAspectRatio = (current_ar, size) ->
 	height = +height
 	gc = gcd width, height
 	if crop? and crop > 0
-		tmp_ar = null
-		if (width? > 0 and height? > 0) 
+		tmp_ar = window.options.pte_ar[size] ? null
+		if (not tmp_ar? and width? > 0 and height? > 0)
 			if gc?
 				tmp_ar = "#{ width / gc }:#{ height / gc }"
 			else
 				tmp_ar = "#{ width }:#{ height }"
+		log """AR: #{ tmp_ar }"""
 		if current_ar? and tmp_ar? and tmp_ar isnt current_ar
 			#alert "2 images are trying to set different aspect ratios, disabling..."
 			throw "Too many Aspect Ratios. Disabling"

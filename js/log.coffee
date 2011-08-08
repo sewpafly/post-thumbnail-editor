@@ -1,5 +1,5 @@
 window.log = (obj) ->
-	return true if not window.debug_enabled
+	return true if not window.options.pte_debug
 	try
 		console.log obj
 	catch error

@@ -7,7 +7,7 @@ do (pte) ->
 
 	pte.admin = ->
 		timeout = 300
-		thickbox = """&TB_iframe=true&height=#{ pte_tb_height }&width=#{ pte_tb_width }"""
+		thickbox = """&TB_iframe=true&height=#{ window.options.pte_tb_height }&width=#{ window.options.pte_tb_width }"""
 		image_id = null
 		pte_url = (override_id) ->
 			id = override_id || image_id || $("#attachment-id").val()

@@ -3,7 +3,7 @@
    Plugin URI: http://wordpress.org/extend/plugins/post-thumbnail-editor/
    Author: sewpafly
    Author URI: http://sewpafly.github.com/post-thumbnail-editor
-   Version: 1.0.1-alpha
+   Version: 1.0.1-alpha2
    Description: Individually manage your post thumbnails
 
     LICENSE
@@ -34,7 +34,7 @@
  */
 define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
 define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
-define( 'PTE_VERSION', "1.0.1-alpha");
+define( 'PTE_VERSION', "1.0.1-alpha2");
 
 
 function pte_get_option_name(){
@@ -45,20 +45,37 @@ function pte_get_option_name(){
 	return "pte-option-{$current_user->ID}";
 }
 
+function pte_get_user_options(){
+	$pte_options = get_option( pte_get_option_name() );
+	if ( !is_array( $pte_options ) ){
+		$pte_options = array();
+	}
+	$defaults = array( 'pte_tb_width' => 750
+		, 'pte_tb_height' => 550
+		, 'pte_debug' => false
+	);
+	return array_merge( $defaults, $pte_options );
+}
+
+function pte_get_site_options(){
+	$pte_site_options = get_option( 'pte-site-options' );
+	if ( !is_array( $pte_site_options ) ){
+		$pte_site_options = array();
+	}
+	$defaults = array( 'pte_hidden_sizes' => array()
+		, 'pte_ar' => array()
+	);
+	return array_merge( $defaults, $pte_site_options );
+}
+
 function pte_get_options(){
 	global $pte_options, $current_user;
 	if ( isset( $pte_options ) ){
 		return $pte_options;
 	}
 
-	$pte_options = get_option( pte_get_option_name() );
+	$pte_options = array_merge( pte_get_user_options(), pte_get_site_options() );
 
-	if ( !( is_array( $pte_options ) and count( $pte_options ) > 0 ) ){
-		$pte_options = array( 'pte_tb_width' => 750
-			, 'pte_tb_height' => 550
-			, 'pte_debug' => false
-		);
-	}
 	return $pte_options;
 }
 
@@ -98,16 +115,10 @@ function pte_admin_media_scripts(){
 }
 
 function pte_enable_admin_js(){
-	$options = pte_get_options();
-	$debug = $options['pte_debug'] ? "var debug_enabled = true;" : "";
-	$options = pte_get_options();
-	$pte_tb_width = $options['pte_tb_width'];
-	$pte_tb_height = $options['pte_tb_height'];
+	$options = json_encode( pte_get_options() );
 	echo <<<EOT
 		<script type="text/javascript">
-			{$debug}
-			var pte_tb_width = {$pte_tb_width};
-			var pte_tb_height = {$pte_tb_height};
+			var options = {$options};
 			jQuery( function(){ pte.admin(); } );
 		</script>
 EOT;

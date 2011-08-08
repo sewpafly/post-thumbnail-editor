@@ -496,8 +496,8 @@
         return;
       }
       log("Fixing thickbox");
-      width = pte_tb_width + 30;
-      height = pte_tb_height + 38;
+      width = window.options.pte_tb_width + 30;
+      height = window.options.pte_tb_height + 38;
       $thickbox = $p("#TB_window");
       if ($thickbox.width() >= width && $thickbox.height() >= height) {
         return;
@@ -523,7 +523,7 @@
     };
   })(pte);
   window.log = function(obj) {
-    if (!window.debug_enabled) {
+    if (!window.options.pte_debug) {
       return true;
     }
     try {
@@ -542,7 +542,7 @@
     return pte.admin = function() {
       var $getLink, checkExistingThickbox, image_id, injectPTE, launchPTE, pte_url, thickbox, timeout;
       timeout = 300;
-      thickbox = "&TB_iframe=true&height=" + pte_tb_height + "&width=" + pte_tb_width;
+      thickbox = "&TB_iframe=true&height=" + window.options.pte_tb_height + "&width=" + window.options.pte_tb_width;
       image_id = null;
       pte_url = function(override_id) {
         var id;
@@ -671,21 +671,22 @@
     return a;
   };
   determineAspectRatio = function(current_ar, size) {
-    var crop, gc, height, tmp_ar, width, _ref;
+    var crop, gc, height, tmp_ar, width, _ref, _ref2;
     _ref = thumbnail_info[size], crop = _ref.crop, width = _ref.width, height = _ref.height;
     crop = +crop;
     width = +width;
     height = +height;
     gc = gcd(width, height);
     if ((crop != null) && crop > 0) {
-      tmp_ar = null;
-      if ((width != null) > 0 && (height != null) > 0) {
+      tmp_ar = (_ref2 = window.options.pte_ar[size]) != null ? _ref2 : null;
+      if (!(tmp_ar != null) && (width != null) > 0 && (height != null) > 0) {
         if (gc != null) {
           tmp_ar = "" + (width / gc) + ":" + (height / gc);
         } else {
           tmp_ar = "" + width + ":" + height;
         }
       }
+      log("AR: " + tmp_ar);
       if ((current_ar != null) && (tmp_ar != null) && tmp_ar !== current_ar) {
         throw "Too many Aspect Ratios. Disabling";
       }

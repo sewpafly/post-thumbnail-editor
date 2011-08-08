@@ -11,8 +11,8 @@ do(pte) ->
 		log "Fixing thickbox"
 
 		# How big should the window be
-		width = pte_tb_width + 30
-		height = pte_tb_height + 38
+		width = window.options.pte_tb_width + 30
+		height = window.options.pte_tb_height + 38
 
 		$thickbox = $p("#TB_window")
 		if $thickbox.width() >= width and $thickbox.height() >= height
