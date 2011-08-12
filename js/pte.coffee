@@ -12,6 +12,7 @@ window.randomness = ->
 	Math.floor(Math.random()*1000001).toString(16)
 
 window.debugTmpl = (data) ->
+	log "===== TEMPLATE DEBUG DATA FOLLOWS ====="
 	log data
 	true
 
@@ -30,7 +31,6 @@ window.goBack = (e) ->
 			$(this).animate
 				left: 0
 			, 500, 'swing', ->
-				log "okay cleanup"
 				# send cleanup request
 				delete_options =
 					"id": $('#pte-post-id').val()
@@ -44,10 +44,8 @@ window.goBack = (e) ->
 					global: false
 					dataType: "json"
 					success: (data, status, xhr) -> 
-						if data.error?
-							log data.error
-						else
-							log "Deleted tmp files"
+						log "===== DELETE SUCCESSFUL, DATA DUMP FOLLOWS ====="
+						log data
 
 
 
@@ -79,7 +77,6 @@ determineAspectRatio = (current_ar, size) ->
 				tmp_ar = "#{ width / gc }:#{ height / gc }"
 			else
 				tmp_ar = "#{ width }:#{ height }"
-		log """AR: #{ tmp_ar }"""
 		if current_ar? and tmp_ar? and tmp_ar isnt current_ar
 			#alert "2 images are trying to set different aspect ratios, disabling..."
 			throw "Too many Aspect Ratios. Disabling"
@@ -101,7 +98,6 @@ do (pte) ->
 		# ===========================================================
 		$loading_screen = $('#pte-loading')
 		closeLoadingScreen = ->
-			log "Closing load screen"
 			$loading_screen.hide()
 			true
 		$('#pte-preview').load closeLoadingScreen
@@ -123,7 +119,7 @@ do (pte) ->
 	# Sets a timeout to be a little bit more responsive
 	setPageHeight = ->
 		reflow = new TimerFunc ->
-			log "reflow called..."
+			log "===== REFLOW ====="
 			pte.fixThickbox window.parent
 			offset = $("#pte-sizes").offset()
 			window_height = $(window).height() - offset.top - 2
@@ -172,17 +168,15 @@ do (pte) ->
 		instance: true
 		onSelectEnd: (img, s) ->
 			if s.width && s.width > 0 and s.height && s.height > 0 and $('.pte-size').filter(':checked').size() > 0
-				log "Enabling button"
 				$('#pte-submit').removeAttr('disabled')
 			else
-				log "Disabling button"
 				$('#pte-submit').attr('disabled', true)
 
 
 	initImgAreaSelect = ->
 		ias_instance = $('#pte-image img').imgAreaSelect ias_defaults
 	iasSetAR = (ar) ->
-		log "setting aspectRatio: #{ ar }"
+		log "===== SETTING ASPECTRATIO: #{ ar } ====="
 		ias_instance.setOptions
 			aspectRatio: ar
 		ias_instance.update()
@@ -194,13 +188,9 @@ do (pte) ->
 	# Setting aspectRatio
 	# This is what happens when a box is checked
 	# Functional call to reduce would work well here (underscore.js)
-	#
-	# TODO: Fix when ar is disabled, don't tell the user until you renable it 
-	#       and disable it again
 	# ===========================================================
 	addRowListener = ->
 		pteCheckHandler = new TimerFunc ->
-			#log "# checked: #{ $('.pte-size:checked').size() }"
 			ar = null
 			selected_elements = $('input.pte-size').filter(':checked').each (i,elem) ->
 				try
@@ -221,12 +211,11 @@ do (pte) ->
 
 
 	# ===========================================================
-	### Callback for resizing images (Stage 1 to 2) ###
+	# Callback for resizing images (Stage 1 to 2) ###
 	# ===========================================================
 	# What do you do when you click submit --> onResizeImages
 	addSubmitListener = ->
 		$('#pte-submit').click (e) ->
-			log "Clicked Submit..."
 			selection = ias_instance.getSelection()
 			scale_factor = $('#pte-sizer').val()
 			submit_data = 
@@ -240,6 +229,7 @@ do (pte) ->
 				'y': Math.floor(selection.y1/scale_factor)
 				'w': Math.floor(selection.width/scale_factor)
 				'h': Math.floor(selection.height/scale_factor)
+			log "===== RESIZE-IMAGES ====="
 			log submit_data
 			ias_instance.setOptions 
 				hide: true
@@ -256,6 +246,7 @@ do (pte) ->
 
 		onResizeImages = (data, status, xhr) ->
 			### Evaluate data ###
+			log "===== RESIZE-IMAGES SUCCESS ====="
 			log data
 			if data.error? and not data.thumbnails?
 				alert(data.error)
@@ -281,7 +272,6 @@ do (pte) ->
 	# ===========================================================
 	addVerifyListener = ->
 		$('#pte-confirm').live 'click', (e) ->
-			log "Confirming"
 			thumbnail_data = {}
 			$('input.pte-confirm').filter(':checked').each (i, elem) ->
 				size = $(elem).val()
@@ -292,10 +282,12 @@ do (pte) ->
 				'pte-action':    'confirm-images'
 				'pte-nonce':     $('#pte-nonce').val()
 				'pte-confirm':   thumbnail_data
+			log "===== CONFIRM-IMAGES ====="
 			log submit_data
 			$.getJSON(ajaxurl, submit_data, onConfirmImages)
 
 		onConfirmImages = (data, status, xhr) ->
+			log "===== CONFIRM-IMAGES SUCCESS ====="
 			log data
 			$('#stage2').animate
 				left: -$(window).width()
@@ -320,13 +312,11 @@ do (pte) ->
 			e?.preventDefault()
 			elements = e.data?.selector ? '.pte-size'
 			#$('.pte-size').filter(':checked').click()
-			#log elements
 			$(elements).filter(':checked').click()
 
 		checkAllSizes = (e) ->
 			e?.preventDefault()
 			elements = e?.data?.selector ? '.pte-size'
-			#log elements
 			#$('.pte-size').not(':checked').click()
 			$(elements).not(':checked').click()
 

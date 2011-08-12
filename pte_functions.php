@@ -1,4 +1,5 @@
 <?php
+require_once( "pte_classes.php" );
 
 function pte_require_json() {
 	if ( function_exists( 'ob_start' ) ){
@@ -8,6 +9,7 @@ function pte_require_json() {
 
 /*
  * This is used to output JSON
+ * - Calling this should return all the way up the chain...
  */
 function pte_json_encode($mixed = null){
 	global $pte_errors;
@@ -42,7 +44,7 @@ function pte_json_encode($mixed = null){
 }
 
 /*
- * pte_json_error
+ * pte_json_error - Calling this should return all the way up the chain...
  */
 function pte_json_error($error){
 	pte_add_error( $error );
@@ -54,6 +56,7 @@ function pte_json_error($error){
  */
 function pte_add_error($error){
 	global $pte_errors;
+	// If pte_errors doesn't exist, initialize it
 	if ( ! isset( $pte_errors ) || ! is_array( $pte_errors ) ){
 		$pte_errors = array();
 	}
@@ -202,16 +205,16 @@ function pte_get_all_alternate_size_information( $id ){
  */
 function pte_launch(){
 	$options = pte_get_options();
-	//wp_register_script( 'jquery-tmpl'
-	//   , PTE_PLUGINURL . 'apps/jquery-tmpl/jquery.tmpl.min.js'
-	//   , array('jquery')
-	//   , '1.0.0pre'
-	//);
 	if ( $options['pte_debug'] ) {
 		wp_enqueue_script( 'pte'
 			, PTE_PLUGINURL . 'js/pte.full.js'
 			, array('jquery','imgareaselect')
 			, PTE_VERSION
+		);
+		wp_enqueue_script( 'jquery-json'
+			, PTE_PLUGINURL . 'apps/jquery.json-2.2.min.js'
+			, array('jquery')
+			, '2.2'
 		);
 		wp_enqueue_style( 'pte'
 			, PTE_PLUGINURL . 'css/pte.css'
@@ -588,3 +591,5 @@ function pte_delete_images()
 	unlink( $PTE_TMP_DIR );
 	return pte_json_encode( array( "success" => "Yay!" ) );
 }
+
+?>

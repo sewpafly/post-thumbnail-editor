@@ -483,7 +483,7 @@
 	}
 })( jQuery );
 (function() {
-  var $, TimerFunc, determineAspectRatio, gcd, pte, window;
+  var $, Message, TimerFunc, determineAspectRatio, gcd, pte, toType, window;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   window = this;
   $ = window.jQuery;
@@ -495,7 +495,7 @@
       if ($p === null || parent.frames.length < 1) {
         return;
       }
-      log("Fixing thickbox");
+      log("===== FIXING THICKBOX =====");
       width = window.options.pte_tb_width + 30;
       height = window.options.pte_tb_height + 38;
       $thickbox = $p("#TB_window");
@@ -522,17 +522,118 @@
       }, 1000);
     };
   })(pte);
-  window.log = function(obj) {
-    if (!window.options.pte_debug) {
-      return true;
-    }
-    try {
-      console.log(obj);
-    } catch (error) {
-      alert(obj);
-    }
-    return true;
+  toType = function(obj) {
+    return {}.toString.call(obj).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
   };
+  Message = (function() {
+    function Message(message) {
+      this.message = message;
+      this.date = new Date();
+    }
+    Message.prototype.toString = function() {
+      var D, M, d, h, m, message, pad, s, y;
+      pad = function(int, pad) {
+        while (("" + int).length < pad) {
+          int = "0" + int;
+        }
+        return int;
+      };
+      d = this.date;
+      y = pad(d.getUTCFullYear(), 4);
+      M = pad(d.getUTCMonth() + 1, 2);
+      D = pad(d.getUTCDate(), 2);
+      h = pad(d.getUTCHours(), 2);
+      m = pad(d.getUTCMinutes(), 2);
+      s = pad(d.getUTCSeconds(), 2);
+      switch (toType(this.message)) {
+        case "string":
+          message = this.message;
+          break;
+        default:
+          message = $.toJSON(this.message);
+      }
+      return "" + y + M + D + " " + h + ":" + m + ":" + s + " - [" + (toType(this.message)) + "] " + message;
+    };
+    return Message;
+  })();
+  (function(pte) {
+    pte.messages = [];
+    pte.log = function(obj) {
+      if (!window.options.pte_debug) {
+        return true;
+      }
+      try {
+        pte.messages.push(new Message(obj));
+        console.log(obj);
+      } catch (error) {
+
+      }
+      return true;
+    };
+    pte.formatLog = function() {
+      var log, message, _i, _len, _ref;
+      log = "";
+      _ref = pte.messages;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        message = _ref[_i];
+        log += "" + message + "\n";
+      }
+      return log;
+    };
+    pte.sendToPastebin = function(text) {
+      var pastebin_url, post_data;
+      pastebin_url = "http://dpastey.appspot.com/";
+      post_data = {
+        title: "PostThumbnailEditor Log",
+        content: text,
+        lexer: "text",
+        expire_options: "3600"
+      };
+      return $.ajax({
+        url: pastebin_url,
+        data: post_data,
+        dataType: "json",
+        global: false,
+        type: "POST",
+        complete: function(xhr, status) {
+          log(xhr);
+          return log(status);
+        },
+        error: function(xhr, status, errorThrown) {
+          log(xhr);
+          log(status);
+          return log(errorThrown);
+        },
+        success: function(data, status, xhr) {
+          log(data);
+          log(status);
+          return log(xhr);
+        }
+      });
+    };
+    return true;
+  })(pte);
+  window.log = pte.log;
+  $(document).ready(function($) {
+    $('#pte-log-tools a').click(function(e) {
+      return e.preventDefault();
+    });
+    $('#pastebin').click(function(e) {
+      return pte.sendToPastebin(pte.formatLog());
+    });
+    $('#clear-log').click(function(e) {
+      pte.messages = [];
+      return $('#pte-log-messages textarea').val(pte.formatLog());
+    });
+    $('#close-log').click(function(e) {
+      return $('#pte-log').fadeOut('900');
+    });
+    return $('body').delegate('.show-log-messages', 'click', function(e) {
+      e.preventDefault();
+      $('#pte-log-messages textarea').val(pte.formatLog());
+      return $('#pte-log').fadeIn('900');
+    });
+  });
   /*
     POST-THUMBNAIL-EDITOR Script for Wordpress
   
@@ -614,6 +715,7 @@
     return Math.floor(Math.random() * 1000001).toString(16);
   };
   window.debugTmpl = function(data) {
+    log("===== TEMPLATE DEBUG DATA FOLLOWS =====");
     log(data);
     return true;
   };
@@ -630,7 +732,6 @@
           left: 0
         }, 500, 'swing', function() {
           var delete_options;
-          log("okay cleanup");
           delete_options = {
             "id": $('#pte-post-id').val(),
             'action': 'pte_ajax',
@@ -643,11 +744,8 @@
             global: false,
             dataType: "json",
             success: function(data, status, xhr) {
-              if (data.error != null) {
-                return log(data.error);
-              } else {
-                return log("Deleted tmp files");
-              }
+              log("===== DELETE SUCCESSFUL, DATA DUMP FOLLOWS =====");
+              return log(data);
             }
           });
         });
@@ -686,7 +784,6 @@
           tmp_ar = "" + width + ":" + height;
         }
       }
-      log("AR: " + tmp_ar);
       if ((current_ar != null) && (tmp_ar != null) && tmp_ar !== current_ar) {
         throw "Too many Aspect Ratios. Disabling";
       }
@@ -706,7 +803,6 @@
       addCheckAllNoneListener();
       $loading_screen = $('#pte-loading');
       closeLoadingScreen = function() {
-        log("Closing load screen");
         $loading_screen.hide();
         return true;
       };
@@ -723,7 +819,7 @@
       var reflow;
       reflow = new TimerFunc(function() {
         var offset, window_height;
-        log("reflow called...");
+        log("===== REFLOW =====");
         pte.fixThickbox(window.parent);
         offset = $("#pte-sizes").offset();
         window_height = $(window).height() - offset.top - 2;
@@ -764,10 +860,8 @@
       instance: true,
       onSelectEnd: function(img, s) {
         if (s.width && s.width > 0 && s.height && s.height > 0 && $('.pte-size').filter(':checked').size() > 0) {
-          log("Enabling button");
           return $('#pte-submit').removeAttr('disabled');
         } else {
-          log("Disabling button");
           return $('#pte-submit').attr('disabled', true);
         }
       }
@@ -776,7 +870,7 @@
       return ias_instance = $('#pte-image img').imgAreaSelect(ias_defaults);
     };
     iasSetAR = function(ar) {
-      log("setting aspectRatio: " + ar);
+      log("===== SETTING ASPECTRATIO: " + ar + " =====");
       ias_instance.setOptions({
         aspectRatio: ar
       });
@@ -805,12 +899,10 @@
       }, 50);
       return $('input.pte-size').click(pteCheckHandler.doFunc);
     };
-    /* Callback for resizing images (Stage 1 to 2) */
     addSubmitListener = function() {
       var onResizeImages;
       $('#pte-submit').click(function(e) {
         var scale_factor, selection, submit_data;
-        log("Clicked Submit...");
         selection = ias_instance.getSelection();
         scale_factor = $('#pte-sizer').val();
         submit_data = {
@@ -825,6 +917,7 @@
           'w': Math.floor(selection.width / scale_factor),
           'h': Math.floor(selection.height / scale_factor)
         };
+        log("===== RESIZE-IMAGES =====");
         log(submit_data);
         ias_instance.setOptions({
           hide: true,
@@ -838,7 +931,8 @@
         return true;
       });
       return onResizeImages = function(data, status, xhr) {
-        /* Evaluate data */        log(data);
+        /* Evaluate data */        log("===== RESIZE-IMAGES SUCCESS =====");
+        log(data);
         if ((data.error != null) && !(data.thumbnails != null)) {
           alert(data.error);
           return;
@@ -863,7 +957,6 @@
       var onConfirmImages;
       $('#pte-confirm').live('click', function(e) {
         var submit_data, thumbnail_data;
-        log("Confirming");
         thumbnail_data = {};
         $('input.pte-confirm').filter(':checked').each(function(i, elem) {
           var size;
@@ -877,10 +970,12 @@
           'pte-nonce': $('#pte-nonce').val(),
           'pte-confirm': thumbnail_data
         };
+        log("===== CONFIRM-IMAGES =====");
         log(submit_data);
         return $.getJSON(ajaxurl, submit_data, onConfirmImages);
       });
       return onConfirmImages = function(data, status, xhr) {
+        log("===== CONFIRM-IMAGES SUCCESS =====");
         log(data);
         $('#stage2').animate({
           left: -$(window).width()
