@@ -127,6 +127,7 @@ EOT;
 function pte_ajax(){
    // Move all adjuntant functions to a separate file and include that here
    require_once(PTE_PLUGINPATH . 'pte_functions.php');
+	pte_add_debug( print_r( $_REQUEST, true ) );
 
    switch ($_GET['pte-action'])
    {

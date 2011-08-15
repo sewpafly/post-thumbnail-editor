@@ -532,11 +532,11 @@
     }
     Message.prototype.toString = function() {
       var D, M, d, h, m, message, pad, s, y;
-      pad = function(int, pad) {
-        while (("" + int).length < pad) {
-          int = "0" + int;
+      pad = function(num, pad) {
+        while (("" + num).length < pad) {
+          num = "0" + num;
         }
-        return int;
+        return num;
       };
       d = this.date;
       y = pad(d.getUTCFullYear(), 4);
@@ -580,6 +580,15 @@
       }
       return log;
     };
+    pte.parseServerLog = function(json) {
+      var message, _i, _len;
+      log("===== SERVER LOG =====");
+      for (_i = 0, _len = json.length; _i < _len; _i++) {
+        message = json[_i];
+        log(message);
+      }
+      return true;
+    };
     pte.sendToPastebin = function(text) {
       var pastebin_url, post_data;
       pastebin_url = "http://dpastey.appspot.com/";
@@ -587,7 +596,8 @@
         title: "PostThumbnailEditor Log",
         content: text,
         lexer: "text",
-        expire_options: "3600"
+        format: "json",
+        expire_options: "2592000"
       };
       return $.ajax({
         url: pastebin_url,
@@ -595,19 +605,16 @@
         dataType: "json",
         global: false,
         type: "POST",
-        complete: function(xhr, status) {
-          log(xhr);
-          return log(status);
-        },
         error: function(xhr, status, errorThrown) {
+          $('#pte-log').fadeOut('900');
+          alert("Sorry, there was a problem trying to send to pastebin");
           log(xhr);
           log(status);
           return log(errorThrown);
         },
         success: function(data, status, xhr) {
-          log(data);
-          log(status);
-          return log(xhr);
+          $('#pte-log').fadeOut('900');
+          return prompt("PASTEBIN URL:", data.url);
         }
       });
     };
@@ -745,7 +752,8 @@
             dataType: "json",
             success: function(data, status, xhr) {
               log("===== DELETE SUCCESSFUL, DATA DUMP FOLLOWS =====");
-              return log(data);
+              log(data);
+              return pte.parseServerLog(data.log);
             }
           });
         });
@@ -933,6 +941,7 @@
       return onResizeImages = function(data, status, xhr) {
         /* Evaluate data */        log("===== RESIZE-IMAGES SUCCESS =====");
         log(data);
+        pte.parseServerLog(data.log);
         if ((data.error != null) && !(data.thumbnails != null)) {
           alert(data.error);
           return;
@@ -977,6 +986,7 @@
       return onConfirmImages = function(data, status, xhr) {
         log("===== CONFIRM-IMAGES SUCCESS =====");
         log(data);
+        pte.parseServerLog(data.log);
         $('#stage2').animate({
           left: -$(window).width()
         }, 500, 'swing', function() {

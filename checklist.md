@@ -20,6 +20,7 @@
    * Do the rows change color on selection?
    * Does the height get set correctly?
    * Does enabling the ad rotate plugin cause any problems?
+	* Does the pastebin functionality work?
 6. Tag the git release
    * `git commit -a -m "Commit msg"`
    * `git tag [-a -m 'annotated tag'] version`

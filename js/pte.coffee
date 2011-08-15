@@ -46,6 +46,7 @@ window.goBack = (e) ->
 					success: (data, status, xhr) -> 
 						log "===== DELETE SUCCESSFUL, DATA DUMP FOLLOWS ====="
 						log data
+						pte.parseServerLog data.log
 
 
 
@@ -248,6 +249,7 @@ do (pte) ->
 			### Evaluate data ###
 			log "===== RESIZE-IMAGES SUCCESS ====="
 			log data
+			pte.parseServerLog data.log
 			if data.error? and not data.thumbnails?
 				alert(data.error)
 				return
@@ -289,6 +291,7 @@ do (pte) ->
 		onConfirmImages = (data, status, xhr) ->
 			log "===== CONFIRM-IMAGES SUCCESS ====="
 			log data
+			pte.parseServerLog data.log
 			$('#stage2').animate
 				left: -$(window).width()
 			, 500, 'swing', ->

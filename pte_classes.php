@@ -1,4 +1,5 @@
 <?php
+
 class PteLogMessage
 {
 	protected $message;
@@ -15,6 +16,9 @@ class PteLogMessage
 	}
 	public function getType(){
 		return $this->type;
+	}
+	public function getMessage(){
+		return $this->message;
 	}
 }
 

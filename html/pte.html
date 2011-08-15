@@ -22,11 +22,12 @@
 				<a class="show-log-messages" href="">Show Logs</a>
 				<?php endif; ?>
 			</h1>
-			<?php global $pte_errors;
-			if ( isset( $pte_errors ) && count( $pte_errors ) > 0 ): ?>
+			<?php global $pte_log;
+			if ( isset( $pte_log ) && count( $pte_log ) > 0 ): ?>
 			<script type="text/javascript" charset="utf-8">
-				var pte_errors = <?php print( json_encode( $pte_errors ) ); ?>
-				log(pte_errors);
+				var pte_errors = <?php print( json_encode( pte_organize_logs() ) ); ?>;
+				log( "===== STARTUP PHP MESSAGES =====");
+				log(pte.parseServerLog(pte_errors.log));
 			</script>
 			<!-- <div id="error"><ul><?php 
 					//print_r($pte_errors);

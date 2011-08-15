@@ -1,3 +1,4 @@
+# http://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/
 toType = (obj) ->
   ({}).toString.call(obj).match(/\s([a-z|A-Z]+)/)[1].toLowerCase()
 
@@ -5,10 +6,10 @@ class Message
 	constructor: (@message) ->
 		@date = new Date()
 	toString: ->
-		pad = (int, pad) ->
-			while (""+int).length < pad
-				int = "0" + int
-			int
+		pad = (num, pad) ->
+			while (""+num).length < pad
+				num = "0" + num
+			num
 
 		d = @date
 		y = pad d.getUTCFullYear(), 4
@@ -39,44 +40,36 @@ do(pte) ->
 		log = ""
 		log += """#{message}\n""" for message in pte.messages
 		log
+	pte.parseServerLog = (json) ->
+		log "===== SERVER LOG ====="
+		for message in json
+			log message
+		true
 
 	pte.sendToPastebin = (text) ->
-		# Other potential options:
-		#   DPASTE.DE
-		#   https://github.com/bartTC/django-paste
-		#   http://paste.kde.org/doc/api/
 		pastebin_url = "http://dpastey.appspot.com/"
 		post_data =
 			title: "PostThumbnailEditor Log"
 			content: text
 			lexer: "text"
-			expire_options: "3600" # 1 hour
-			#expire_options: "2592000" # 1 month
-		#pastebin_url = "http://paste.kde.org/"
-		#post_data =
-		#   paste_data: text
-		#   paste_lang: "javascript"
-		#   api_submit: "true"
-		#   mode: "json"
-		#   paste_expire: "3600" # 1 hour
-		#   paste_project: "PostThumbnailEditor"
+			format: "json"
+			#expire_options: "3600" # 1 hour
+			expire_options: "2592000" # 1 month
 		$.ajax
 			url: pastebin_url
 			data: post_data
 			dataType: "json"
 			global: false
 			type: "POST"
-			complete: (xhr, status) ->
-				log xhr
-				log status
 			error: (xhr, status, errorThrown) ->
+				$('#pte-log').fadeOut '900'
+				alert "Sorry, there was a problem trying to send to pastebin"
 				log xhr
 				log status
 				log errorThrown
 			success: (data, status, xhr) ->
-				log data
-				log status
-				log xhr
+				$('#pte-log').fadeOut '900'
+				prompt "PASTEBIN URL:", data.url
 
 
 	# End PTE Log Section
