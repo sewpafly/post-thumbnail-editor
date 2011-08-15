@@ -159,12 +159,17 @@ function pte_media_row_actions($actions, $post, $detached){
 	return $actions;
 }
 
+// Anonymous function (which apparently some versions of PHP will whine about)
+function pte_launch_options_page(){
+   require_once( PTE_PLUGINPATH . 'options.php' ); pte_options_page();
+}
+
 function pte_admin_menu(){
 	add_options_page( __('Post Thumbnail Editor') . "-title",
 		__('Post Thumbnail Editor'),
 		'edit_posts', // Set the capability to null as every user can have different settings set
 		'pte',
-		function(){ require_once( PTE_PLUGINPATH . 'options.php' ); pte_options_page(); }
+		'pte_launch_options_page'
 	);
 }
 

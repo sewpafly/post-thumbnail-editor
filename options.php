@@ -1,17 +1,21 @@
 <?php
 
+// Anonymous Functions that can't be anonymous thanks to
+// some versions of PHP
+function pte_noop(){}
+function pte_edit_posts_cap( $capability ){ return 'edit_posts'; }
+function pte_site_options_html(){ echo "These site-wide settings can only be changed by an administrator"; }
+
 //http://ottopress.com/2009/wordpress-settings-api-tutorial/
 function pte_options_init(){
-	add_filter( 'option_page_capability_pte_options', function( $capability ){
-		return 'edit_posts';
-	} );
+	add_filter( 'option_page_capability_pte_options', 'pte_edit_posts_cap' );
 	register_setting( 'pte_options', 
 		pte_get_option_name(),
 		'pte_options_validate' );
 
 	add_settings_section( 'pte_main'
 		, __('User Options')
-		, function(){}
+		, 'pte_noop'
 		, 'pte' );
 	
 	add_settings_field( 'pte_dimensions', 
@@ -39,7 +43,7 @@ function pte_options_init(){
 			'pte_site_options_validate' );
 		add_settings_section( 'pte_site'
 			, __('Site Options')
-			, function(){ echo "These site-wide settings can only be changed by an administrator"; }
+			, 'pte_site_options_html'
 			, 'pte' );
 		add_settings_field( 'pte_sizes', 
 			__('Thumbnails'), 
