@@ -17,12 +17,17 @@
 	</head>
 	<body>
 		<div id="stage1" class="stage">
-			<h1 class="stage-header">Post Thumbnail Editor - Step 1</h1>
-			<?php global $pte_errors;
-			if ( isset( $pte_errors ) && count( $pte_errors ) > 0 ): ?>
+			<h1 class="stage-header">Post Thumbnail Editor - Step 1
+				<?php if ( $options['pte_debug'] ): ?>
+				<a class="show-log-messages" href="">Show Logs</a>
+				<?php endif; ?>
+			</h1>
+			<?php global $pte_log;
+			if ( isset( $pte_log ) && count( $pte_log ) > 0 ): ?>
 			<script type="text/javascript" charset="utf-8">
-				var pte_errors = <?php print( json_encode( $pte_errors ) ); ?>
-				log(pte_errors);
+				var pte_errors = <?php print( json_encode( pte_organize_logs() ) ); ?>;
+				log( "===== STARTUP PHP MESSAGES =====");
+				log(pte.parseServerLog(pte_errors.log));
 			</script>
 			<!-- <div id="error"><ul><?php 
 					//print_r($pte_errors);
@@ -76,7 +81,11 @@
 			<a onclick="goBack(); return false;" href="#back" class="stage-navigation"
 				alt="Return to Step 1" title="Return to Step 1">
 				<img src="<?php print( PTE_PLUGINURL . "images/back.gif" ); ?>"/> Back</a>
-			<h1 class="stage-header"> Post Thumbnail Editor - Step 2</h1>
+			<h1 class="stage-header">Post Thumbnail Editor - Step 2
+				<?php if ( $options['pte_debug'] ): ?>
+				<a class="show-log-messages" href="">Show Logs</a>
+				<?php endif; ?>
+			</h1>
 			{{if $data['error']}}
 			<div id="error">We noticed some potential issues:
 				<ul>
@@ -114,7 +123,11 @@
 		<div id="stage3" class="stage">
 		</div>
 		<script id="stage3template" type="text/x-jquery-tmpl">
-			<h1 class="stage-header"> Post Thumbnail Editor</h1>
+			<h1 class="stage-header">Post Thumbnail Editor
+				<?php if ( $options['pte_debug'] ): ?>
+				<a class="show-log-messages" href="">Show Logs</a>
+				<?php endif; ?>
+			</h1>
 			{{if $data['success']}}
 			<div id="success">
 				<p>Images were created successfully.</p>
@@ -130,10 +143,27 @@
 			{{/if}}
 		</script>
 		<div id="pte-loading"> 
-			<div id="pte-loading-opaque"></div>
+			<div class="pte-opaque"></div>
 			<div id="pte-loading-spinner">
 				<img src="<?php print PTE_PLUGINURL; ?>images/loading.gif" alt="Please wait" />
 		</div></div>
+		<?php if ( $options['pte_debug'] ): ?>
+		<div id="pte-log"> 
+			<div class="pte-opaque"></div>
+			<div id="pte-log-container">
+				<div id="pte-log-messages">
+					<textarea name="logs"></textarea>
+					<!--<textarea name="logs" rows="8" cols="40"></textarea>-->
+				</div>
+				<div id="pte-log-tools">
+					<!--<a id="clipboard" href="">Copy to Clipboard</a>&nbsp;-->
+					<a id="pastebin" href="">Send to Pastebin</a>&nbsp;
+					<a id="clear-log" href="">Clear Messages</a>&nbsp;
+					<a id="close-log" href="">Close</a>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
 		<div style='clear:both'></div>
 	</body>
 </html>

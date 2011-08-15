@@ -1,4 +1,5 @@
 <?php
+require_once( "pte_classes.php" );
 
 function pte_require_json() {
 	if ( function_exists( 'ob_start' ) ){
@@ -8,9 +9,10 @@ function pte_require_json() {
 
 /*
  * This is used to output JSON
+ * - Calling this should return all the way up the chain...
  */
 function pte_json_encode($mixed = null){
-	global $pte_errors;
+	global $pte_log;
 	// If a buffer was started this will check for any residual output
 	// and add to the existing errors.
 	if ( function_exists( 'ob_get_flush' ) ){
@@ -22,7 +24,7 @@ function pte_json_encode($mixed = null){
 
 	if ( ! function_exists('json_encode') ){
 		pte_add_error( "json_encode not available, upgrade your php" );
-		$messages = implode( "\r\n", $pte_errors );
+		$messages = implode( "\r\n", $pte_log );
 		die("{\"error\":\"{$messages}\"}");
 	}
 
@@ -33,8 +35,8 @@ function pte_json_encode($mixed = null){
 		$mixed = array($mixed);
 	}
 
-	if ( count( $pte_errors ) > 0 ){
-		$mixed = array_merge_recursive( $mixed, array( 'error' => $pte_errors ) );
+	if ( count( $pte_log ) > 0 ){
+		$mixed = array_merge_recursive( $mixed, pte_organize_logs() );
 	}
 
 	print( json_encode($mixed) );
@@ -42,7 +44,7 @@ function pte_json_encode($mixed = null){
 }
 
 /*
- * pte_json_error
+ * pte_json_error - Calling this should return all the way up the chain...
  */
 function pte_json_error($error){
 	pte_add_error( $error );
@@ -50,22 +52,57 @@ function pte_json_error($error){
 }
 
 /*
- * pte_add_error
+ * pte_log
  */
-function pte_add_error($error){
-	global $pte_errors;
-	if ( ! isset( $pte_errors ) || ! is_array( $pte_errors ) ){
-		$pte_errors = array();
+function pte_log($pte_message, $type=NULL){
+	global $pte_log;
+	// If $pte_log doesn't exist, initialize it
+	if ( ! isset( $pte_log ) || ! is_array( $pte_log ) ){
+		$pte_log = array();
+	}
+	// END INIT //
+	if ( ! $pte_message instanceof PteLogMessage ){
+		if ( is_string( $pte_message ) and !is_null( type ) ){
+			$pte_message = new PteLogMessage( $type, $pte_message );
+		}
+		else{
+			return false;
+		}
+	}
+	$options = pte_get_options();
+	if ( !( $options['pte_debug'] || $pte_message->getType() == "ERROR" ) ) {
+		return false;
 	}
 
-	if ( !in_array( $error, $pte_errors ) ){
-		if ( is_string( $error ) ){
-			$pte_errors[] = $error;
-		}
-		else if ( is_array( $error ) ){
-			$pte_errors = array_merge( $error, $pte_errors );
-		}
+	if ( !in_array( $pte_message, $pte_log ) ){
+		$pte_log[] = $pte_message;
 	}
+}
+
+/*
+ * pte_log helper functions
+ */
+function pte_add_error($message){
+	pte_log( new PteError( $message ) );
+}
+
+function pte_add_debug($message){
+	$options = pte_get_options();
+	if ( $options['pte_debug'] ) {
+		pte_log( new PteDebug( $message ) );
+	}
+}
+
+function pte_organize_logs(){
+	global $pte_log;
+	$output = array();
+	foreach ( $pte_log as $log ){
+		if ( $log->getType() == "ERROR" ){
+			$output['error'][] = $log->getMessage();
+		}
+		$output['log'][] = "{$log->getType()}: {$log->getMessage()}";
+	}
+	return $output;
 }
 
 /*
@@ -101,12 +138,15 @@ function pte_get_alternate_sizes($filter=true){
 	if ( !isset($pte_gas) ){
 		$pte_gas = array();
 		$sizes = array();
+
+		// Some times we don't want the filter to run (in admin for example)
 		if ($filter){
 			$sizes = array_filter( get_intermediate_image_sizes(), 'pte_filter_sizes' );
 		}
 		else{
 			$sizes = get_intermediate_image_sizes();
 		}
+
 		foreach ($sizes as $s){
 			if ( isset( $_wp_additional_image_sizes[$s]['width'] ) ) // For theme-added sizes
 				$width = intval( $_wp_additional_image_sizes[$s]['width'] );
@@ -202,16 +242,16 @@ function pte_get_all_alternate_size_information( $id ){
  */
 function pte_launch(){
 	$options = pte_get_options();
-	//wp_register_script( 'jquery-tmpl'
-	//   , PTE_PLUGINURL . 'apps/jquery-tmpl/jquery.tmpl.min.js'
-	//   , array('jquery')
-	//   , '1.0.0pre'
-	//);
 	if ( $options['pte_debug'] ) {
 		wp_enqueue_script( 'pte'
 			, PTE_PLUGINURL . 'js/pte.full.js'
 			, array('jquery','imgareaselect')
 			, PTE_VERSION
+		);
+		wp_enqueue_script( 'jquery-json'
+			, PTE_PLUGINURL . 'apps/jquery.json-2.2.min.js'
+			, array('jquery')
+			, '2.2'
 		);
 		wp_enqueue_style( 'pte'
 			, PTE_PLUGINURL . 'css/pte.css'
@@ -317,10 +357,10 @@ function pte_create_image($original_image, $type,
 	$dst_x, $dst_y, $dst_w, $dst_h,
 	$src_x, $src_y, $src_w, $src_h )
 {
-	$new_image = wp_imagecreatetruecolor( $dst_w, $dst_h );
+	pte_add_debug( print_r( compact( 'type', 'dst_x', 'dst_y', 'dst_w', 'dst_h',
+		'src_x','src_y','src_w','src_h' ), true ) );
 
-	//print_r( compact( "original_image", 'type', 'dst_x', 'dst_y', 'dst_w', 'dst_h',
-	//   'src_x','src_y','src_w','src_h' ) );
+	$new_image = wp_imagecreatetruecolor( $dst_w, $dst_h );
 
 	imagecopyresampled( $new_image, $original_image,
 		$dst_x, $dst_y, $src_x, $src_y,
@@ -425,6 +465,7 @@ function pte_resize_images(){
 		return pte_json_error("Could not read image size");
 	}
 
+	pte_add_debug( "BASE FILE DIMENSIONS/INFO: " . print_r( $original_size, true ) );
 	list( $orig_w, $orig_h, $orig_type ) = $original_size;
 	// *** End common-info
 
@@ -486,7 +527,7 @@ function pte_resize_images(){
  * Clean up and return error/success information...
  */
 function pte_confirm_images(){
-	global $pte_sizes, $pte_errors;
+	global $pte_sizes;
 
 	// Require JSON output
 	pte_require_json();
@@ -505,6 +546,8 @@ function pte_confirm_images(){
 	if ( is_array( $_GET['pte-confirm'] ) ){
 		$pte_sizes = array_keys( $_GET['pte-confirm'] );
 		$sizes = pte_get_all_alternate_size_information( $id );
+		pte_add_debug( "pte_get_all_alternate_size_information returned: "
+			. print_r( $sizes, true ) );
 	}
 	else {
 		return pte_json_error( "Invalid Parameters: can't find sizes" );
@@ -539,6 +582,7 @@ function pte_confirm_images(){
 		}
 
 		// Move good image
+		pte_add_debug( "Moving '{$good_file}' to '{$new_file}'" );
 		rename( $good_file, $new_file );
 
 		// Update metadata
@@ -552,7 +596,7 @@ function pte_confirm_images(){
 			'width' => $w,
 			'height' => $h 
 		);
-		//print_r($metadata['sizes'][$size]);
+		pte_add_debug( "Updating '{$size}' metadata: " . print_r( $metadata['sizes'][$size], true ) );
 		wp_update_attachment_metadata( $id, $metadata);
 
 		// Delete/unlink old file
@@ -560,7 +604,7 @@ function pte_confirm_images(){
 			&& $old_file !== $new_file 
 			&& file_exists( $old_file ) )
 		{
-			//print( "OLD FILE: {$old_file}" );
+			pte_add_debug( "Deleting old thumbnail: {$old_file}" );
 			unlink( $old_file );
 		}
 	}
@@ -588,3 +632,5 @@ function pte_delete_images()
 	unlink( $PTE_TMP_DIR );
 	return pte_json_encode( array( "success" => "Yay!" ) );
 }
+
+?>

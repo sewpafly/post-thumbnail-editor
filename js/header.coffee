@@ -8,7 +8,7 @@ do(pte) ->
 	pte.fixThickbox = (parent) ->
 		$p = parent.jQuery
 		if $p == null or parent.frames.length < 1 then return
-		log "Fixing thickbox"
+		log "===== FIXING THICKBOX ====="
 
 		# How big should the window be
 		width = window.options.pte_tb_width + 30
