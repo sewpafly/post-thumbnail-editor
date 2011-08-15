@@ -62,9 +62,7 @@ function pte_get_site_options(){
 	if ( !is_array( $pte_site_options ) ){
 		$pte_site_options = array();
 	}
-	$defaults = array( 'pte_hidden_sizes' => array()
-		, 'pte_ar' => array()
-	);
+	$defaults = array( 'pte_hidden_sizes' => array() );
 	return array_merge( $defaults, $pte_site_options );
 }
 

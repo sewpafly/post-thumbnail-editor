@@ -568,7 +568,6 @@
       } catch (error) {
 
       }
-      return true;
     };
     pte.formatLog = function() {
       var log, message, _i, _len, _ref;
@@ -777,15 +776,15 @@
     return a;
   };
   determineAspectRatio = function(current_ar, size) {
-    var crop, gc, height, tmp_ar, width, _ref, _ref2;
+    var crop, gc, height, tmp_ar, width, _ref;
     _ref = thumbnail_info[size], crop = _ref.crop, width = _ref.width, height = _ref.height;
     crop = +crop;
     width = +width;
     height = +height;
     gc = gcd(width, height);
     if ((crop != null) && crop > 0) {
-      tmp_ar = (_ref2 = window.options.pte_ar[size]) != null ? _ref2 : null;
-      if (!(tmp_ar != null) && (width != null) > 0 && (height != null) > 0) {
+      tmp_ar = null;
+      if ((width != null) > 0 && (height != null) > 0) {
         if (gc != null) {
           tmp_ar = "" + (width / gc) + ":" + (height / gc);
         } else {

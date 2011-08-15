@@ -83,7 +83,6 @@ function pte_site_options_validate( $input ){
 	$sizes = get_intermediate_image_sizes();
 	
 	$pte_hidden_sizes = array();
-	$pte_ar           = array();
 
 	foreach ( $sizes as $size ){
 		// Hidden
@@ -91,20 +90,10 @@ function pte_site_options_validate( $input ){
 				and in_array( $size, $input['pte_hidden_sizes'] ) ){
 			$pte_hidden_sizes[] = $size;
 		}
-		// Aspect Ratio
-		if (! isset( $input['pte_ar'][$size] ) or $input['pte_ar'][$size] === "" ){}
-		else if ( preg_match( '/^\d+:\d+$/', $input['pte_ar'][$size] ) ){
-			$pte_ar[$size] = $input['pte_ar'][$size];
-		}
-		else {
-			add_settings_error('pte_options_site'
-				, 'pte_options_error'
-				, "Invalid Aspect Ratio ({$input['pte_ar'][$size]}) for {$size}");
-		}
 	}
 
 
-	$output = array( 'pte_hidden_sizes' => $pte_hidden_sizes, 'pte_ar' => $pte_ar );
+	$output = array( 'pte_hidden_sizes' => $pte_hidden_sizes );
 	return $output;
 }
 
@@ -202,7 +191,7 @@ function pte_sizes_display(){
 	?>
 	<table><tr><th><?php _e("Post Thumbnail"); ?></th>
 		<th><?php _e( "Hidden" ); ?></th>
-		<th><?php _e( "For cropped thumbnails, manually override the aspect ratio ('width:height', e.g. '4:3', '16:9')" ); ?></th>
+		</tr>
 	<?php
 	// End table header
 
@@ -211,30 +200,14 @@ function pte_sizes_display(){
 	foreach ( $sizes as $size => $size_data ){
 		$hidden = ( in_array( $size, $options['pte_hidden_sizes'] ) ) ?
 			"checked":"";
-		// Set Aspect Ratio
-		$ar_text = "";
-		$ar_input = "";
-		if ( $size_data['crop'] ){
-			$gcd = pte_gcd( $size_data['width'], $size_data['height'] );
-			$ar_height = $size_data['height'];
-			$ar_width = $size_data['width'];
-			if ( !is_null( $gcd ) ){
-				$ar_height = $ar_height / $gcd;
-				$ar_width = $ar_width / $gcd;
-			}
-			$ar_text = sprintf( __( "Default Aspect Ratio is %d:%d<br/>" ), $ar_width, $ar_height );
-			$ar_input = "<label for='ar-{$size}'>${ar_text}"
-			. "<input id='ar-{$size}' type='text' name='pte-site-options[pte_ar][{$size}]'"
-			. " value='". $options['pte_ar'][$size] ."'/></label></tr>";
-		}
 
 		print( "<tr><td><label for='{$size}'>{$size}</label></td>"
 			. "<td><input type='checkbox' id='{$size}' name='pte-site-options[pte_hidden_sizes][]'"
 		   . " value='{$size}' {$hidden}></td>"
-			. "<td>{$ar_input}</td></tr>"
+			. "</tr>"
 		);
 	}
 
-	print( '</tr></table>' );
+	print( '</table>' );
 }
 ?>

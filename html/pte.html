@@ -27,7 +27,7 @@
 			<script type="text/javascript" charset="utf-8">
 				var pte_errors = <?php print( json_encode( pte_organize_logs() ) ); ?>;
 				log( "===== STARTUP PHP MESSAGES =====");
-				log(pte.parseServerLog(pte_errors.log));
+				pte.parseServerLog(pte_errors.log);
 			</script>
 			<!-- <div id="error"><ul><?php 
 					//print_r($pte_errors);

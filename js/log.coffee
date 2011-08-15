@@ -35,7 +35,7 @@ do(pte) ->
 			console.log obj
 		catch error
 			#alert obj
-		true
+		return
 	pte.formatLog = ->
 		log = ""
 		log += """#{message}\n""" for message in pte.messages
