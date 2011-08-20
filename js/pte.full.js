@@ -565,6 +565,7 @@
       try {
         pte.messages.push(new Message(obj));
         console.log(obj);
+        $('#pte-log-messages textarea').filter(':visible').val(pte.formatLog());
       } catch (error) {
 
       }
@@ -582,9 +583,11 @@
     pte.parseServerLog = function(json) {
       var message, _i, _len;
       log("===== SERVER LOG =====");
-      for (_i = 0, _len = json.length; _i < _len; _i++) {
-        message = json[_i];
-        log(message);
+      if (((json != null ? json.length : void 0) != null) && json.length > 0) {
+        for (_i = 0, _len = json.length; _i < _len; _i++) {
+          message = json[_i];
+          log(message);
+        }
       }
       return true;
     };

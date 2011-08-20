@@ -1,5 +1,5 @@
 <?php
-require_once( "pte_classes.php" );
+require_once( "log.php" );
 
 function pte_require_json() {
 	if ( function_exists( 'ob_start' ) ){
@@ -12,19 +12,24 @@ function pte_require_json() {
  * - Calling this should return all the way up the chain...
  */
 function pte_json_encode($mixed = null){
-	global $pte_log;
+	$logger = PteLogger::singleton();
+
 	// If a buffer was started this will check for any residual output
 	// and add to the existing errors.
 	if ( function_exists( 'ob_get_flush' ) ){
 		$buffer = ob_get_clean();
 		if ( isset( $buffer ) && strlen( $buffer ) > 0 ){
-			pte_add_error("Buffered output: {$buffer}");
+			$logger->error( "Buffered output: {$buffer}" );
 		}
 	}
 
+	$logs = array(
+		'error' => $logger->get_logs( PteLogMessage::$ERROR ),
+		'log' => $logger->get_logs()
+	);
 	if ( ! function_exists('json_encode') ){
-		pte_add_error( "json_encode not available, upgrade your php" );
-		$messages = implode( "\r\n", $pte_log );
+		$logs['error'][] = "json_encode not available, upgrade your php";
+		$messages = implode( "\r\n", $logs['error'] );
 		die("{\"error\":\"{$messages}\"}");
 	}
 
@@ -32,11 +37,12 @@ function pte_json_encode($mixed = null){
 		$mixed = array();
 	}
 	else if ( ! is_array( $mixed ) ){
-		$mixed = array($mixed);
+		$mixed = array('noarray' => $mixed);
 	}
 
-	if ( count( $pte_log ) > 0 ){
-		$mixed = array_merge_recursive( $mixed, pte_organize_logs() );
+
+	if ( count( $logs['error'] )+count( $logs['log'] ) > 0 ){
+		$mixed = array_merge_recursive( $mixed, $logs );
 	}
 
 	print( json_encode($mixed) );
@@ -47,62 +53,9 @@ function pte_json_encode($mixed = null){
  * pte_json_error - Calling this should return all the way up the chain...
  */
 function pte_json_error($error){
-	pte_add_error( $error );
+	$logger = PteLogger::singleton();
+	$logger->error( $error );
 	return pte_json_encode();
-}
-
-/*
- * pte_log
- */
-function pte_log($pte_message, $type=NULL){
-	global $pte_log;
-	// If $pte_log doesn't exist, initialize it
-	if ( ! isset( $pte_log ) || ! is_array( $pte_log ) ){
-		$pte_log = array();
-	}
-	// END INIT //
-	if ( ! $pte_message instanceof PteLogMessage ){
-		if ( is_string( $pte_message ) and !is_null( type ) ){
-			$pte_message = new PteLogMessage( $type, $pte_message );
-		}
-		else{
-			return false;
-		}
-	}
-	$options = pte_get_options();
-	if ( !( $options['pte_debug'] || $pte_message->getType() == "ERROR" ) ) {
-		return false;
-	}
-
-	if ( !in_array( $pte_message, $pte_log ) ){
-		$pte_log[] = $pte_message;
-	}
-}
-
-/*
- * pte_log helper functions
- */
-function pte_add_error($message){
-	pte_log( new PteError( $message ) );
-}
-
-function pte_add_debug($message){
-	$options = pte_get_options();
-	if ( $options['pte_debug'] ) {
-		pte_log( new PteDebug( $message ) );
-	}
-}
-
-function pte_organize_logs(){
-	global $pte_log;
-	$output = array();
-	foreach ( $pte_log as $log ){
-		if ( $log->getType() == "ERROR" ){
-			$output['error'][] = $log->getMessage();
-		}
-		$output['log'][] = "{$log->getType()}: {$log->getMessage()}";
-	}
-	return $output;
 }
 
 /*
@@ -114,7 +67,8 @@ function pte_organize_logs(){
 function pte_filter_sizes( $element ){
 	global $pte_sizes;
 	$options = pte_get_options();
-	if ( ( is_array( $pte_sizes ) && !in_array( $element, $pte_sizes ) ) // is the element in the pte_sizes array
+	// Check if the element is in the pte_sizes array
+	if ( ( is_array( $pte_sizes ) && !in_array( $element, $pte_sizes ) )
 		or ( in_array( $element, $options['pte_hidden_sizes'] ) )
 	){
 		return false;
@@ -179,6 +133,7 @@ function pte_get_alternate_sizes($filter=true){
  * Optionally can return the JSON value or PHP array
  */
 function pte_get_image_data( $id, $size, $size_data ){
+	$logger = PteLogger::singleton();
 
 	$fullsizepath = get_attached_file( $id );
 	$path_information = image_get_intermediate_size($id, $size);
@@ -186,12 +141,8 @@ function pte_get_image_data( $id, $size, $size_data ){
 	if ( $path_information && 
 		@file_exists( dirname( $fullsizepath ) . DIRECTORY_SEPARATOR . $path_information['file'] )
 	){
-		//print_r( $path_information );
 		return $path_information;
 	}
-	//print("NOPE, no path information...");
-	//print_r($path_information);
-	//print("END PI");
 
 	// We don't really care how it gets generated, just that it is...
 	// see ajax-thumbnail-rebuild plugin for inspiration
@@ -215,7 +166,7 @@ function pte_get_image_data( $id, $size, $size_data ){
 		return $path_information;
 	}
 	else {
-		pte_add_error( "Couldn't find or generate metadata for image: {$id}-{$size}" );
+		$logger->error( "Couldn't find or generate metadata for image: {$id}-{$size}" );
 	}
 	return false;
 }
@@ -241,6 +192,7 @@ function pte_get_all_alternate_size_information( $id ){
  * Requires post id as $_GET['id']
  */
 function pte_launch(){
+	$logger = PteLogger::singleton();
 	$options = pte_get_options();
 	if ( $options['pte_debug'] ) {
 		wp_enqueue_script( 'pte'
@@ -290,20 +242,22 @@ function pte_launch(){
 }
 
 function pte_check_id( $id ){
+	$logger = PteLogger::singleton();
 	if ( !$post =& get_post( $id ) ){
-		pte_add_error( "Invalid id: {$id}" );
+		$logger->error( "Invalid id: {$id}" );
 		return false;
 	}
 	if ( !current_user_can( 'edit_post', $id ) ){
-		pte_add_error( "User does not have permission to edit this item" );
+		$logger->error( "User does not have permission to edit this item" );
 		return false;
 	}
 	return $id;
 }
 
 function pte_check_int( $int ){
+	$logger = PteLogger::singleton();
 	if (! is_numeric( $int ) ){
-		pte_add_error("PARAM not numeric: '{$int}'");
+		$logger->error( "PARAM not numeric: '{$int}'" );
 		return false;
 	}
 	return $int;
@@ -357,7 +311,8 @@ function pte_create_image($original_image, $type,
 	$dst_x, $dst_y, $dst_w, $dst_h,
 	$src_x, $src_y, $src_w, $src_h )
 {
-	pte_add_debug( print_r( compact( 'type', 'dst_x', 'dst_y', 'dst_w', 'dst_h',
+	$logger = PteLogger::singleton();
+	$logger->debug( print_r( compact( 'type', 'dst_x', 'dst_y', 'dst_w', 'dst_h',
 		'src_x','src_y','src_w','src_h' ), true ) );
 
 	$new_image = wp_imagecreatetruecolor( $dst_w, $dst_h );
@@ -379,29 +334,31 @@ function pte_create_image($original_image, $type,
 }
 
 function pte_write_image( $image, $orig_type, $destfilename ){
+	$logger = PteLogger::singleton();
+
 	$dir = dirname( $destfilename );
 	if ( ! is_dir( $dir ) ){
 		if ( ! mkdir( $dir, 0777, true ) ){
-			pte_add_error("Error creating directory: {$dir}");
+			$logger->error("Error creating directory: {$dir}");
 		}
 	}
 
 	if ( IMAGETYPE_GIF == $orig_type ) {
 		if ( !imagegif( $image, $destfilename ) ){
-			pte_add_error("Resize path invalid");
+			$logger->error("Resize path invalid");
 			return false;
 		}
 	} 
 	elseif ( IMAGETYPE_PNG == $orig_type ) {
 		if ( !imagepng( $image, $destfilename ) ){
-			pte_add_error("Resize path invalid");
+			$logger->error("Resize path invalid");
 			return false;
 		}
 	} 
 	else {
 		// all other formats are converted to jpg
 		if ( !imagejpeg( $image, $destfilename, 90) ){
-			pte_add_error("Resize path invalid: " . $destfilename);
+			$logger->error("Resize path invalid: " . $destfilename);
 			return false;
 		}
 	}
@@ -426,6 +383,7 @@ function pte_write_image( $image, $orig_type, $destfilename ){
  * OUTPUT: JSON object 'size: url'
  */
 function pte_resize_images(){
+	$logger = PteLogger::singleton();
 	global $pte_sizes;
 
 	// Require JSON output
@@ -465,7 +423,7 @@ function pte_resize_images(){
 		return pte_json_error("Could not read image size");
 	}
 
-	pte_add_debug( "BASE FILE DIMENSIONS/INFO: " . print_r( $original_size, true ) );
+	$logger->debug( "BASE FILE DIMENSIONS/INFO: " . print_r( $original_size, true ) );
 	list( $orig_w, $orig_h, $orig_type ) = $original_size;
 	// *** End common-info
 
@@ -487,12 +445,12 @@ function pte_resize_images(){
 			$x,     $y,     $w,     $h );
 
 		if ( ! isset( $image ) ){
-			pte_add_error( "Error creating image: {$size}" );
+			$logger->error( "Error creating image: {$size}" );
 			continue;
 		}
 
 		if ( ! pte_write_image( $image, $orig_type, $tmpfile ) ){
-			pte_add_error( "Error writing image: {$size} to '{$tmpfile}'" );
+			$logger->error( "Error writing image: {$size} to '{$tmpfile}'" );
 			continue;
 		}
 		// === END CREATE IMAGE ===============
@@ -528,6 +486,7 @@ function pte_resize_images(){
  */
 function pte_confirm_images(){
 	global $pte_sizes;
+	$logger = PteLogger::singleton();
 
 	// Require JSON output
 	pte_require_json();
@@ -546,7 +505,7 @@ function pte_confirm_images(){
 	if ( is_array( $_GET['pte-confirm'] ) ){
 		$pte_sizes = array_keys( $_GET['pte-confirm'] );
 		$sizes = pte_get_all_alternate_size_information( $id );
-		pte_add_debug( "pte_get_all_alternate_size_information returned: "
+		$logger->debug( "pte_get_all_alternate_size_information returned: "
 			. print_r( $sizes, true ) );
 	}
 	else {
@@ -582,7 +541,7 @@ function pte_confirm_images(){
 		}
 
 		// Move good image
-		pte_add_debug( "Moving '{$good_file}' to '{$new_file}'" );
+		$logger->debug( "Moving '{$good_file}' to '{$new_file}'" );
 		rename( $good_file, $new_file );
 
 		// Update metadata
@@ -596,7 +555,7 @@ function pte_confirm_images(){
 			'width' => $w,
 			'height' => $h 
 		);
-		pte_add_debug( "Updating '{$size}' metadata: " . print_r( $metadata['sizes'][$size], true ) );
+		$logger->debug( "Updating '{$size}' metadata: " . print_r( $metadata['sizes'][$size], true ) );
 		wp_update_attachment_metadata( $id, $metadata);
 
 		// Delete/unlink old file
@@ -604,13 +563,27 @@ function pte_confirm_images(){
 			&& $old_file !== $new_file 
 			&& file_exists( $old_file ) )
 		{
-			pte_add_debug( "Deleting old thumbnail: {$old_file}" );
+			$logger->debug( "Deleting old thumbnail: {$old_file}" );
 			unlink( $old_file );
 		}
 	}
 	// Delete tmpdir
-	rmdir( $PTE_TMP_DIR );
+	pte_rmdir( $PTE_TMP_DIR );
 	return pte_json_encode( array( 'success' => "Yay!" ) );
+}
+
+function pte_rmdir( $dir ){
+	$logger = PteLogger::singleton();
+	if ( !is_dir( $dir ) || !preg_match( "/ptetmp/", $dir ) ){
+		$logger->error("Tried to delete invalid directory: {$dir}");
+	}
+	foreach ( scandir( $dir ) as $file ){
+		if ( "." == $file || ".." == $file ) continue;
+		$full_path_to_file = $dir . DIRECTORY_SEPARATOR . $file;
+		$logger->debug("DELETING: {$full_path_to_file}");
+		unlink( $full_path_to_file );
+	}
+	rmdir( $dir );
 }
 
 function pte_delete_images()

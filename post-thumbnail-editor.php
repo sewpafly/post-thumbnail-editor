@@ -36,7 +36,9 @@ define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
 define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
 define( 'PTE_VERSION', "1.0.1-alpha2");
 
-
+/*
+ * Option Functionality
+ */
 function pte_get_option_name(){
 	global $current_user;
 	if ( ! isset( $current_user ) ){
@@ -122,10 +124,12 @@ function pte_enable_admin_js(){
 EOT;
 }
 
+// Base url/function.  All pte interactions go through here
 function pte_ajax(){
    // Move all adjuntant functions to a separate file and include that here
-   require_once(PTE_PLUGINPATH . 'pte_functions.php');
-	pte_add_debug( print_r( $_REQUEST, true ) );
+   require_once(PTE_PLUGINPATH . 'php/functions.php');
+	$logger = PteLogger::singleton();
+	$logger->debug( "PARAMETERS: " . print_r( $_REQUEST, true ) );
 
    switch ($_GET['pte-action'])
    {
@@ -161,7 +165,7 @@ function pte_media_row_actions($actions, $post, $detached){
 
 // Anonymous function (which apparently some versions of PHP will whine about)
 function pte_launch_options_page(){
-   require_once( PTE_PLUGINPATH . 'options.php' ); pte_options_page();
+   require_once( PTE_PLUGINPATH . 'php/options.php' ); pte_options_page();
 }
 
 function pte_admin_menu(){
@@ -174,16 +178,9 @@ function pte_admin_menu(){
 }
 
 function pte_options(){
-	require_once( PTE_PLUGINPATH . 'options.php' );
+	require_once( PTE_PLUGINPATH . 'php/options.php' );
 	pte_options_init();
 }
-
-/* Add Settings Page */
-add_action( 'admin_menu', 'pte_admin_menu' );
-add_action( 'settings_page_pte', 'pte_options' );
-add_action( 'load-options.php', 'pte_options' );
-//add_action( 'admin_init', 'pte_options' );
-/** End Settings Hooks **/
 
 
 /* This is the main admin media page */
@@ -203,5 +200,12 @@ add_filter('media_row_actions', 'pte_media_row_actions', 10, 3); // priority: 10
 
 /* For all purpose needs */
 add_action('wp_ajax_pte_ajax', 'pte_ajax');
+
+/* Add Settings Page */
+add_action( 'admin_menu', 'pte_admin_menu' );
+add_action( 'settings_page_pte', 'pte_options' );
+add_action( 'load-options.php', 'pte_options' );
+//add_action( 'admin_init', 'pte_options' );
+/** End Settings Hooks **/
 
 ?>

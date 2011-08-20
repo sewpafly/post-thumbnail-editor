@@ -17,24 +17,14 @@
 	</head>
 	<body>
 		<div id="stage1" class="stage">
-			<h1 class="stage-header">Post Thumbnail Editor - Step 1
-				<?php if ( $options['pte_debug'] ): ?>
-				<a class="show-log-messages" href="">Show Logs</a>
-				<?php endif; ?>
-			</h1>
-			<?php global $pte_log;
-			if ( isset( $pte_log ) && count( $pte_log ) > 0 ): ?>
+			<h1 class="stage-header">Post Thumbnail Editor - Step 1</h1>
+			<?php 
+			if ( $options['pte_debug'] ): ?>
 			<script type="text/javascript" charset="utf-8">
-				var pte_errors = <?php print( json_encode( pte_organize_logs() ) ); ?>;
+				var pte_errors = <?php print( json_encode( array( 'log' => $logger->get_logs() ) ) ); ?>;
 				log( "===== STARTUP PHP MESSAGES =====");
 				pte.parseServerLog(pte_errors.log);
 			</script>
-			<!-- <div id="error"><ul><?php 
-					//print_r($pte_errors);
-				foreach ( $pte_errors as $error_message ){
-					print( "<li>${error_message}</li>\r\n" );
-				}
-				?></ul></div> -->
 			<?php endif; ?>
 			<div id="pte-image">
 				<input type="hidden" id="pte-sizer" value="<?php echo $sizer; ?>" />
@@ -81,11 +71,7 @@
 			<a onclick="goBack(); return false;" href="#back" class="stage-navigation"
 				alt="Return to Step 1" title="Return to Step 1">
 				<img src="<?php print( PTE_PLUGINURL . "images/back.gif" ); ?>"/> Back</a>
-			<h1 class="stage-header">Post Thumbnail Editor - Step 2
-				<?php if ( $options['pte_debug'] ): ?>
-				<a class="show-log-messages" href="">Show Logs</a>
-				<?php endif; ?>
-			</h1>
+			<h1 class="stage-header">Post Thumbnail Editor - Step 2</h1>
 			{{if $data['error']}}
 			<div id="error">We noticed some potential issues:
 				<ul>
@@ -123,11 +109,7 @@
 		<div id="stage3" class="stage">
 		</div>
 		<script id="stage3template" type="text/x-jquery-tmpl">
-			<h1 class="stage-header">Post Thumbnail Editor
-				<?php if ( $options['pte_debug'] ): ?>
-				<a class="show-log-messages" href="">Show Logs</a>
-				<?php endif; ?>
-			</h1>
+			<h1 class="stage-header">Post Thumbnail Editor</h1>
 			{{if $data['success']}}
 			<div id="success">
 				<p>Images were created successfully.</p>
@@ -148,18 +130,20 @@
 				<img src="<?php print PTE_PLUGINURL; ?>images/loading.gif" alt="Please wait" />
 		</div></div>
 		<?php if ( $options['pte_debug'] ): ?>
+		<a id="pte-log-button" class="show-log-messages" href="" alt="Click here to show application logs" title="Click here to show application logs">Debug</a>
 		<div id="pte-log"> 
 			<div class="pte-opaque"></div>
 			<div id="pte-log-container">
 				<div id="pte-log-messages">
+					<p>If you are having any issues with this plugin, create a problem report on a <a href="https://github.com/sewpafly/post-thumbnail-editor/issues/new">github</a> or <a href="http://wordpress.org/tags/post-thumbnail-editor?forum_id=10#postform">wordpress.org</a> so that I can look into it. Copy these log statements and include some information about what you were trying to do, the expected output, and the output you got (really the most amount of information you can) to really help me out.  Thanks and good luck!</p>
 					<textarea name="logs"></textarea>
 					<!--<textarea name="logs" rows="8" cols="40"></textarea>-->
 				</div>
 				<div id="pte-log-tools">
 					<!--<a id="clipboard" href="">Copy to Clipboard</a>&nbsp;-->
-					<a id="pastebin" href="">Send to Pastebin</a>&nbsp;
-					<a id="clear-log" href="">Clear Messages</a>&nbsp;
-					<a id="close-log" href="">Close</a>
+					<a class="button" id="pastebin" href="">Send to Pastebin</a>&nbsp;
+					<a class="button" id="clear-log" href="">Clear Messages</a>&nbsp;
+					<a class="button" id="close-log" href="">Close</a>
 				</div>
 			</div>
 		</div>

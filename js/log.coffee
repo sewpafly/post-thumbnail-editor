@@ -33,6 +33,7 @@ do(pte) ->
 		try
 			pte.messages.push(new Message obj)
 			console.log obj
+			$('#pte-log-messages textarea').filter(':visible').val pte.formatLog()
 		catch error
 			#alert obj
 		return
@@ -42,8 +43,9 @@ do(pte) ->
 		log
 	pte.parseServerLog = (json) ->
 		log "===== SERVER LOG ====="
-		for message in json
-			log message
+		if json?.length? and json.length > 0
+			for message in json
+				log message
 		true
 
 	pte.sendToPastebin = (text) ->

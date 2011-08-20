@@ -188,7 +188,7 @@ function pte_gcd($a, $b){
 }
 
 function pte_sizes_display(){
-	require_once( 'pte_functions.php' );
+	require_once( 'functions.php' );
 	$options = pte_get_options();
 
 	// Table Header

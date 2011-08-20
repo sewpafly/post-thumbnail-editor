@@ -41,13 +41,6 @@ h1 {
 	font-style: italic; 
 	font-size: 1.6em;
 	text-shadow: white 1px 1px 5px, 2px 2px 10px #999;
-	a.show-log-messages {
-		color: #CD0000;
-		font-size: .5em;
-		font-style: italic; 
-		text-decoration: none;
-		text-shadow: none;
-	}
 }
 
 body { 
@@ -173,22 +166,78 @@ $opacity_percent: $opacity/100;
 	z-index: 0;
 }
 
+@mixin gradient($start, $end){
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from($start), to($end));
+   background-image: -webkit-linear-gradient(top, $start, $end);
+   background-image:    -moz-linear-gradient(top, $start, $end);
+   background-image:     -ms-linear-gradient(top, $start, $end);
+   background-image:      -o-linear-gradient(top, $start, $end);
+}
+
 #pte-log {
 	@include full-screen;
 	display: none;
 	z-index: 1300;
+	color: #ddd;
+	a { color: white; }
 	#pte-log-container {
 		@include full-screen-embedded;
 		top: 5%;
 		height: 80%;
 	}
-	a {
-		color: white;
+	$link-gradient-start: #303080;
+	$link-gradient-end: #00007F;
+	a.button {
+		@include gradient($link-gradient-start, $link-gradient-end);
+		/*border: 2px solid white;*/
+		border-radius: 0 0 7px 7px;
+		-moz-border-radius: 0 0 7px 7px;
+		-webkit-border-radius: 0 0 7px 7px;
+		padding: 0 10px 3px 10px;
+		text-decoration: none;
+	}
+	a.button:hover { @include gradient($link-gradient-end, $link-gradient-start); }
+	p { 
+		line-height: 1.2em;
+		margin: 0 auto 20px; 
+		text-align: left; 
+		width: 90%; 
 	}
 	textarea {
 		height: 400px;
 		width: 90%;
 	}
+}
+
+$log-gradient-start: #FF0000;
+$log-gradient-end:   #CD0000;
+
+a#pte-log-button.show-log-messages {
+	background-color: $log-gradient-end;
+	border-radius: 0 0 7px 7px;
+	-moz-border-radius: 0 0 7px 7px;
+	-webkit-border-radius: 0 0 7px 7px;
+	top: 0;
+	right: 20px;
+	display: block;
+	/*left: 282px;*/
+	padding: 3px 5px 5px 5px;
+	position: fixed;
+	text-align: center;
+	color: white;
+	font-size: 0.9em;
+	font-style: italic; 
+	text-decoration: none;
+	text-shadow: none;
+	@include gradient($log-gradient-start, $log-gradient-end);
+}
+a#pte-log-button.show-log-messages:hover {
+	@include gradient($log-gradient-end, $log-gradient-start);
+}
+/* FIXES IE to bottom of screen */
+* html #pte-log-button.show-log-messages {
+	position:absolute;
+top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px');
 }
 
 #pte-loading {
