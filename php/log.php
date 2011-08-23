@@ -12,13 +12,13 @@ class PteLogMessage
 	private function getTypeString(){
 		switch ($this->type){
 		case self::$ERROR:
-			return "ERROR";
+			return __( "ERROR", PTE_DOMAIN );
 			break;
 		case self::$WARN:
-			return "WARN";
+			return __( "WARNING", PTE_DOMAIN );
 			break;
 		default:
-			return "DEBUG";
+			return __( "DEBUG", PTE_DOMAIN );
 		}
 	}
 
@@ -49,10 +49,14 @@ class PteLogMessage
 class PteLogger {
 	private static $instance;
 	private $messages    = array();
-	private $defaulttype = 4;
+	private $counts      = array();
+	//private $defaulttype = 4;
 	//private $defaulttype = PteLogMessage::$DEBUG;
+	private $defaulttype = NULL;
 
-	private function __construct() { }
+	private function __construct() {
+		$this->defaulttype = PteLogMessage::$DEBUG;
+  	}
 
 	public static function singleton()
 	{
@@ -61,6 +65,22 @@ class PteLogger {
 			self::$instance = new $className;
 		}
 		return self::$instance;
+	}
+
+	private function add_message( $message ){
+		$type = $message->getType();
+
+		if ( ! isset( $this->counts[ $type ] ) ){
+			$this->counts[ $message->getType() ] = 1;
+		}
+		else {
+			$this->counts[ $message->getType() ]++;
+		}
+		$this->messages[] = $message;
+	}
+
+	public function get_log_count( $type ){
+		return is_int( $this->counts[ $type ] ) ? $this->counts[$type] : 0;
 	}
 
 	/*
@@ -76,7 +96,7 @@ class PteLogger {
 					$message = new PteLogMessage( $type, $message );
 				}
 				catch ( Exception $e ){
-					printf( __( "ERROR Logging Message: %s" ), $message );
+					printf( __( "ERROR Logging Message: %s", PTE_DOMAIN ), $message );
 				}
 			}
 			else{
@@ -90,7 +110,7 @@ class PteLogger {
 			return false;
 		}
 
-		$this->messages[] = $message;
+		$this->add_message( $message );
 		return true;
 	}
 
@@ -115,11 +135,10 @@ class PteLogger {
 		}
 
 		foreach ( $this->messages as $message ){
-			// If the current Level isn't requested, go to next
-			if ( !( $levels & $message->getType() ) ){
-				continue;
+			// If the current Level is requested, add to output
+			if ( $levels & $message->getType() ){
+				$output[] = $message->__toString();
 			}
-			$output[] = $message->__toString();
 		}
 		return $output;
 	}

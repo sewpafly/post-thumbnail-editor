@@ -609,14 +609,14 @@
         type: "POST",
         error: function(xhr, status, errorThrown) {
           $('#pte-log').fadeOut('900');
-          alert("Sorry, there was a problem trying to send to pastebin");
+          alert(objectL10n.pastebin_create_error);
           log(xhr);
           log(status);
           return log(errorThrown);
         },
         success: function(data, status, xhr) {
           $('#pte-log').fadeOut('900');
-          return prompt("PASTEBIN URL:", data.url);
+          return prompt(objectL10n.pastebin_url, data.url);
         }
       });
     };
@@ -795,7 +795,7 @@
         }
       }
       if ((current_ar != null) && (tmp_ar != null) && tmp_ar !== current_ar) {
-        throw "Too many Aspect Ratios. Disabling";
+        throw objectL10n.aspect_ratio_disabled;
       }
       return current_ar = tmp_ar;
     }

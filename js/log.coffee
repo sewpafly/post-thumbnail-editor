@@ -65,13 +65,13 @@ do(pte) ->
 			type: "POST"
 			error: (xhr, status, errorThrown) ->
 				$('#pte-log').fadeOut '900'
-				alert "Sorry, there was a problem trying to send to pastebin"
+				alert objectL10n.pastebin_create_error
 				log xhr
 				log status
 				log errorThrown
 			success: (data, status, xhr) ->
 				$('#pte-log').fadeOut '900'
-				prompt "PASTEBIN URL:", data.url
+				prompt objectL10n.pastebin_url, data.url
 
 
 	# End PTE Log Section

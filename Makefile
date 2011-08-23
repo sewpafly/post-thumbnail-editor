@@ -36,7 +36,7 @@ endif
 
 
 # A simple make will compile the js/css and minify them
-all: minify-js minify-css
+all: minify-js minify-css trans
 
 # Build javascript
 $(JSOUTPUT_MIN): $(JSOUTPUT_DEV)
@@ -64,6 +64,14 @@ js: $(JSOUTPUT_DEV)
 minify-js: $(JSOUTPUT_MIN)
 css: $(CSSOUTPUT_DEV)
 minify-css: $(CSSOUTPUT_MIN)
+
+#  i18n - Defined in local.mk to point to wordpress makepot.php script
+trans:
+	@echo "Creating Internationalization Template"
+ifdef I18N
+	cd i18n; \
+	php '$(I18N)' wp-plugin ../
+endif
 
 # Clean
 OUTPUTFILES = $(wildcard $(CSSOUTPUT_MIN) $(CSSOUTPUT_DEV) $(JSOUTPUT_MIN) $(JSOUTPUT_DEV))

@@ -1,0 +1,235 @@
+# Copyright (C) 2010 Post Thumbnail Editor
+# This file is distributed under the same license as the Post Thumbnail Editor package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Post Thumbnail Editor 1.0.1-alpha2\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
+"POT-Creation-Date: 2011-08-23 02:22:21+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: html/pte.php:20
+msgid "Post Thumbnail Editor - Step 1"
+msgstr ""
+
+#: html/pte.php:33
+msgid "Create Thumbnails"
+msgstr ""
+
+#: html/pte.php:39
+msgid "Choose the images/thumbnails that you want to edit:"
+msgstr ""
+
+#: html/pte.php:42
+msgid "Select: %1$sAll%2$s | %3$sNone%4$s"
+msgstr ""
+
+#: html/pte.php:59
+msgid "Current image:"
+msgstr ""
+
+#: html/pte.php:78
+msgid "Back"
+msgstr ""
+
+#: html/pte.php:80
+msgid "Post Thumbnail Editor - Step 2"
+msgstr ""
+
+#: html/pte.php:83 html/pte.php:144
+msgid "We noticed some potential issues:"
+msgstr ""
+
+#: html/pte.php:86
+msgid "View %1$slogs%2$s for further information"
+msgstr ""
+
+#: html/pte.php:91
+msgid "%1$sEnable debugging%2$s for additional information"
+msgstr ""
+
+#: html/pte.php:101
+msgid "Select the images you want to keep: %1$sAll%2$s | %3$sNone%4$s"
+msgstr ""
+
+#: html/pte.php:124
+msgid "Okay, these look good..."
+msgstr ""
+
+#: html/pte.php:128
+msgid "I'd rather start over..."
+msgstr ""
+
+#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 1.0.1-alpha2)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: html/pte.php:135 php/options.php:64 post-thumbnail-editor.php:113
+#: post-thumbnail-editor.php:175 post-thumbnail-editor.php:176
+msgid "Post Thumbnail Editor"
+msgstr ""
+
+#: html/pte.php:138
+msgid "Images were created successfully."
+msgstr ""
+
+#: html/pte.php:140
+msgid "Click %1$shere%2$s to modify another thumbnail."
+msgstr ""
+
+#: html/pte.php:156
+msgid "Please wait"
+msgstr ""
+
+#: html/pte.php:160
+msgid "Click here to show application logs"
+msgstr ""
+
+#: html/pte.php:162 php/options.php:30
+msgid "Debug"
+msgstr ""
+
+#: html/pte.php:167
+msgid ""
+"If you are having any issues with this plugin, create a problem report on %1"
+"$sgithub%2$s or %3$swordpress.org%4$s so that I can look into it. Copy these "
+"log statements and include some information about what you were trying to "
+"do, the expected output, and the output you got (the more information the "
+"better).  Thanks and good luck!"
+msgstr ""
+
+#: html/pte.php:178
+msgid "Send to Pastebin"
+msgstr ""
+
+#: html/pte.php:179
+msgid "Clear Messages"
+msgstr ""
+
+#: html/pte.php:180
+msgid "Close"
+msgstr ""
+
+#: php/functions.php:237
+msgid "Sorry, there was a problem trying to send to pastebin"
+msgstr ""
+
+#: php/functions.php:238
+msgid "PASTEBIN URL:"
+msgstr ""
+
+#: php/functions.php:239
+msgid "Disabling aspect ratio"
+msgstr ""
+
+#: php/log.php:15
+msgid "ERROR"
+msgstr ""
+
+#: php/log.php:18
+msgid "WARNING"
+msgstr ""
+
+#: php/log.php:21
+msgid "DEBUG"
+msgstr ""
+
+#: php/log.php:99
+msgid "ERROR Logging Message: %s"
+msgstr ""
+
+#: php/options.php:8
+msgid "These site-wide settings can only be changed by an administrator"
+msgstr ""
+
+#: php/options.php:19
+msgid "User Options"
+msgstr ""
+
+#: php/options.php:24
+msgid "Thickbox dimensions"
+msgstr ""
+
+#: php/options.php:36
+msgid "Reset to defaults"
+msgstr ""
+
+#: php/options.php:47
+msgid "Site Options"
+msgstr ""
+
+#: php/options.php:51 post-thumbnail-editor.php:165
+msgid "Thumbnails"
+msgstr ""
+
+#: php/options.php:72
+msgid "Save Changes"
+msgstr ""
+
+#: php/options.php:86
+msgid ""
+"Only users with the 'manage_options' capability may make changes to these "
+"settings."
+msgstr ""
+
+#: php/options.php:118
+msgid "Thickbox width must be at least 750 pixels."
+msgstr ""
+
+#: php/options.php:128
+msgid "Thickbox height must be greater than 550 pixels."
+msgstr ""
+
+#: php/options.php:142
+msgid "Width:"
+msgstr ""
+
+#: php/options.php:146
+msgid "Set this to a value greater than 750."
+msgstr ""
+
+#: php/options.php:153
+msgid "Height:"
+msgstr ""
+
+#: php/options.php:157
+msgid "Set this to a value greater than 550."
+msgstr ""
+
+#: php/options.php:169
+msgid "Enable debugging"
+msgstr ""
+
+#: php/options.php:178
+msgid "Reset User Options"
+msgstr ""
+
+#: php/options.php:204
+msgid "Post Thumbnail"
+msgstr ""
+
+#: php/options.php:205
+msgid "Hidden"
+msgstr ""
+
+#: post-thumbnail-editor.php:164
+msgid "Edit Thumbnails"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Individually manage your post thumbnails"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "sewpafly"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://sewpafly.github.com/post-thumbnail-editor"
+msgstr ""

@@ -13,20 +13,29 @@ function pte_require_json() {
  */
 function pte_json_encode($mixed = null){
 	$logger = PteLogger::singleton();
+	$options = pte_get_options();
 
 	// If a buffer was started this will check for any residual output
 	// and add to the existing errors.
 	if ( function_exists( 'ob_get_flush' ) ){
 		$buffer = ob_get_clean();
 		if ( isset( $buffer ) && strlen( $buffer ) > 0 ){
-			$logger->error( "Buffered output: {$buffer}" );
+			$logger->warn( "Buffered output: {$buffer}" );
 		}
 	}
 
-	$logs = array(
-		'error' => $logger->get_logs( PteLogMessage::$ERROR ),
-		'log' => $logger->get_logs()
-	);
+	if ( $logger->get_log_count( PteLogMessage::$ERROR ) > 0 
+		|| $logger->get_log_count( PteLogMessage::$WARN ) > 0 )
+	{
+		$logs['error'] = $logger->get_logs( PteLogMessage::$ERROR | PteLogMessage::$WARN );
+	}
+	//if ( $logger->get_log_count( PteLogMessage::$WARN ) > 0 ){
+	//   $logs['warn'] = $logger->get_logs( PteLogMessage::$WARN );
+	//}
+	if ( $options['pte_debug'] ){
+		$logs['log'] = $logger->get_logs();
+	}
+
 	if ( ! function_exists('json_encode') ){
 		$logs['error'][] = "json_encode not available, upgrade your php";
 		$messages = implode( "\r\n", $logs['error'] );
@@ -52,7 +61,7 @@ function pte_json_encode($mixed = null){
 /*
  * pte_json_error - Calling this should return all the way up the chain...
  */
-function pte_json_error($error){
+function pte_json_error( $error ){
 	$logger = PteLogger::singleton();
 	$logger->error( $error );
 	return pte_json_encode();
@@ -166,7 +175,7 @@ function pte_get_image_data( $id, $size, $size_data ){
 		return $path_information;
 	}
 	else {
-		$logger->error( "Couldn't find or generate metadata for image: {$id}-{$size}" );
+		$logger->warn( "Couldn't find or generate metadata for image: {$id}-{$size}" );
 	}
 	return false;
 }
@@ -223,6 +232,13 @@ function pte_launch(){
 			, PTE_VERSION
 		);
 	}
+	wp_localize_script('pte'
+		, 'objectL10n'
+		, array( 'pastebin_create_error' => __( 'Sorry, there was a problem trying to send to pastebin', PTE_DOMAIN )
+			, 'pastebin_url' => __( 'PASTEBIN URL:', PTE_DOMAIN )
+			, 'aspect_ratio_disabled' => __( 'Disabling aspect ratio', PTE_DOMAIN )
+		)
+	);
 
 	$id = pte_check_id((int) $_GET['id']);
 
@@ -238,17 +254,17 @@ function pte_launch(){
 
 	$sizer = $big > 400 ? 400 / $big : 1;
 
-	require( PTE_PLUGINPATH . "html/pte.html" );
+	require( PTE_PLUGINPATH . "html/pte.php" );
 }
 
 function pte_check_id( $id ){
 	$logger = PteLogger::singleton();
 	if ( !$post =& get_post( $id ) ){
-		$logger->error( "Invalid id: {$id}" );
+		$logger->warn( "Invalid id: {$id}" );
 		return false;
 	}
 	if ( !current_user_can( 'edit_post', $id ) ){
-		$logger->error( "User does not have permission to edit this item" );
+		$logger->warn( "User does not have permission to edit this item" );
 		return false;
 	}
 	return $id;
@@ -257,7 +273,7 @@ function pte_check_id( $id ){
 function pte_check_int( $int ){
 	$logger = PteLogger::singleton();
 	if (! is_numeric( $int ) ){
-		$logger->error( "PARAM not numeric: '{$int}'" );
+		$logger->warn( "PARAM not numeric: '{$int}'" );
 		return false;
 	}
 	return $int;
@@ -339,7 +355,7 @@ function pte_write_image( $image, $orig_type, $destfilename ){
 	$dir = dirname( $destfilename );
 	if ( ! is_dir( $dir ) ){
 		if ( ! mkdir( $dir, 0777, true ) ){
-			$logger->error("Error creating directory: {$dir}");
+			$logger->warn("Error creating directory: {$dir}");
 		}
 	}
 
@@ -575,7 +591,8 @@ function pte_confirm_images(){
 function pte_rmdir( $dir ){
 	$logger = PteLogger::singleton();
 	if ( !is_dir( $dir ) || !preg_match( "/ptetmp/", $dir ) ){
-		$logger->error("Tried to delete invalid directory: {$dir}");
+		$logger->warn("Tried to delete invalid directory: {$dir}");
+		return;
 	}
 	foreach ( scandir( $dir ) as $file ){
 		if ( "." == $file || ".." == $file ) continue;
@@ -602,7 +619,7 @@ function pte_delete_images()
 	$uploads = wp_upload_dir();
 	$PTE_TMP_DIR = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR . $id;
 	// Delete tmpdir
-	unlink( $PTE_TMP_DIR );
+	pte_rmdir( $PTE_TMP_DIR );
 	return pte_json_encode( array( "success" => "Yay!" ) );
 }
 

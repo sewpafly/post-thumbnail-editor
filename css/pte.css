@@ -165,7 +165,7 @@ table td {
 .pte-opaque {
   background-color: #000;
   height: 100%;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -176,7 +176,7 @@ table td {
 
 #pte-log {
   height: 100%;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -255,7 +255,7 @@ a#pte-log-button.show-log-messages:hover {
 
 #pte-loading {
   height: 100%;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%; }

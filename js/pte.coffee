@@ -80,7 +80,8 @@ determineAspectRatio = (current_ar, size) ->
 				tmp_ar = "#{ width }:#{ height }"
 		if current_ar? and tmp_ar? and tmp_ar isnt current_ar
 			#alert "2 images are trying to set different aspect ratios, disabling..."
-			throw "Too many Aspect Ratios. Disabling"
+			#throw "Too many Aspect Ratios. Disabling"
+			throw objectL10n.aspect_ratio_disabled
 		current_ar = tmp_ar
 
 do (pte) ->

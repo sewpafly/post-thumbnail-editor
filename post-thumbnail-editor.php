@@ -34,6 +34,7 @@
  */
 define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
 define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
+define( 'PTE_DOMAIN', "post-thumbnail-editor");
 define( 'PTE_VERSION', "1.0.1-alpha2");
 
 /*
@@ -159,7 +160,9 @@ function pte_media_row_actions($actions, $post, $detached){
 		. "?action=pte_ajax&pte-action=launch&id=" 
 		. $post->ID
 		. "&TB_iframe=true&height={$options['pte_tb_height']}&width={$options['pte_tb_width']}";
-	$actions['pte'] = "<a class='thickbox' href='${pte_url}' title='Edit Thumbnails'>Thumbnails</a>";
+	$actions['pte'] = "<a class='thickbox' href='${pte_url}' title='"
+		. __( 'Edit Thumbnails', PTE_DOMAIN )
+		. "'>" . __( 'Thumbnails', PTE_DOMAIN ) . "</a>";
 	return $actions;
 }
 
@@ -169,8 +172,8 @@ function pte_launch_options_page(){
 }
 
 function pte_admin_menu(){
-	add_options_page( __('Post Thumbnail Editor') . "-title",
-		__('Post Thumbnail Editor'),
+	add_options_page( __('Post Thumbnail Editor', PTE_DOMAIN) . "-title",
+		__('Post Thumbnail Editor', PTE_DOMAIN),
 		'edit_posts', // Set the capability to null as every user can have different settings set
 		'pte',
 		'pte_launch_options_page'
@@ -181,7 +184,6 @@ function pte_options(){
 	require_once( PTE_PLUGINPATH . 'php/options.php' );
 	pte_options_init();
 }
-
 
 /* This is the main admin media page */
 add_action('admin_print_styles-media.php', 'pte_admin_media_scripts');
@@ -206,6 +208,10 @@ add_action( 'admin_menu', 'pte_admin_menu' );
 add_action( 'settings_page_pte', 'pte_options' );
 add_action( 'load-options.php', 'pte_options' );
 //add_action( 'admin_init', 'pte_options' );
+
 /** End Settings Hooks **/
 
+	load_plugin_textdomain( PTE_DOMAIN
+		, false
+		, basename( PTE_PLUGINPATH ) . DIRECTORY_SEPARATOR . "i18n" );
 ?>

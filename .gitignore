@@ -1,3 +1,4 @@
 .css
 .sass-cache/
 local.mk
+.pot
