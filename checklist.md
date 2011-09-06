@@ -30,4 +30,9 @@
    * `git commit -a -m "Commit msg"`
    * `git tag [-a -m 'annotated tag'] version`
    * `git push --tags`
+8. Push to wordpress
+   * `gitk` Use diff utility to see changes from last version
+	* Manually update the svn tree
+	* Tag release: `svn cp trunk tag/-version-`
+	* Check in all changes: `svn ci -m "message"`
 
