@@ -80,11 +80,12 @@ do(pte) ->
 window.log = pte.log
 
 $(document).ready ($) ->
-	$('#pte-log-tools a').click (e) ->
-		e.preventDefault()
 	#$('#clipboard').click (e) ->
 	#   text = pte.formatLog()
 	#   prompt "Ctrl+C, Enter", text
+	$('#test').click (e) ->
+		e.stopImmediatePropagation()
+		true
 	$('#pastebin').click (e) ->
 		pte.sendToPastebin pte.formatLog()
 	$('#clear-log').click (e) ->
@@ -93,6 +94,8 @@ $(document).ready ($) ->
 	$('#close-log').click (e) ->
 		$('#pte-log').fadeOut '900'
 
+	$('#pte-log-tools a').click (e) ->
+		e.preventDefault()
 	$('body').delegate '.show-log-messages', 'click', (e) ->
 		e.preventDefault()
 		$('#pte-log-messages textarea').val pte.formatLog()

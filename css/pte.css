@@ -140,9 +140,13 @@ table td {
   vertical-align: middle;
   padding: 15px 0; }
 
-/*.col1 { */
-/*width: 50px; */
-/*}*/
+.col1 {
+  max-width: 30px;
+  text-align: center;
+  width: 30px; }
+  .col1 input {
+    margin: 0 auto; }
+
 /*.col2 { */
 /*   padding-right: 20px; */
 /*}*/
@@ -276,7 +280,7 @@ a#pte-log-button.show-log-messages:hover {
 
 #stage2, #stage3 {
   display: none;
-  left: 1500px;
+  /*left: $width * 2;*/
   width: 750px; }
 
 table {

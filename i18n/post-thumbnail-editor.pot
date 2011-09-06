@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Post Thumbnail Editor 1.0.1-alpha2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
-"POT-Creation-Date: 2011-08-23 02:22:21+00:00\n"
+"POT-Creation-Date: 2011-09-06 15:57:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -66,8 +66,9 @@ msgstr ""
 
 #. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 1.0.1-alpha2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: html/pte.php:135 php/options.php:64 post-thumbnail-editor.php:113
-#: post-thumbnail-editor.php:175 post-thumbnail-editor.php:176
+#: html/pte.php:135 post-thumbnail-editor.php:113
+#: post-thumbnail-editor.php:178 post-thumbnail-editor.php:179
+#: php/options.php:64
 msgid "Post Thumbnail Editor"
 msgstr ""
 
@@ -93,35 +94,35 @@ msgstr ""
 
 #: html/pte.php:167
 msgid ""
-"If you are having any issues with this plugin, create a problem report on %1"
-"$sgithub%2$s or %3$swordpress.org%4$s so that I can look into it. Copy these "
-"log statements and include some information about what you were trying to "
-"do, the expected output, and the output you got (the more information the "
+"If you are having any issues with this plugin, create a problem report on "
+"%1$sgithub%2$s or %3$swordpress.org%4$s so that I can look into it. Copy "
+"these log statements and include some information about what you were trying "
+"to do, the expected output, and the output you got (the more information the "
 "better).  Thanks and good luck!"
 msgstr ""
 
-#: html/pte.php:178
+#: html/pte.php:181
 msgid "Send to Pastebin"
 msgstr ""
 
-#: html/pte.php:179
+#: html/pte.php:182
 msgid "Clear Messages"
 msgstr ""
 
-#: html/pte.php:180
+#: html/pte.php:185
+msgid "Run Tests"
+msgstr ""
+
+#: html/pte.php:186
 msgid "Close"
 msgstr ""
 
-#: php/functions.php:237
-msgid "Sorry, there was a problem trying to send to pastebin"
+#: post-thumbnail-editor.php:167
+msgid "Edit Thumbnails"
 msgstr ""
 
-#: php/functions.php:238
-msgid "PASTEBIN URL:"
-msgstr ""
-
-#: php/functions.php:239
-msgid "Disabling aspect ratio"
+#: post-thumbnail-editor.php:168 php/options.php:51
+msgid "Thumbnails"
 msgstr ""
 
 #: php/log.php:15
@@ -158,10 +159,6 @@ msgstr ""
 
 #: php/options.php:47
 msgid "Site Options"
-msgstr ""
-
-#: php/options.php:51 post-thumbnail-editor.php:165
-msgid "Thumbnails"
 msgstr ""
 
 #: php/options.php:72
@@ -214,8 +211,16 @@ msgstr ""
 msgid "Hidden"
 msgstr ""
 
-#: post-thumbnail-editor.php:164
-msgid "Edit Thumbnails"
+#: php/functions.php:257
+msgid "Sorry, there was a problem trying to send to pastebin"
+msgstr ""
+
+#: php/functions.php:258
+msgid "PASTEBIN URL:"
+msgstr ""
+
+#: php/functions.php:259
+msgid "Disabling aspect ratio"
 msgstr ""
 
 #. Plugin URI of the plugin/theme

@@ -2,7 +2,7 @@
 Contributors: sewpafly
 Donate link: https://www.wepay.com/donate/34543
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, awesome
-Requires at least: 3.1
+Requires at least: 3.2.1
 Tested up to: 3.2.1
 Stable tag: trunk
 
@@ -66,6 +66,7 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 = 1.0.1 =
 * Fixed compatibility with other thickbox enabled plugins that called the wordpress media scripts.
 * Added Options screen (Settings -> Post Thumbnail Editor) to configure thickbox dimensions and enable/disable debugging.
+* Added Translation support & French translation (thanks to Li-An)
 
 = 1.0.0 =
 * Total redesign of PHP/HTML interface
@@ -85,7 +86,7 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 == Upgrade Notice ==
 
 = 1.0.1 =
-Added options menu and fixed incompatibility with other thickbox enabled plugins.
+Added translation support, french language, options menu and fixed incompatibility with other thickbox enabled plugins.
 
 = 1.0.0 =
 Now with more awesome.  Redesigned interface will challenge your perceptions of the universe.

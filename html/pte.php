@@ -110,7 +110,7 @@
 			<table>
 			{{each $data.thumbnails}}
 				<tr class="selected">
-					<td><input checked class="pte-confirm" type="checkbox" name="pte_confirm[]" value="${$index}"/></td>
+					<td class="col1"><input checked class="pte-confirm" type="checkbox" name="pte_confirm[]" value="${$index}"/></td>
 					<td class="col2">
 						<div class="pte-size-label">${$index}</div>
 						<img src="${$value.url}?${randomness()}"/>
@@ -174,9 +174,15 @@
 					<!--<textarea name="logs" rows="8" cols="40"></textarea>-->
 				</div>
 				<div id="pte-log-tools">
+<?php
+					$testurl = admin_url('admin-ajax.php') . "?action=pte_ajax&pte-action=test&id=${id}";
+?>
 					<!--<a id="clipboard" href="">Copy to Clipboard</a>&nbsp;-->
 					<a class="button" id="pastebin" href=""><?php _e( 'Send to Pastebin', PTE_DOMAIN ); ?></a>&nbsp;
 					<a class="button" id="clear-log" href=""><?php _e( 'Clear Messages', PTE_DOMAIN ); ?></a>&nbsp;
+					<a class="button" id="test" target="ptetest" href="<?php 
+						echo( $testurl ); ?>"><?php 
+						_e( 'Run Tests', PTE_DOMAIN ); ?></a>&nbsp;
 					<a class="button" id="close-log" href=""><?php _e( 'Close', PTE_DOMAIN ); ?></a>
 				</div>
 			</div>

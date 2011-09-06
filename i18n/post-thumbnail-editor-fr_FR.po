@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Post Thumbnail Editor 1.0.1-alpha2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
-"POT-Creation-Date: 2011-08-22 20:53:04+00:00\n"
+"POT-Creation-Date: 2011-09-06 15:57:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -43,76 +43,86 @@ msgstr "Revenir en arrière"
 msgid "Post Thumbnail Editor - Step 2"
 msgstr "Post Thumbnail Editor - Étape 2"
 
-#: html/pte.php:82
-#: html/pte.php:132
+#: html/pte.php:83 html/pte.php:144
 msgid "We noticed some potential issues:"
 msgstr "Nous avons noté d'éventuels problèmes:"
 
-#: html/pte.php:89
+#: html/pte.php:86
+msgid "View %1$slogs%2$s for further information"
+msgstr ""
+
+#: html/pte.php:91
+msgid "%1$sEnable debugging%2$s for additional information"
+msgstr ""
+
+#: html/pte.php:101
 msgid "Select the images you want to keep: %1$sAll%2$s | %3$sNone%4$s"
 msgstr "Sélectionner les images que vous désirez conserver: %1$sToutes%2$s | %3$sAucune%4$s"
 
-#: html/pte.php:112
+#: html/pte.php:124
 msgid "Okay, these look good..."
 msgstr "Très bien, cela semble correct..."
 
-#: html/pte.php:116
+#: html/pte.php:128
 msgid "I'd rather start over..."
 msgstr "Je ferai mieux de recommencer..."
 
 #. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 1.0.1-alpha2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: html/pte.php:123
-#: post-thumbnail-editor.php:113
-#: post-thumbnail-editor.php:175
-#: post-thumbnail-editor.php:176
+#: html/pte.php:135 post-thumbnail-editor.php:113
+#: post-thumbnail-editor.php:178 post-thumbnail-editor.php:179
 #: php/options.php:64
 msgid "Post Thumbnail Editor"
 msgstr "Post Thumbnail Editor"
 
-#: html/pte.php:126
+#: html/pte.php:138
 msgid "Images were created successfully."
 msgstr "Les images ont été créées avec succès."
 
-#: html/pte.php:128
+#: html/pte.php:140
 msgid "Click %1$shere%2$s to modify another thumbnail."
 msgstr "Cliquez %1$sici%2$s pour modifier une autre miniature."
 
-#: html/pte.php:144
+#: html/pte.php:156
 msgid "Please wait"
 msgstr "Veuillez attendre"
 
-#: html/pte.php:148
+#: html/pte.php:160
 msgid "Click here to show application logs"
 msgstr "Cliquez ici pour montrer les logs de l'application"
 
-#: html/pte.php:150
-#: php/options.php:30
+#: html/pte.php:162 php/options.php:30
 msgid "Debug"
 msgstr "Debugger"
 
-#: html/pte.php:155
-msgid "If you are having any issues with this plugin, create a problem report on %1$sgithub%2$s or %3$swordpress.org%4$s so that I can look into it. Copy these log statements and include some information about what you were trying to do, the expected output, and the output you got (the more information the better).  Thanks and good luck!"
+#: html/pte.php:167
+msgid ""
+"If you are having any issues with this plugin, create a problem report on "
+"%1$sgithub%2$s or %3$swordpress.org%4$s so that I can look into it. Copy "
+"these log statements and include some information about what you were trying "
 msgstr "Si vous rencontrer des problèmes avec ce plugin, veuillez créer un rapport de problème à  %1$sgithub%2$s ou %3$swordpress.org%4$s afin que je puisse le consulter. Veuillez copier ces états de log et inclure les informations sur ce que vous étiez en train de faire, ce que vous espériez obtenir, et ce qui en est résulté (plus il y aura d'informations, mieux ce sera). Merci et bonne chance !"
 
-#: html/pte.php:166
+#: html/pte.php:181
 msgid "Send to Pastebin"
 msgstr "Envoyer à  Pastebin"
 
-#: html/pte.php:167
+#: html/pte.php:182
 msgid "Clear Messages"
 msgstr "Effacer les messages"
 
-#: html/pte.php:168
+#: html/pte.php:185
+msgid "Run Tests"
+msgstr ""
+
+#: html/pte.php:186
 msgid "Close"
 msgstr "Fermer"
 
-#: post-thumbnail-editor.php:164
+#: post-thumbnail-editor.php:167
 msgid "Edit Thumbnails"
 msgstr "Éditer les miniatures"
 
-#: post-thumbnail-editor.php:165
-#: php/options.php:51
+#: post-thumbnail-editor.php:168 php/options.php:51
 msgid "Thumbnails"
 msgstr "Miniatures"
 
@@ -200,16 +210,16 @@ msgstr "Miniature de billet"
 msgid "Hidden"
 msgstr "Caché"
 
-#: php/functions.php:237
+#: php/functions.php:257
 msgid "Sorry, there was a problem trying to send to pastebin"
 msgstr "Désolé, il y a eu un problème lors de l'envoi à Pastebin"
 
-#: php/functions.php:238
+#: php/functions.php:258
 msgid "PASTEBIN URL:"
 msgstr "URL de Pastebin:"
 
-#: php/functions.php:239
-msgid "Too many Aspect Ratios. Disabling."
+#: php/functions.php:259
+msgid "Disabling aspect ratio"
 msgstr "Trop de différents ratios de taille. Désactivation."
 
 #. Plugin URI of the plugin/theme

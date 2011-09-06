@@ -1,4 +1,8 @@
 <?php
+/*
+ * TODO: add helper functions to get various links to different functions
+ */
+
 require_once( "log.php" );
 
 function pte_require_json() {
@@ -191,6 +195,22 @@ function pte_get_all_alternate_size_information( $id ){
 		$info['current'] = pte_get_image_data( $id, $size, $info );
 	}
 	return $sizes;
+}
+
+/*
+ * pte_test
+ *
+ * Outputs the test HTML (and loads normal interface in an iframe)
+ *
+ * Requires post id as $_GET['id']
+ */
+function pte_test(){
+	$id = pte_check_id((int) $_GET['id']);
+	if ( $id ){
+		$testurl = admin_url('admin-ajax.php') . "?action=pte_ajax&pte-action=launch&id=${id}";
+		require( PTE_PLUGINPATH . "html/test.php" );
+	}
+	return;
 }
 
 /*

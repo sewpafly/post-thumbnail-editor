@@ -483,7 +483,7 @@
 	}
 })( jQuery );
 (function() {
-  var $, Message, TimerFunc, determineAspectRatio, gcd, pte, toType, window;
+  var $, Message, TimerFunc, deleteThumbs, deleteThumbsSuccessCallback, determineAspectRatio, gcd, pte, pte_queue, toType, window;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   window = this;
   $ = window.jQuery;
@@ -624,8 +624,9 @@
   })(pte);
   window.log = pte.log;
   $(document).ready(function($) {
-    $('#pte-log-tools a').click(function(e) {
-      return e.preventDefault();
+    $('#test').click(function(e) {
+      e.stopImmediatePropagation();
+      return true;
     });
     $('#pastebin').click(function(e) {
       return pte.sendToPastebin(pte.formatLog());
@@ -636,6 +637,9 @@
     });
     $('#close-log').click(function(e) {
       return $('#pte-log').fadeOut('900');
+    });
+    $('#pte-log-tools a').click(function(e) {
+      return e.preventDefault();
     });
     return $('body').delegate('.show-log-messages', 'click', function(e) {
       e.preventDefault();
@@ -728,39 +732,99 @@
     log(data);
     return true;
   };
+  deleteThumbs = function(id) {
+    var delete_options;
+    delete_options = {
+      "id": id,
+      'action': 'pte_ajax',
+      'pte-action': 'delete-images',
+      'pte-nonce': $('#pte-delete-nonce').val()
+    };
+    return $.ajax({
+      url: ajaxurl,
+      data: delete_options,
+      global: false,
+      dataType: "json",
+      success: deleteThumbsSuccessCallback
+    });
+  };
+  deleteThumbsSuccessCallback = function(data, status, xhr) {
+    log("===== DELETE SUCCESSFUL, DATA DUMP FOLLOWS =====");
+    log(data);
+    return pte.parseServerLog(data.log);
+  };
+  pte_queue = $({});
+  $.fn.extend({
+    move: function(options) {
+      var defaults;
+      defaults = {
+        direction: 'left',
+        speed: 500,
+        easing: 'swing',
+        toggle: true,
+        callback: null,
+        callbackargs: null
+      };
+      options = $.extend(defaults, options);
+      this.each(function() {
+        return pte_queue.queue(__bind(function(next) {
+          var $elem, direction, isVisible, move_to;
+          $elem = $(this);
+          direction = options.direction === 'left' ? -1 : 1;
+          move_to = $elem.css('left') === "0px" ? $(window).width() * direction : 0;
+          isVisible = $elem.is(':visible');
+          if (!isVisible) {
+            $elem.show(0, function() {
+              return $(this).animate({
+                'left': move_to
+              }, options.speed, options.easing, next);
+            });
+          } else {
+            $elem.animate({
+              'left': move_to
+            }, options.speed, options.easing);
+            $elem.hide(0, next);
+          }
+          return true;
+        }, this));
+      });
+      if (options.callback) {
+        pte_queue.queue(function(next) {
+          if (options.callbackargs != null) {
+            options.callback.apply(this, options.callbackargs);
+          } else {
+            options.callback.apply(this);
+          }
+          return next();
+        });
+      }
+      return this;
+    },
+    moveRight: function(options) {
+      options = $.extend(options, {
+        direction: 'right'
+      });
+      return this.move(options);
+    },
+    moveLeft: function(options) {
+      options = $.extend(options, {
+        direction: 'left'
+      });
+      return this.move(options);
+    }
+  });
   window.goBack = function(e) {
     if (e != null) {
       e.preventDefault();
     }
-    return $('#stage2').animate({
-      left: 1200
-    }, 500, 'swing', function() {
-      $(this).hide();
-      return $('#stage1').show(0, function() {
-        return $(this).animate({
-          left: 0
-        }, 500, 'swing', function() {
-          var delete_options;
-          delete_options = {
-            "id": $('#pte-post-id').val(),
-            'action': 'pte_ajax',
-            'pte-action': 'delete-images',
-            'pte-nonce': $('#pte-delete-nonce').val()
-          };
-          return $.ajax({
-            url: ajaxurl,
-            data: delete_options,
-            global: false,
-            dataType: "json",
-            success: function(data, status, xhr) {
-              log("===== DELETE SUCCESSFUL, DATA DUMP FOLLOWS =====");
-              log(data);
-              return pte.parseServerLog(data.log);
-            }
-          });
-        });
-      });
+    $('#stage2').moveRight();
+    $('#stage1').moveRight({
+      callback: function() {
+        deleteThumbs($('#pte-post-id').val());
+        return $('#stage2').html('');
+      }
     });
+    return true;
   };
   gcd = function(a, b) {
     if (a === 0) {
@@ -778,9 +842,9 @@
     }
     return a;
   };
-  determineAspectRatio = function(current_ar, size) {
-    var crop, gc, height, tmp_ar, width, _ref;
-    _ref = thumbnail_info[size], crop = _ref.crop, width = _ref.width, height = _ref.height;
+  determineAspectRatio = function(current_ar, size_info) {
+    var crop, gc, height, tmp_ar, width;
+    crop = size_info.crop, width = size_info.width, height = size_info.height;
     crop = +crop;
     width = +width;
     height = +height;
@@ -797,20 +861,28 @@
       if ((current_ar != null) && (tmp_ar != null) && tmp_ar !== current_ar) {
         throw objectL10n.aspect_ratio_disabled;
       }
-      return current_ar = tmp_ar;
+      current_ar = tmp_ar;
     }
+    return current_ar;
+  };
+  pte.functions = {
+    determineAspectRatio: determineAspectRatio
   };
   (function(pte) {
-    var addCheckAllNoneListener, addRowListener, addRowListeners, addSubmitListener, addVerifyListener, editor, iasSetAR, ias_defaults, ias_instance, initImgAreaSelect, setPageHeight;
+    var addCheckAllNoneListener, addRowListener, addRowListeners, addSubmitListener, addVerifyListener, configureOverlay, configurePageDisplay, editor, iasSetAR, ias_defaults, ias_instance, initImgAreaSelect;
     editor = pte.editor = function() {
-      var $loading_screen, closeLoadingScreen;
-      setPageHeight();
+      configurePageDisplay();
       addRowListeners();
       initImgAreaSelect();
       addRowListener();
       addSubmitListener();
       addVerifyListener();
       addCheckAllNoneListener();
+      configureOverlay();
+      return true;
+    };
+    configureOverlay = function() {
+      var $loading_screen, closeLoadingScreen;
       $loading_screen = $('#pte-loading');
       closeLoadingScreen = function() {
         $loading_screen.hide();
@@ -825,7 +897,7 @@
       window.setTimeout(closeLoadingScreen, 2000);
       return true;
     };
-    setPageHeight = function() {
+    configurePageDisplay = function() {
       var reflow;
       reflow = new TimerFunc(function() {
         var offset, window_height;
@@ -836,6 +908,9 @@
         return $("#pte-sizes").height(window_height);
       }, 100);
       $(window).resize(reflow.doFunc).load(reflow.doFunc);
+      $('#stage2, #stage3').css({
+        left: $(window).width()
+      });
       return true;
     };
     addRowListeners = function() {
@@ -877,7 +952,7 @@
       }
     };
     initImgAreaSelect = function() {
-      return ias_instance = $('#pte-image img').imgAreaSelect(ias_defaults);
+      return pte.ias = ias_instance = $('#pte-image img').imgAreaSelect(ias_defaults);
     };
     iasSetAR = function(ar) {
       log("===== SETTING ASPECTRATIO: " + ar + " =====");
@@ -887,13 +962,24 @@
       return ias_instance.update();
     };
     addRowListener = function() {
-      var pteCheckHandler;
+      var pteCheckHandler, pteVerifySubmitButtonHandler;
+      pteVerifySubmitButtonHandler = new TimerFunc(function() {
+        log("===== CHECK SUBMIT BUTTON =====");
+        if ($('.pte-confirm').filter(':checked').size() > 0) {
+          log("ENABLE");
+          $('#pte-confirm').removeAttr('disabled');
+        } else {
+          log("DISABLE");
+          $('#pte-confirm').attr('disabled', true);
+        }
+        return true;
+      }, 50);
       pteCheckHandler = new TimerFunc(function() {
         var ar, selected_elements;
         ar = null;
         selected_elements = $('input.pte-size').filter(':checked').each(function(i, elem) {
           try {
-            ar = determineAspectRatio(ar, $(elem).val());
+            ar = determineAspectRatio(ar, thumbnail_info[$(elem).val()]);
           } catch (error) {
             ar = null;
             if (ar !== ias_instance.getOptions().aspectRatio) {
@@ -907,7 +993,13 @@
         ias_defaults.onSelectEnd(null, ias_instance.getSelection());
         return true;
       }, 50);
-      return $('input.pte-size').click(pteCheckHandler.doFunc);
+      $.extend(pte.functions, {
+        pteVerifySubmitButtonHandler: pteVerifySubmitButtonHandler
+      });
+      $('input.pte-size').click(pteCheckHandler.doFunc);
+      return $('.pte-confirm').live('click', function(e) {
+        return pteVerifySubmitButtonHandler.doFunc();
+      });
     };
     addSubmitListener = function() {
       var onResizeImages;
@@ -948,17 +1040,9 @@
           alert(data.error);
           return;
         }
-        $('#stage1').animate({
-          left: -$(window).width()
-        }, 500, 'swing', function() {
-          $(this).hide();
-          $('#stage2').html($('#stage2template').tmpl(data)).show(0, function() {
-            $(this).animate({
-              left: 0
-            }, 500);
-            return true;
-          });
-          return true;
+        $('#stage1').moveLeft();
+        $('#stage2').html($('#stage2template').tmpl(data)).moveLeft({
+          callback: pte.functions.pteVerifySubmitButtonHandler.doFunc
         });
         return false;
       };
@@ -989,23 +1073,13 @@
         log("===== CONFIRM-IMAGES SUCCESS =====");
         log(data);
         pte.parseServerLog(data.log);
-        $('#stage2').animate({
-          left: -$(window).width()
-        }, 500, 'swing', function() {
-          $(this).hide();
-          $('#stage3').html($('#stage3template').tmpl(data)).show(0, function() {
-            $(this).animate({
-              left: 0
-            }, 500);
-            return true;
-          });
-          return true;
-        });
+        $('#stage2').moveLeft();
+        $('#stage3').html($('#stage3template').tmpl(data)).moveLeft();
         return false;
       };
     };
     /* Select ALL|NONE */
-    return addCheckAllNoneListener = function() {
+    addCheckAllNoneListener = function() {
       var checkAllSizes, uncheckAllSizes;
       uncheckAllSizes = function(e) {
         var elements, _ref, _ref2;
@@ -1033,5 +1107,8 @@
       }, uncheckAllSizes);
       return true;
     };
+    return $.extend(pte.functions, {
+      iasSetAR: iasSetAR
+    });
   })(pte);
 }).call(this);

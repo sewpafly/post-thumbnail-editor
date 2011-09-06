@@ -19,41 +19,99 @@ window.debugTmpl = (data) ->
 # ===========================================================
 # Change stages
 # ===========================================================
+# send cleanup request
+deleteThumbs = (id) ->
+	delete_options =
+		"id": id
+		'action': 'pte_ajax'
+		'pte-action': 'delete-images'
+		'pte-nonce': $('#pte-delete-nonce').val()
+	# use ajax:global - false so the overlay isn't triggered
+	$.ajax
+		url: ajaxurl,
+		data: delete_options
+		global: false
+		dataType: "json"
+		success: deleteThumbsSuccessCallback
+
+deleteThumbsSuccessCallback = (data, status, xhr) ->
+	log "===== DELETE SUCCESSFUL, DATA DUMP FOLLOWS ====="
+	log data
+	pte.parseServerLog data.log
+
+# Make jQuery function for moveRight and moveLeft
+# include:
+#  * callback support
+#  * show/hide ability
+#  * Make the left value dependent on screen size
+#
+# See: 
+#   http://stackoverflow.com/questions/1058158/can-somebody-explain-jquery-queue-to-me/3314877#3314877
+# TODO: Testing this needs to see if it runs for each element passed in
+pte_queue = $({})
+$.fn.extend
+	move: (options) ->
+		defaults =
+			direction: 'left'
+			speed: 500
+			easing: 'swing'
+			toggle: true
+			callback: null
+			callbackargs: null
+		options = $.extend defaults, options
+
+		this.each ->
+			# Since no queue name defined, it will start automatically
+			pte_queue.queue (next) =>
+				$elem = $ this
+				# if this object is in view, move it out of view
+				# if this object is out of view, move it in view
+				direction = if options.direction == 'left' then -1 else 1
+				move_to = if $elem.css('left') == "0px" then $(window).width() * direction else 0
+
+				# if this object is currently hidden, show it
+				# if this object is currently shown, hide it
+				isVisible = $elem.is(':visible')
+				if (not isVisible)
+					$elem.show 0, ->
+						$(this).animate {'left': move_to}, options.speed, options.easing, next
+				else
+					$elem.animate {'left': move_to}, options.speed, options.easing
+					$elem.hide 0, next
+				true
+		if (options.callback)
+			pte_queue.queue (next) ->
+				if options.callbackargs?
+					options.callback.apply this, options.callbackargs 
+				else
+					options.callback.apply this
+				next()
+		return this
+
+	moveRight: (options) ->
+		options = $.extend options, { direction: 'right' }
+		this.move options
+	moveLeft: (options) ->
+		options = $.extend options, { direction: 'left' }
+		this.move options
+
 window.goBack = (e) ->
 	e?.preventDefault()
-	$('#stage2').animate
-		left: 1200
-	, 500, 'swing', ->
-		# COMMENT: this = stage2
-		$(this).hide()
-		$('#stage1').show 0, ->
-			# this = stage1
-			$(this).animate
-				left: 0
-			, 500, 'swing', ->
-				# send cleanup request
-				delete_options =
-					"id": $('#pte-post-id').val()
-					'action': 'pte_ajax'
-					'pte-action': 'delete-images'
-					'pte-nonce': $('#pte-delete-nonce').val()
-				# use ajax:global - false
-				$.ajax
-					url: ajaxurl,
-					data: delete_options
-					global: false
-					dataType: "json"
-					success: (data, status, xhr) -> 
-						log "===== DELETE SUCCESSFUL, DATA DUMP FOLLOWS ====="
-						log data
-						pte.parseServerLog data.log
+	$('#stage2').moveRight()
+	$('#stage1').moveRight
+		callback: ->
+			deleteThumbs $('#pte-post-id').val()
+			# Reset stage2 to blank
+			$('#stage2').html ''
+		#callbackargs: [$('#pte-post-id').val()]
+	true
 
 
 
 gcd = (a, b) ->
 	return b if a is 0
 	while b > 0
-		if a > b 
+		if a > b
 			a = a - b
 		else
 			b = b - a
@@ -64,9 +122,8 @@ gcd = (a, b) ->
 # convert to crop/width/height
 # determine current ar and test against other ar's
 # throw exception if more than 1?
-# _(list).reduce( determineAspectRatio , ar)
-determineAspectRatio = (current_ar, size) ->
-	{crop, width, height} = thumbnail_info[size]
+determineAspectRatio = (current_ar, size_info) ->
+	{crop, width, height} = size_info
 	crop = +crop
 	width = +width
 	height = +height
@@ -79,47 +136,60 @@ determineAspectRatio = (current_ar, size) ->
 			else
 				tmp_ar = "#{ width }:#{ height }"
 		if current_ar? and tmp_ar? and tmp_ar isnt current_ar
-			#alert "2 images are trying to set different aspect ratios, disabling..."
-			#throw "Too many Aspect Ratios. Disabling"
 			throw objectL10n.aspect_ratio_disabled
 		current_ar = tmp_ar
+	current_ar
+
+pte.functions =
+	determineAspectRatio: determineAspectRatio
 
 do (pte) ->
 	# Call this on page instantiation
+	# Initialize stage2 & stage3 to be set at screen width (for moveRight moveLeft functionality)
 	editor = pte.editor = ->
-		setPageHeight()
+		configurePageDisplay()
 		addRowListeners()
 		initImgAreaSelect()
 		addRowListener()
 		addSubmitListener()
 		addVerifyListener()
 		addCheckAllNoneListener()
+		configureOverlay()
+		true
+	# ===========================================================
+	# End Editor INIT
+	# ===========================================================
 
-		# ===========================================================
-		# This is our loading div
-		# ===========================================================
+	# ===========================================================
+	# This configures our loading overlay
+	# ===========================================================
+	configureOverlay = ->
 		$loading_screen = $('#pte-loading')
 		closeLoadingScreen = ->
 			$loading_screen.hide()
 			true
+
+		# overlay starts by being shown, this should close it
 		$('#pte-preview').load closeLoadingScreen
+
+		# AJAX calls will show/hide the overlay
 		$loading_screen
 		.ajaxStart( ->
 			$(this).fadeIn 200
 		).ajaxStop( ->
 			$(this).fadeOut 200
 		)
+		# overlay starts by being shown, this WILL close it
 		window.setTimeout closeLoadingScreen, 2000
 		true
-
-
 
 
 	# ===========================================================
 	# Set the height of the options 
 	# ===========================================================
 	# Sets a timeout to be a little bit more responsive
-	setPageHeight = ->
+	configurePageDisplay = ->
+		# Set the height of the side column
 		reflow = new TimerFunc ->
 			log "===== REFLOW ====="
 			pte.fixThickbox window.parent
@@ -129,6 +199,10 @@ do (pte) ->
 		, 100
 		# Add to the resize and load events
 		$(window).resize(reflow.doFunc).load(reflow.doFunc)
+
+		# Set the left position of stages2,3
+		$('#stage2, #stage3').css
+			left: $(window).width()
 		true
 
 
@@ -137,12 +211,12 @@ do (pte) ->
 	# ===========================================================
 	addRowListeners = ->
 		enableRowFeatures = ($elem) ->
-			#$('#stage2').delegate 'tr', 'click', (e) ->
+			# Check the checkbox
 			$elem.delegate 'tr', 'click', (e) ->
 				if e.target.type isnt 'checkbox'
 					$('input:checkbox', this).click()
 				true
-			#$('#stage2').delegate ':checkbox', 'click', (e) ->
+			# Style the row
 			$elem.delegate 'input:checkbox', 'click', (e) ->
 				if this.checked or $(this).is('input:checked')
 					$(this).parents('tr').first().removeClass 'selected'
@@ -176,7 +250,7 @@ do (pte) ->
 
 
 	initImgAreaSelect = ->
-		ias_instance = $('#pte-image img').imgAreaSelect ias_defaults
+		pte.ias = ias_instance = $('#pte-image img').imgAreaSelect ias_defaults
 	iasSetAR = (ar) ->
 		log "===== SETTING ASPECTRATIO: #{ ar } ====="
 		ias_instance.setOptions
@@ -192,11 +266,22 @@ do (pte) ->
 	# Functional call to reduce would work well here (underscore.js)
 	# ===========================================================
 	addRowListener = ->
+		pteVerifySubmitButtonHandler = new TimerFunc ->
+			# If the number of confirms clicked is > 0, enable the submit button
+			log "===== CHECK SUBMIT BUTTON ====="
+			if $('.pte-confirm').filter(':checked').size() > 0
+				log "ENABLE"
+				$('#pte-confirm').removeAttr('disabled')
+			else
+				log "DISABLE"
+				$('#pte-confirm').attr('disabled', true)
+			true
+		, 50
 		pteCheckHandler = new TimerFunc ->
 			ar = null
 			selected_elements = $('input.pte-size').filter(':checked').each (i,elem) ->
 				try
-					ar = determineAspectRatio ar, $(elem).val()
+					ar = determineAspectRatio ar, thumbnail_info[$(elem).val()]
 				catch error
 					ar = null
 					if ar isnt ias_instance.getOptions().aspectRatio
@@ -209,7 +294,11 @@ do (pte) ->
 			ias_defaults.onSelectEnd null, ias_instance.getSelection()
 			true
 		, 50
+		$.extend pte.functions,
+			pteVerifySubmitButtonHandler: pteVerifySubmitButtonHandler
 		$('input.pte-size').click pteCheckHandler.doFunc
+		$('.pte-confirm').live 'click', (e) ->
+			pteVerifySubmitButtonHandler.doFunc()
 
 
 	# ===========================================================
@@ -220,7 +309,7 @@ do (pte) ->
 		$('#pte-submit').click (e) ->
 			selection = ias_instance.getSelection()
 			scale_factor = $('#pte-sizer').val()
-			submit_data = 
+			submit_data =
 				'id':         $('#pte-post-id').val()
 				'action':     'pte_ajax'
 				'pte-action': 'resize-images'
@@ -233,7 +322,7 @@ do (pte) ->
 				'h': Math.floor(selection.height/scale_factor)
 			log "===== RESIZE-IMAGES ====="
 			log submit_data
-			ias_instance.setOptions 
+			ias_instance.setOptions
 				hide: true
 				x1: 0
 				y1: 0
@@ -255,18 +344,9 @@ do (pte) ->
 				alert(data.error)
 				return
 			
-			$('#stage1').animate
-				left: -$(window).width()
-			, 500, 'swing', ->
-				$(this).hide()
-				$('#stage2').html($('#stage2template').tmpl(data)).show(0, ->
-					$(this).animate(
-						left: 0
-					, 500)
-					true
-				)
-				#$('#stage2').animate({left: 0}, 500)
-				true
+			$('#stage1').moveLeft()
+			$('#stage2').html($('#stage2template').tmpl(data)).moveLeft
+				callback: pte.functions.pteVerifySubmitButtonHandler.doFunc
 			false
 	# ===========================================================
 		
@@ -293,17 +373,8 @@ do (pte) ->
 			log "===== CONFIRM-IMAGES SUCCESS ====="
 			log data
 			pte.parseServerLog data.log
-			$('#stage2').animate
-				left: -$(window).width()
-			, 500, 'swing', ->
-				$(this).hide()
-				$('#stage3').html($('#stage3template').tmpl(data)).show(0, ->
-					$(this).animate(
-						left: 0
-					, 500)
-					true
-				)
-				true
+			$('#stage2').moveLeft()
+			$('#stage3').html($('#stage3template').tmpl(data)).moveLeft()
 			false
 	# ===========================================================
 
@@ -331,4 +402,7 @@ do (pte) ->
 
 		# Finished
 		true
+	
+	$.extend pte.functions,
+		iasSetAR: iasSetAR
 

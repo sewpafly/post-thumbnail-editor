@@ -116,9 +116,15 @@ table td {
 	vertical-align: middle; 
 	padding: 15px 0;
 }
-	/*.col1 { */
-	/*width: 50px; */
-	/*}*/
+.col1 { 
+	$c1width: 30px;
+	max-width: $c1width; 
+	text-align: center;
+	width: $c1width; 
+	input {
+		margin: 0 auto;
+	}
+}
 /*.col2 { */
 /*   padding-right: 20px; */
 /*}*/
@@ -260,7 +266,7 @@ top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ?
 
 #stage2, #stage3 {
 	display: none;
-	left: $width * 2;
+	/*left: $width * 2;*/
 	width: $width;
 }
 
