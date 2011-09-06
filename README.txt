@@ -63,6 +63,9 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Changelog ==
 
+= 1.0.2 =
+* Problem with SVN commit of 1.0.1
+
 = 1.0.1 =
 * Fixed compatibility with other thickbox enabled plugins that called the wordpress media scripts.
 * Added Options screen (Settings -> Post Thumbnail Editor) to configure thickbox dimensions and enable/disable debugging.
@@ -84,6 +87,9 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 * Initial cut
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Problem with SVN commit of 1.0.1
 
 = 1.0.1 =
 Added translation support, french language, options menu and fixed incompatibility with other thickbox enabled plugins.
