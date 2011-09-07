@@ -75,14 +75,16 @@ $.fn.extend
 				if (not isVisible)
 					$elem.show 0, ->
 						$(this).animate {'left': move_to}, options.speed, options.easing, next
+						true
 				else
 					$elem.animate {'left': move_to}, options.speed, options.easing
 					$elem.hide 0, next
 				true
-		if (options.callback)
+			true
+		if options.callback?
 			pte_queue.queue (next) ->
 				if options.callbackargs?
-					options.callback.apply this, options.callbackargs 
+					options.callback.apply this, options.callbackargs
 				else
 					options.callback.apply this
 				next()
@@ -243,6 +245,7 @@ do (pte) ->
 		zIndex: 1200
 		instance: true
 		onSelectEnd: (img, s) ->
+			# Check that getSelection returns valid information...
 			if s.width && s.width > 0 and s.height && s.height > 0 and $('.pte-size').filter(':checked').size() > 0
 				$('#pte-submit').removeAttr('disabled')
 			else

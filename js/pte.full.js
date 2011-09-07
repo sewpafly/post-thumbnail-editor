@@ -767,7 +767,7 @@
       };
       options = $.extend(defaults, options);
       this.each(function() {
-        return pte_queue.queue(__bind(function(next) {
+        pte_queue.queue(__bind(function(next) {
           var $elem, direction, isVisible, move_to;
           $elem = $(this);
           direction = options.direction === 'left' ? -1 : 1;
@@ -775,9 +775,10 @@
           isVisible = $elem.is(':visible');
           if (!isVisible) {
             $elem.show(0, function() {
-              return $(this).animate({
+              $(this).animate({
                 'left': move_to
               }, options.speed, options.easing, next);
+              return true;
             });
           } else {
             $elem.animate({
@@ -787,8 +788,9 @@
           }
           return true;
         }, this));
+        return true;
       });
-      if (options.callback) {
+      if (options.callback != null) {
         pte_queue.queue(function(next) {
           if (options.callbackargs != null) {
             options.callback.apply(this, options.callbackargs);
