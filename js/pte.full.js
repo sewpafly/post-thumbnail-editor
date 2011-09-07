@@ -767,18 +767,18 @@
       };
       options = $.extend(defaults, options);
       this.each(function() {
-        pte_queue.queue(__bind(function(next) {
+        return pte_queue.queue(__bind(function(next) {
           var $elem, direction, isVisible, move_to;
           $elem = $(this);
           direction = options.direction === 'left' ? -1 : 1;
           move_to = $elem.css('left') === "0px" ? $(window).width() * direction : 0;
           isVisible = $elem.is(':visible');
+          log([direction, move_to, isVisible]);
           if (!isVisible) {
             $elem.show(0, function() {
-              $(this).animate({
+              return $(this).animate({
                 'left': move_to
               }, options.speed, options.easing, next);
-              return true;
             });
           } else {
             $elem.animate({
@@ -788,15 +788,17 @@
           }
           return true;
         }, this));
-        return true;
       });
       if (options.callback != null) {
         pte_queue.queue(function(next) {
           if (options.callbackargs != null) {
+            log("running callback with arguments");
             options.callback.apply(this, options.callbackargs);
           } else {
+            log("running callback with no arguments");
             options.callback.apply(this);
           }
+          log("finished running callback");
           return next();
         });
       }
@@ -907,12 +909,14 @@
         pte.fixThickbox(window.parent);
         offset = $("#pte-sizes").offset();
         window_height = $(window).height() - offset.top - 2;
-        return $("#pte-sizes").height(window_height);
+        $("#pte-sizes").height(window_height);
+        log("WINDOW WIDTH: " + ($(window).width()));
+        $('#stage2, #stage3').css({
+          left: $(window).width()
+        });
+        return true;
       }, 100);
       $(window).resize(reflow.doFunc).load(reflow.doFunc);
-      $('#stage2, #stage3').css({
-        left: $(window).width()
-      });
       return true;
     };
     addRowListeners = function() {

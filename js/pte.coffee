@@ -72,21 +72,23 @@ $.fn.extend
 				# if this object is currently hidden, show it
 				# if this object is currently shown, hide it
 				isVisible = $elem.is(':visible')
+				log [direction,move_to,isVisible]
 				if (not isVisible)
 					$elem.show 0, ->
 						$(this).animate {'left': move_to}, options.speed, options.easing, next
-						true
 				else
 					$elem.animate {'left': move_to}, options.speed, options.easing
 					$elem.hide 0, next
 				true
-			true
 		if options.callback?
 			pte_queue.queue (next) ->
 				if options.callbackargs?
+					log "running callback with arguments"
 					options.callback.apply this, options.callbackargs
 				else
+					log "running callback with no arguments"
 					options.callback.apply this
+				log "finished running callback"
 				next()
 		return this
 
@@ -198,13 +200,15 @@ do (pte) ->
 			offset = $("#pte-sizes").offset()
 			window_height = $(window).height() - offset.top - 2
 			$("#pte-sizes").height window_height
+			# Set the left position of stages2,3
+			log """WINDOW WIDTH: #{$(window).width()}"""
+			$('#stage2, #stage3').css
+				left: $(window).width()
+			true
 		, 100
 		# Add to the resize and load events
 		$(window).resize(reflow.doFunc).load(reflow.doFunc)
 
-		# Set the left position of stages2,3
-		$('#stage2, #stage3').css
-			left: $(window).width()
 		true
 
 
