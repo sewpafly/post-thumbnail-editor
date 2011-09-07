@@ -911,7 +911,7 @@
         window_height = $(window).height() - offset.top - 2;
         $("#pte-sizes").height(window_height);
         log("WINDOW WIDTH: " + ($(window).width()));
-        $('#stage2, #stage3').css({
+        $('#stage2, #stage3').filter(":hidden").css({
           left: $(window).width()
         });
         return true;

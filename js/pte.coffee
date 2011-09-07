@@ -202,7 +202,7 @@ do (pte) ->
 			$("#pte-sizes").height window_height
 			# Set the left position of stages2,3
 			log """WINDOW WIDTH: #{$(window).width()}"""
-			$('#stage2, #stage3').css
+			$('#stage2, #stage3').filter(":hidden").css
 				left: $(window).width()
 			true
 		, 100
