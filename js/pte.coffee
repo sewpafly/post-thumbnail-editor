@@ -329,6 +329,10 @@ do (pte) ->
 				'h': Math.floor(selection.height/scale_factor)
 			log "===== RESIZE-IMAGES ====="
 			log submit_data
+			if isNaN(submit_data.x) or isNaN(submit_data.y) or isNaN(submit_data.w) or isNaN(submit_data.h)
+				alert objectL10n.crop_submit_data_error
+				log "ERROR with submit_data and NaN's"
+				return false
 			ias_instance.setOptions
 				hide: true
 				x1: 0

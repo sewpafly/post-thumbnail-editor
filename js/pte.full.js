@@ -1027,6 +1027,11 @@
         };
         log("===== RESIZE-IMAGES =====");
         log(submit_data);
+        if (isNaN(submit_data.x) || isNaN(submit_data.y) || isNaN(submit_data.w) || isNaN(submit_data.h)) {
+          alert("ERROR with submit_data");
+          log("ERROR with submit_data");
+          return false;
+        }
         ias_instance.setOptions({
           hide: true,
           x1: 0,

@@ -1,0 +1,242 @@
+# Copyright (C) 2010 Post Thumbnail Editor
+# This file is distributed under the same license as the Post Thumbnail Editor package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Post Thumbnail Editor 1.0.2\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
+"POT-Creation-Date: 2011-09-06 15:57:59+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2011-09-07 14:33+0100\n"
+"Last-Translator: Mac\n"
+"Language-Team: Marco Rossi <macitaly@gmail.com>\n"
+"X-Poedit-Language: Italian\n"
+"X-Poedit-Country: ITALY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: html/pte.php:20
+msgid "Post Thumbnail Editor - Step 1"
+msgstr "Modifica delle miniature - Passo 1"
+
+#: html/pte.php:33
+msgid "Create Thumbnails"
+msgstr "Crea miniatura"
+
+#: html/pte.php:39
+msgid "Choose the images/thumbnails that you want to edit:"
+msgstr "Scegli le immagini/miniature che vuoi modificare:"
+
+#: html/pte.php:42
+msgid "Select: %1$sAll%2$s | %3$sNone%4$s"
+msgstr "Seleziona: %1$sTutte%2$s | %3$sNessuna%4$s"
+
+#: html/pte.php:59
+msgid "Current image:"
+msgstr "Dimensione Miniatura:"
+
+#: html/pte.php:78
+msgid "Back"
+msgstr "Indietro"
+
+#: html/pte.php:80
+msgid "Post Thumbnail Editor - Step 2"
+msgstr "Modifica delle miniature - Passo 2"
+
+#: html/pte.php:83
+#: html/pte.php:144
+msgid "We noticed some potential issues:"
+msgstr "Abbiamo rilevato alcuni potenziali problemi:"
+
+#: html/pte.php:86
+msgid "View %1$slogs%2$s for further information"
+msgstr "Esamina i %1$slogs%2$s per avere ulteriori informazioni"
+
+#: html/pte.php:91
+msgid "%1$sEnable debugging%2$s for additional information"
+msgstr "%1$sAbilita il debugging%2$s per avere ulteriori informazioni"
+
+#: html/pte.php:101
+msgid "Select the images you want to keep: %1$sAll%2$s | %3$sNone%4$s"
+msgstr "Seleziona le immagini che vuoi mantenere: %1$sTutte%2$s | %3$sNessuna%4$s"
+
+#: html/pte.php:124
+msgid "Okay, these look good..."
+msgstr "Ok, queste vanno bene..."
+
+#: html/pte.php:128
+msgid "I'd rather start over..."
+msgstr "Preferisco riprovare ..."
+
+#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 1.0.1-alpha2)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: html/pte.php:135
+#: post-thumbnail-editor.php:113
+#: post-thumbnail-editor.php:178
+#: post-thumbnail-editor.php:179
+#: php/options.php:64
+msgid "Post Thumbnail Editor"
+msgstr "Post Thumbnail Editor"
+
+#: html/pte.php:138
+msgid "Images were created successfully."
+msgstr "Le nuove immagini sono state create perfettamente."
+
+#: html/pte.php:140
+msgid "Click %1$shere%2$s to modify another thumbnail."
+msgstr "Clicca %1$squi%2$s per modificare altre miniature."
+
+#: html/pte.php:156
+msgid "Please wait"
+msgstr "Si prega di attendere"
+
+#: html/pte.php:160
+msgid "Click here to show application logs"
+msgstr "Clicca qui per mostrare i logs dell'applicazione"
+
+#: html/pte.php:162
+#: php/options.php:30
+msgid "Debug"
+msgstr "Debug"
+
+#: html/pte.php:167
+msgid "If you are having any issues with this plugin, create a problem report on %1$sgithub%2$s or %3$swordpress.org%4$s so that I can look into it. Copy these log statements and include some information about what you were trying to do, the expected output, and the output you got (the more information the better).  Thanks and good luck!"
+msgstr "Se hai problemi con questo plugin, apri un rapporto su  %1$sgithub%2$s o %3$swordpress.org%4$s in modo da permettermi di esaminarlo. Copia il testo di questi logs e includi tutte le informazioni necessarie su cosa stavi facendo quando si è verificato il problema, il risultato che ti aspettavi e quello che, invece, hai ottenuto (più informazioni fornisci, meglio sarà).Grazie e buona fortuna!"
+
+#: html/pte.php:181
+msgid "Send to Pastebin"
+msgstr "Invia a Pastebin"
+
+#: html/pte.php:182
+msgid "Clear Messages"
+msgstr "Cancella messaggi"
+
+#: html/pte.php:185
+msgid "Run Tests"
+msgstr "Esegui i tests"
+
+#: html/pte.php:186
+msgid "Close"
+msgstr "Chiudi"
+
+#: post-thumbnail-editor.php:167
+msgid "Edit Thumbnails"
+msgstr "Modifica Miniature"
+
+#: post-thumbnail-editor.php:168
+#: php/options.php:51
+msgid "Thumbnails"
+msgstr "Modifica Miniature"
+
+#: php/log.php:15
+msgid "ERROR"
+msgstr "ERRORE"
+
+#: php/log.php:18
+msgid "WARNING"
+msgstr "AVVISO"
+
+#: php/log.php:21
+msgid "DEBUG"
+msgstr "DEBUG"
+
+#: php/log.php:99
+msgid "ERROR Logging Message: %s"
+msgstr "ERRORE messaggio di logging: %s"
+
+#: php/options.php:8
+msgid "These site-wide settings can only be changed by an administrator"
+msgstr "Queste impostazioni generali, possono essere cambiate solo dall'amministratore.<br /> Scegli quali, tra le miniature usate nel sito, vuoi mostrare o nascondere nella finestra delle modifiche (di default, sono mostrate)."
+
+#: php/options.php:19
+msgid "User Options"
+msgstr "Opzioni utente"
+
+#: php/options.php:24
+msgid "Thickbox dimensions"
+msgstr "Dimensione Finestra di modifica"
+
+#: php/options.php:36
+msgid "Reset to defaults"
+msgstr "Ripristina la configurazione iniziale"
+
+#: php/options.php:47
+msgid "Site Options"
+msgstr "Opzioni del sito"
+
+#: php/options.php:72
+msgid "Save Changes"
+msgstr "Registra le modifiche"
+
+#: php/options.php:86
+msgid "Only users with the 'manage_options' capability may make changes to these settings."
+msgstr "Solo gli utenti con i permessi di 'manage_options' possono cambiare queste configurazioni."
+
+#: php/options.php:118
+msgid "Thickbox width must be at least 750 pixels."
+msgstr "La larghezza dev'essere almeno di 750 pixels."
+
+#: php/options.php:128
+msgid "Thickbox height must be greater than 550 pixels."
+msgstr "L'altezza dev'essere almeno di 550 pixels."
+
+#: php/options.php:142
+msgid "Width:"
+msgstr "Larghezza:"
+
+#: php/options.php:146
+msgid "Set this to a value greater than 750."
+msgstr "Inserire un valore di almeno 750px ."
+
+#: php/options.php:153
+msgid "Height:"
+msgstr "Altezza:"
+
+#: php/options.php:157
+msgid "Set this to a value greater than 550."
+msgstr "Inserire un valore di almeno 550px ."
+
+#: php/options.php:169
+msgid "Enable debugging"
+msgstr "Abilita il debugging"
+
+#: php/options.php:178
+msgid "Reset User Options"
+msgstr "Cancella le opzioni utente"
+
+#: php/options.php:204
+msgid "Post Thumbnail"
+msgstr "Tipi di Miniature"
+
+#: php/options.php:205
+msgid "Hidden"
+msgstr "Nascondi"
+
+#: php/functions.php:257
+msgid "Sorry, there was a problem trying to send to pastebin"
+msgstr "Spiacente, c'è stato un problema nell'invio a Pastebin"
+
+#: php/functions.php:258
+msgid "PASTEBIN URL:"
+msgstr "PASTEBIN URL:"
+
+#: php/functions.php:259
+msgid "Disabling aspect ratio"
+msgstr "Le miniature selezionate sono di proporzioni diverse"
+
+#. Plugin URI of the plugin/theme
+msgid "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
+msgstr "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
+
+#. Description of the plugin/theme
+msgid "Individually manage your post thumbnails"
+msgstr "Gestione individuale delle miniature"
+
+#. Author of the plugin/theme
+msgid "sewpafly"
+msgstr "sewpafly"
+
+#. Author URI of the plugin/theme
+msgid "http://sewpafly.github.com/post-thumbnail-editor"
+msgstr "http://sewpafly.github.com/post-thumbnail-editor"
+

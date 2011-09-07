@@ -257,6 +257,7 @@ function pte_launch(){
 		, array( 'pastebin_create_error' => __( 'Sorry, there was a problem trying to send to pastebin', PTE_DOMAIN )
 			, 'pastebin_url' => __( 'PASTEBIN URL:', PTE_DOMAIN )
 			, 'aspect_ratio_disabled' => __( 'Disabling aspect ratio', PTE_DOMAIN )
+			, 'crop_submit_data_error' => __( 'Error parsing selection information', PTE_DOMAIN )
 		)
 	);
 
@@ -283,6 +284,7 @@ function pte_launch(){
 	}
 
 	$sizer = $big > 400 ? 400 / $big : 1;
+	$sizer = sprintf( "%.8F", $sizer );
 	$logger->debug( "USER-AGENT: " . $_SERVER['HTTP_USER_AGENT'] );
 	$logger->debug( "WORDPRESS: " . $GLOBALS['wp_version'] );
 	$logger->debug( "SIZER: ${sizer}" );
