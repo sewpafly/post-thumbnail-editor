@@ -65,6 +65,7 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 = 1.0.3 =
 * Fixed some javascript issues
+* Added Italian translation
 
 = 1.0.2 =
 * Problem with SVN commit of 1.0.1
@@ -92,7 +93,7 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 == Upgrade Notice ==
 
 = 1.0.3 =
-Fixed javascript problems
+Fixed javascript problems & added italian translation
 
 = 1.0.2 =
 Problem with SVN commit of 1.0.1
