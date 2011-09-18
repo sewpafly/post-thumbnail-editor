@@ -110,7 +110,7 @@ function pte_admin_media_scripts(){
 	}
 	wp_localize_script('pte'
 		, 'objectL10n'
-		, array('PTE' => __('Post Thumbnail Editor'))
+		, array('PTE' => __('Post Thumbnail Editor', PTE_DOMAIN))
 	);
 	add_action("admin_head","pte_enable_admin_js",100);
 }
