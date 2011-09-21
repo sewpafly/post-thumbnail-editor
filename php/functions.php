@@ -3,7 +3,7 @@
  * TODO: add helper functions to get various links to different functions
  */
 
-require_once( "log.php" );
+require_once(PTE_PLUGINPATH . 'php/log.php');
 
 function pte_require_json() {
 	if ( function_exists( 'ob_start' ) ){

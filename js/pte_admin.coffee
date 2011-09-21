@@ -62,7 +62,6 @@ do (pte) ->
 				return false
 
 			# Add convenience functions to menu
-			#$editmenu.append $("""<a class="thickbox" href="#{ pte_url() }">#{ objectL10n.PTE }</a>""")
 			$editmenu.append $getLink().click checkExistingThickbox
 
 		injectPTE()
