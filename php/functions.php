@@ -586,10 +586,10 @@ function pte_confirm_images(){
 		$new_file = $dir
 			. DIRECTORY_SEPARATOR
 			. basename( $good_file );
-		if ( isset( $data['file'] ) ){
+		if ( isset( $data['current']['file'] ) ){
 			$old_file = $dir
 				. DIRECTORY_SEPARATOR
-				. $data['file'];
+				. $data['current']['file'];
 		}
 
 		// Delete/unlink old file
