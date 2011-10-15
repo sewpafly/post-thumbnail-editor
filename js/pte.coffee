@@ -369,7 +369,7 @@ do (pte) ->
 			thumbnail_data = {}
 			$('input.pte-confirm').filter(':checked').each (i, elem) ->
 				size = $(elem).val()
-				thumbnail_data[size] = $("\#pte-#{ size }-file").val()
+				thumbnail_data[size] = $(elem).parent().parent().find('.pte-file').val()
 			submit_data =
 				'id':            $('#pte-post-id').val()
 				'action':        'pte_ajax'

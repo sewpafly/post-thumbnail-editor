@@ -1067,7 +1067,7 @@
         $('input.pte-confirm').filter(':checked').each(function(i, elem) {
           var size;
           size = $(elem).val();
-          return thumbnail_data[size] = $("\#pte-" + size + "-file").val();
+          return thumbnail_data[size] = $(elem).parent().parent().find('.pte-file').val();
         });
         submit_data = {
           'id': $('#pte-post-id').val(),

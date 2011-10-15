@@ -114,7 +114,7 @@
 					<td class="col2">
 						<div class="pte-size-label">${$index}</div>
 						<img src="${$value.url}?${randomness()}"/>
-						<input id="pte-${$index}-file" type="hidden" value="${$value.file}"/>
+						<input class="pte-file" type="hidden" value="${$value.file}"/>
 					</td>
 				</tr>
 			{{/each}}
