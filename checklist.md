@@ -20,12 +20,17 @@
 5. Fix any translation changes
    * gvim -d new-pot-file old-po-file
    * Rebuild .mo from .po files (msgfmt po-file -o mo-file)
+        find * -iname '*.po' | \
+        while read file; do \
+           echo "$file --> ${file%.po}"; msgfmt $file -o ${file%.po}.mo; \
+        done
 6. Test on Firefox, Chrome, Safari, IE7/8/9 & Linux/Windows/Mac
    * Do the rows change color on selection?
    * Does the height get set correctly?
    * Does enabling the ad rotate plugin cause any problems?
 	* Does the pastebin functionality work?
 	* Test changing from debug to normal
+	* How does post-thumbnails work with spaces in the name?
 7. Tag the git release
    * `git commit -a -m "Commit msg"`
    * `git tag [-a -m 'annotated tag'] version`

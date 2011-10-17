@@ -2,7 +2,7 @@
 Contributors: sewpafly
 Donate link: https://www.wepay.com/donate/34543
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, awesome
-Requires at least: 3.2.1
+Requires at least: 3.2
 Tested up to: 3.2.1
 Stable tag: trunk
 
@@ -63,6 +63,12 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Changelog ==
 
+= 1.0.4 =
+* Added full paths to php includes
+* Fix handling for thumbnail names with spaces
+* Fix unlink/deletion issue
+* Added Italian translation
+
 = 1.0.3 =
 * Fixed some javascript issues
 * Added Italian translation
@@ -91,6 +97,9 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 * Initial cut
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+Bugfixes & portugese translation
 
 = 1.0.3 =
 Fixed javascript problems & added italian translation

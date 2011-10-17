@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Post Thumbnail Editor package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Post Thumbnail Editor 1.0.3\n"
+"Project-Id-Version: Post Thumbnail Editor 1.0.4-beta\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
-"POT-Creation-Date: 2011-09-08 15:17:02+00:00\n"
+"POT-Creation-Date: 2011-10-17 21:23:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -40,7 +40,7 @@ msgstr ""
 msgid "Post Thumbnail Editor - Step 2"
 msgstr ""
 
-#: html/pte.php:83 html/pte.php:144
+#: html/pte.php:83 html/pte.php:145
 msgid "We noticed some potential issues:"
 msgstr ""
 
@@ -64,10 +64,11 @@ msgstr ""
 msgid "I'd rather start over..."
 msgstr ""
 
-#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 1.0.3)  #-#-#-#-#
+#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 1.0.4-beta)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: html/pte.php:135 php/options.php:64 post-thumbnail-editor.php:113
+#: html/pte.php:135 post-thumbnail-editor.php:113
 #: post-thumbnail-editor.php:178 post-thumbnail-editor.php:179
+#: php/options.php:64
 msgid "Post Thumbnail Editor"
 msgstr ""
 
@@ -116,28 +117,12 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: php/functions.php:257
-msgid "Sorry, there was a problem trying to send to pastebin"
+#: post-thumbnail-editor.php:167
+msgid "Edit Thumbnails"
 msgstr ""
 
-#: php/functions.php:258
-msgid "PASTEBIN URL:"
-msgstr ""
-
-#: php/functions.php:259
-msgid "Disabling aspect ratio"
-msgstr ""
-
-#: php/functions.php:260
-msgid "Error parsing selection information"
-msgstr ""
-
-#: php/functions.php:278
-msgid "Invalid meta data for POST #%d: %s"
-msgstr ""
-
-#: php/functions.php:283
-msgid "Please contact support"
+#: post-thumbnail-editor.php:168 php/options.php:51
+msgid "Thumbnails"
 msgstr ""
 
 #: php/log.php:15
@@ -174,10 +159,6 @@ msgstr ""
 
 #: php/options.php:47
 msgid "Site Options"
-msgstr ""
-
-#: php/options.php:51 post-thumbnail-editor.php:168
-msgid "Thumbnails"
 msgstr ""
 
 #: php/options.php:72
@@ -230,8 +211,28 @@ msgstr ""
 msgid "Hidden"
 msgstr ""
 
-#: post-thumbnail-editor.php:167
-msgid "Edit Thumbnails"
+#: php/functions.php:257
+msgid "Sorry, there was a problem trying to send to pastebin"
+msgstr ""
+
+#: php/functions.php:258
+msgid "PASTEBIN URL:"
+msgstr ""
+
+#: php/functions.php:259
+msgid "Disabling aspect ratio"
+msgstr ""
+
+#: php/functions.php:260
+msgid "Error parsing selection information"
+msgstr ""
+
+#: php/functions.php:278
+msgid "Invalid meta data for POST #%d: %s"
+msgstr ""
+
+#: php/functions.php:283
+msgid "Please contact support"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
