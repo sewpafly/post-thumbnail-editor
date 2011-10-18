@@ -67,7 +67,7 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 * Added full paths to php includes
 * Fix handling for thumbnail names with spaces
 * Fix unlink/deletion issue
-* Added Italian translation
+* Added Portuguese translation
 
 = 1.0.3 =
 * Fixed some javascript issues
@@ -99,7 +99,7 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 == Upgrade Notice ==
 
 = 1.0.4 =
-Bugfixes & portugese translation
+Bugfixes & portuguese translation
 
 = 1.0.3 =
 Fixed javascript problems & added italian translation

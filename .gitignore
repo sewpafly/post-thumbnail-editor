@@ -1,4 +1,7 @@
 .css
 .sass-cache/
+.buildpath
+.project
+.settings/
 local.mk
 .pot
