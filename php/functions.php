@@ -328,7 +328,8 @@ function pte_get_width_height( $size_information, $w, $h ){
 		$dst_h = $size_information['height'];
 	}
 	// Crop isn't set so the height / width should be based on the biggest side
-	else if ($w > $h){
+	// or check if the post_thumbnail has a 0 for a side.
+	else if ( $w > $h || $size_information['height'] == 0 ){
 		$dst_w = $size_information['width'];
 		$dst_h = round( ($dst_w/$w) * $h, 0);
 	}
@@ -336,8 +337,13 @@ function pte_get_width_height( $size_information, $w, $h ){
 		$dst_h = $size_information['height'];
 		$dst_w = round( ($dst_h/$h) * $w, 0);
 	}
-	$return = compact( "dst_w", "dst_h" );
-	return $return;
+
+	// Sanity Check
+	if ( $dst_h == 0 || $dst_w == 0 ){
+		$logger = PteLogger::singleton();
+		$logger->error( "Invalid derived dimensions: ${dst_w} x ${dst_h}" );
+	}
+	return compact( "dst_w", "dst_h" );
 }
 
 /*
