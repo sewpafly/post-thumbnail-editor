@@ -52,6 +52,11 @@ function pte_options_init(){
 			'pte_sizes_display', 
 			'pte', 
 			'pte_site' );
+		add_settings_field( 'pte_jpeg_compression', 
+			__('JPEG Compression', PTE_DOMAIN), 
+			'pte_jpeg_compression_display', 
+			'pte', 
+			'pte_site' );
 	}
 	// End Admin only
 
@@ -98,8 +103,20 @@ function pte_site_options_validate( $input ){
 		}
 	}
 
+	// Check the JPEG Compression value
+	$tmp_jpeg_compression = (int) preg_replace( "/[\D]/", "", $input['pte_jpeg_compression'] );
+	if ( ! is_int( $tmp_jpeg_compression ) 
+		|| $tmp_jpeg_compression < 0 
+		|| $tmp_jpeg_compression > 100 )
+	{
+		add_settings_error('pte_options_site'
+			, 'pte_options_error'
+			, __( "JPEG Compression needs to be set from 0 to 100.", PTE_DOMAIN ) );
+	}
 
-	$output = array( 'pte_hidden_sizes' => $pte_hidden_sizes );
+	$output = array( 'pte_hidden_sizes' => $pte_hidden_sizes
+		, 'pte_jpeg_compression' => $tmp_jpeg_compression
+  	);
 	return $output;
 }
 
@@ -221,5 +238,18 @@ function pte_sizes_display(){
 	}
 
 	print( '</table>' );
+}
+
+function pte_jpeg_compression_display(){
+	$options = pte_get_options();
+	$option_label = pte_get_option_name();
+?>
+	<span><input class="small-text" type="text" 
+			 name="pte-site-options[pte_jpeg_compression]" 
+			 value="<?php print $options['pte_jpeg_compression']; ?>" 
+          id="pte_jpeg_compression">&nbsp; 
+	<?php _e("Set the compression level for resizing jpeg images (0 to 100).", PTE_DOMAIN); ?>
+	</span>
+	<?php
 }
 ?>

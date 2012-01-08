@@ -424,7 +424,9 @@ function pte_write_image( $image, $orig_type, $destfilename ){
 	} 
 	else {
 		// all other formats are converted to jpg
-		if ( !imagejpeg( $image, $destfilename, 90) ){
+		$options = pte_get_options();
+		$logger->debug("JPEG COMPRESSION: {$options['pte_jpeg_compression']}");
+		if ( !imagejpeg( $image, $destfilename, $options['pte_jpeg_compression'] ) ){
 			$logger->error("Resize path invalid: " . $destfilename);
 			return false;
 		}
