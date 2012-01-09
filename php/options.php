@@ -20,6 +20,12 @@ function pte_options_init(){
 		, 'pte_noop'
 		, 'pte' );
 	
+	add_settings_field( 'pte_thickbox', 
+		__('Thickbox', PTE_DOMAIN), 
+		'pte_thickbox_display', 
+		'pte', 
+		'pte_main' );
+
 	add_settings_field( 'pte_dimensions', 
 		__('Thickbox dimensions', PTE_DOMAIN), 
 		'pte_dimensions_display', 
@@ -127,6 +133,7 @@ function pte_options_validate( $input ){
 		return array();
 	}
 	$options['pte_debug'] = isset( $input['pte_debug'] );
+	$options['pte_thickbox'] = isset( $input['pte_thickbox'] );
 
 	$tmp_width = (int) preg_replace( "/[\D]/", "", $input['pte_tb_width'] );
 	if ( !is_int( $tmp_width ) || $tmp_width < 750 ){
@@ -149,6 +156,19 @@ function pte_options_validate( $input ){
 	}
 
 	return $options;
+}
+
+function pte_thickbox_display(){
+	$options = pte_get_options();
+	$option_label = pte_get_option_name();
+	?>
+	<span><input type="checkbox" name="<?php
+		print $option_label
+	?>[pte_thickbox]" <?php 
+		if ( $options['pte_thickbox'] ): print "checked"; endif; 
+	?> id="pte_thickbox"/>&nbsp;<label for="pte_thickbox"><?php _e( 'Enable Thickbox', PTE_DOMAIN ); ?></label>
+	</span>
+	<?php
 }
 
 function pte_dimensions_display(){
