@@ -1,0 +1,242 @@
+# Copyright (C) 2010 Post Thumbnail Editor
+# This file is distributed under the same license as the Post Thumbnail Editor package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Post Thumbnail Editor 1.0.1-alpha2\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
+"POT-Creation-Date: 2011-09-06 15:57:59+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2012-04-02 10:57+0100\n"
+"Last-Translator: Christian Wenzl <post@christian-wenzl.de>\n"
+"Language-Team: Christian Wenzl <post@christian-wenzl.de>\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: html/pte.php:20
+msgid "Post Thumbnail Editor - Step 1"
+msgstr "Vorschaubild Editor - Schritt 1"
+
+#: html/pte.php:33
+msgid "Create Thumbnails"
+msgstr "Erzeuge Vorschaubilder"
+
+#: html/pte.php:39
+msgid "Choose the images/thumbnails that you want to edit:"
+msgstr "Wählen Sie die zu bearbeitenden Bilder:"
+
+#: html/pte.php:42
+msgid "Select: %1$sAll%2$s | %3$sNone%4$s"
+msgstr "Auswahl: %1$sAlle%2$s | %3$sKeine%4$s"
+
+#: html/pte.php:59
+msgid "Current image:"
+msgstr "Aktuelles Bild:"
+
+#: html/pte.php:78
+msgid "Back"
+msgstr "Zurück"
+
+#: html/pte.php:80
+msgid "Post Thumbnail Editor - Step 2"
+msgstr "Vorschaubild Editor - Schritt 2"
+
+#: html/pte.php:83
+#: html/pte.php:144
+msgid "We noticed some potential issues:"
+msgstr "Es sind einige Probleme aufgetreten:"
+
+#: html/pte.php:86
+msgid "View %1$slogs%2$s for further information"
+msgstr "Weitere Informationen finden Sie in den %1$sLogdateien%2$s"
+
+#: html/pte.php:91
+msgid "%1$sEnable debugging%2$s for additional information"
+msgstr "%1$sDebug aktivieren%2$s um weitere Informationen zu erhalten"
+
+#: html/pte.php:101
+msgid "Select the images you want to keep: %1$sAll%2$s | %3$sNone%4$s"
+msgstr "Wählen Sie die zu behaltenden Bilder aus: %1$sAlle%2$s | %3$sKeine%4$s"
+
+#: html/pte.php:124
+msgid "Okay, these look good..."
+msgstr "Okey, sieht gut aus..."
+
+#: html/pte.php:128
+msgid "I'd rather start over..."
+msgstr "Nochmal neu beginnen..."
+
+#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 1.0.1-alpha2)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: html/pte.php:135
+#: post-thumbnail-editor.php:113
+#: post-thumbnail-editor.php:178
+#: post-thumbnail-editor.php:179
+#: php/options.php:64
+msgid "Post Thumbnail Editor"
+msgstr "Vorschaubild Editor"
+
+#: html/pte.php:138
+msgid "Images were created successfully."
+msgstr "Die Bilder wurden erfolgreich erstellt."
+
+#: html/pte.php:140
+msgid "Click %1$shere%2$s to modify another thumbnail."
+msgstr "Klicken Sie %1$shier%2$s um ein weiteres Vorschaubild zu bearbeiten."
+
+#: html/pte.php:156
+msgid "Please wait"
+msgstr "Etwas Geduld"
+
+#: html/pte.php:160
+msgid "Click here to show application logs"
+msgstr "Klicken Sie hier um die Logdatei einzusehen"
+
+#: html/pte.php:162
+#: php/options.php:30
+msgid "Debug"
+msgstr "Debug"
+
+#: html/pte.php:167
+msgid "If you are having any issues with this plugin, create a problem report on %1$sgithub%2$s or %3$swordpress.org%4$s so that I can look into it. Copy these log statements and include some information about what you were trying "
+msgstr "Falls Sie irgendwelche Probleme bei  diesem Plugin feststellen, melden Sie dies bitte bei %1$sgithub%2$s oder %3$swordpress.org%4$s damit sich der Entwickler darum kümmern kann. Kopieren Sie diese Log-Informationen dazu, ergänzend von einer kurzen Beschreibung was Sie versucht haben."
+
+#: html/pte.php:181
+msgid "Send to Pastebin"
+msgstr "In den Papierkorb"
+
+#: html/pte.php:182
+msgid "Clear Messages"
+msgstr "Nachrichten leeren"
+
+#: html/pte.php:185
+msgid "Run Tests"
+msgstr "Tests starten"
+
+#: html/pte.php:186
+msgid "Close"
+msgstr "Schließen"
+
+#: post-thumbnail-editor.php:167
+msgid "Edit Thumbnails"
+msgstr "Vorschaubilder bearbeiten"
+
+#: post-thumbnail-editor.php:168
+#: php/options.php:51
+msgid "Thumbnails"
+msgstr "Vorschaubilder"
+
+#: php/log.php:15
+msgid "ERROR"
+msgstr "FEHLER"
+
+#: php/log.php:18
+msgid "WARNING"
+msgstr "WARNUNG"
+
+#: php/log.php:21
+msgid "DEBUG"
+msgstr "DEBUG"
+
+#: php/log.php:99
+msgid "ERROR Logging Message: %s"
+msgstr "FEHLERMELDUNG: %s"
+
+#: php/options.php:8
+msgid "These site-wide settings can only be changed by an administrator"
+msgstr "Diese seitenweite Einstellung kann nur durch einen Administrator geändert werden"
+
+#: php/options.php:19
+msgid "User Options"
+msgstr "Benutzer Einstellungen"
+
+#: php/options.php:24
+msgid "Thickbox dimensions"
+msgstr "Abmessungen der Thickbox"
+
+#: php/options.php:36
+msgid "Reset to defaults"
+msgstr "Auf Standardeinstellungen zurücksetzen"
+
+#: php/options.php:47
+msgid "Site Options"
+msgstr "Seiteneinstellungen"
+
+#: php/options.php:72
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: php/options.php:86
+msgid "Only users with the 'manage_options' capability may make changes to these settings."
+msgstr "Nur Benutzer mit dem Recht 'manage_options' (Einstellungen bearbeiten) können diese Optionen ändern."
+
+#: php/options.php:118
+msgid "Thickbox width must be at least 750 pixels."
+msgstr "Breite der Thickbox muss mind. 750 Pixel betragen."
+
+#: php/options.php:128
+msgid "Thickbox height must be greater than 550 pixels."
+msgstr "Höhe der Thickbox muss mind. 750 Pixel betragen."
+
+#: php/options.php:142
+msgid "Width:"
+msgstr "Breite:"
+
+#: php/options.php:146
+msgid "Set this to a value greater than 750."
+msgstr "mind. 750 Pixel"
+
+#: php/options.php:153
+msgid "Height:"
+msgstr "Höhe:"
+
+#: php/options.php:157
+msgid "Set this to a value greater than 550."
+msgstr "mind. 550 Pixel"
+
+#: php/options.php:169
+msgid "Enable debugging"
+msgstr "Debugging aktivieren"
+
+#: php/options.php:178
+msgid "Reset User Options"
+msgstr "Benutzereinstellungen zurücksetzen"
+
+#: php/options.php:204
+msgid "Post Thumbnail"
+msgstr "Artikel Vorschaubild"
+
+#: php/options.php:205
+msgid "Hidden"
+msgstr "Versteckt"
+
+#: php/functions.php:257
+msgid "Sorry, there was a problem trying to send to pastebin"
+msgstr "Ups, konnte die Datei nicht in den Papierkorb legen."
+
+#: php/functions.php:258
+msgid "PASTEBIN URL:"
+msgstr "Url zum Papierkorb:"
+
+#: php/functions.php:259
+msgid "Disabling aspect ratio"
+msgstr "Seitenverhältnis nicht beachten"
+
+#. Plugin URI of the plugin/theme
+msgid "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
+msgstr "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
+
+#. Description of the plugin/theme
+msgid "Individually manage your post thumbnails"
+msgstr "Verändern Sie die  Vorschaubilder individuell nach Ihren Vorstellungen"
+
+#. Author of the plugin/theme
+msgid "sewpafly"
+msgstr "sewpafly"
+
+#. Author URI of the plugin/theme
+msgid "http://sewpafly.github.com/post-thumbnail-editor"
+msgstr "http://sewpafly.github.com/post-thumbnail-editor"
+
