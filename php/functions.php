@@ -323,24 +323,33 @@ function pte_check_int( $int ){
  *    but the other dimension is wrong
  */
 function pte_get_width_height( $size_information, $w, $h ){
+	$logger = PteLogger::singleton();
 	if ( $size_information['crop'] == 1 ){
+		$logger->debug("GETwidthheightCROPPED");
 		$dst_w = $size_information['width'];
 		$dst_h = $size_information['height'];
 	}
 	// Crop isn't set so the height / width should be based on the biggest side
 	// or check if the post_thumbnail has a 0 for a side.
-	else if ( $w > $h || $size_information['height'] == 0 ){
-		$dst_w = $size_information['width'];
-		$dst_h = round( ($dst_w/$w) * $h, 0);
-	}
 	else {
-		$dst_h = $size_information['height'];
-		$dst_w = round( ($dst_h/$h) * $w, 0);
+		$use_width = false;
+		if ( $w > $h ) $use_width = true;
+		if ( $size_information['height'] == 0 ) $use_width = true;
+		if ( $size_information['width'] == 0 ) $use_width = false;
+
+		$logger->debug("GETwidthheightPARAMS\nWIDTH: $w\nHEIGHT: $h\nUSE_WIDTH: $use_width");
+		if ( $use_width ){
+			$dst_w = $size_information['width'];
+			$dst_h = round( ($dst_w/$w) * $h, 0);
+		}
+		else {
+			$dst_h = $size_information['height'];
+			$dst_w = round( ($dst_h/$h) * $w, 0);
+		}
 	}
 
 	// Sanity Check
 	if ( $dst_h == 0 || $dst_w == 0 ){
-		$logger = PteLogger::singleton();
 		$logger->error( "Invalid derived dimensions: ${dst_w} x ${dst_h}" );
 	}
 	return compact( "dst_w", "dst_h" );
