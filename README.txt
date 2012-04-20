@@ -3,7 +3,7 @@ Contributors: sewpafly
 Donate link: https://www.wepay.com/donate/34543
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, awesome
 Requires at least: 3.2
-Tested up to: 3.2.1
+Tested up to: 3.3.1
 Stable tag: trunk
 
 Fed up with the lack of automated tools to properly crop and scale post thumbnails? Maybe this plugin can help.
@@ -63,6 +63,10 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Changelog ==
 
+= 1.0.5 =
+* Fix custom sizes with either height or width set to '0'
+* Added German translation
+
 = 1.0.4 =
 * Added full paths to php includes
 * Fix handling for thumbnail names with spaces
@@ -97,6 +101,9 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 * Initial cut
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+Bugfix & added German translation
 
 = 1.0.4 =
 Bugfixes & portuguese translation
