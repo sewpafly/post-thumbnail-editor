@@ -592,6 +592,9 @@ function pte_confirm_images(){
 		$good_file = $PTE_TMP_DIR
 			. DIRECTORY_SEPARATOR
 			. basename( $_GET['pte-confirm'][$size] );
+			
+		//replace the ?123 at end image file
+		$good_file = preg_replace('"\?123$"', '', $good_file);
 
 		if ( ! ( isset( $good_file ) && file_exists( $good_file ) ) ){
 			return pte_json_error("FILE is invalid: {$good_file}");
