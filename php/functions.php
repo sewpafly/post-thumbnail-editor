@@ -425,8 +425,9 @@ function pte_write_image( $image, $orig_type, $destfilename ){
 	else {
 		// all other formats are converted to jpg
 		$options = pte_get_options();
-		$logger->debug("JPEG COMPRESSION: {$options['pte_jpeg_compression']}");
-		if ( !imagejpeg( $image, $destfilename, $options['pte_jpeg_compression'] ) ){
+		$quality = apply_filters('jpeg_quality', $options['pte_jpeg_compression'], 'pte_write_image');
+		$logger->debug("JPEG COMPRESSION: {$quality}");
+		if ( !imagejpeg( $image, $destfilename, $quality ) ){
 			$logger->error("Resize path invalid: " . $destfilename);
 			return false;
 		}
