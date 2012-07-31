@@ -223,43 +223,6 @@ function pte_test(){
 function pte_launch(){
 	$logger = PteLogger::singleton();
 	$options = pte_get_options();
-	if ( $options['pte_debug'] ) {
-		wp_enqueue_script( 'pte'
-			, PTE_PLUGINURL . 'js/pte.full.js'
-			, array('jquery','imgareaselect')
-			, PTE_VERSION
-		);
-		wp_enqueue_script( 'jquery-json'
-			, PTE_PLUGINURL . 'apps/jquery.json-2.2.min.js'
-			, array('jquery')
-			, '2.2'
-		);
-		wp_enqueue_style( 'pte'
-			, PTE_PLUGINURL . 'css/pte.css'
-			, array('imgareaselect')
-			, PTE_VERSION
-		);
-	}
-	else { // Minified versions
-		wp_enqueue_script( 'pte'
-			, PTE_PLUGINURL . 'js/pte.full.min.js'
-			, array('jquery','imgareaselect')
-			, PTE_VERSION
-		);
-		wp_enqueue_style( 'pte'
-			, PTE_PLUGINURL . 'css/pte.min.css'
-			, array('imgareaselect')
-			, PTE_VERSION
-		);
-	}
-	wp_localize_script('pte'
-		, 'objectL10n'
-		, array( 'pastebin_create_error' => __( 'Sorry, there was a problem trying to send to pastebin', PTE_DOMAIN )
-			, 'pastebin_url' => __( 'PASTEBIN URL:', PTE_DOMAIN )
-			, 'aspect_ratio_disabled' => __( 'Disabling aspect ratio', PTE_DOMAIN )
-			, 'crop_submit_data_error' => __( 'Error parsing selection information', PTE_DOMAIN )
-		)
-	);
 
 	$id = pte_check_id((int) $_GET['id']);
 
@@ -288,7 +251,13 @@ function pte_launch(){
 	$logger->debug( "USER-AGENT: " . $_SERVER['HTTP_USER_AGENT'] );
 	$logger->debug( "WORDPRESS: " . $GLOBALS['wp_version'] );
 	$logger->debug( "SIZER: ${sizer}" );
-	$logger->debug( "META: " . print_r( $meta, true ) );
+
+	$script_url = PTE_PLUGINURL . 'php/load-scripts.php?load=jquery,imgareaselect,pte,jquery-json';
+	$style_url = PTE_PLUGINURL . 'php/load-styles.php?load=imgareaselect,pte';
+	if ( $options['pte_debug'] ){
+		$style_url .= "&d=1";
+		$script_url .= "&d=1";
+	}
 
 	require( PTE_PLUGINPATH . "html/pte.php" );
 }

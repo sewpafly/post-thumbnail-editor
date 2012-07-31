@@ -1,6 +1,6 @@
 
-JSOUTPUT_DEV = js/pte.full.js
-JSOUTPUT_MIN = js/pte.full.min.js
+JSOUTPUT_DEV = js/pte.full.dev.js
+JSOUTPUT_MIN = js/pte.full.js
 COFFEE       = coffee
 COFFEE_FLAGS = -s -p
 COFFEE_FILES = js/header.coffee \
@@ -10,8 +10,8 @@ COFFEE_FILES = js/header.coffee \
 JS_FILES     = apps/jquery-tmpl/jquery.tmpl.js
 
 
-CSSOUTPUT_DEV = css/pte.css
-CSSOUTPUT_MIN = css/pte.min.css
+CSSOUTPUT_DEV = css/pte.dev.css
+CSSOUTPUT_MIN = css/pte.css
 SCSSFILE      = css/pte.scss
 SASS          = sass
 CSSFILES      = css/reset.css
