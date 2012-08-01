@@ -20,6 +20,12 @@ function pte_options_init(){
 		, 'pte_noop'
 		, 'pte' );
 	
+	add_settings_field( 'pte_thickbox', 
+		__('Thickbox', PTE_DOMAIN), 
+		'pte_thickbox_display', 
+		'pte', 
+		'pte_main' );
+
 	add_settings_field( 'pte_dimensions', 
 		__('Thickbox dimensions', PTE_DOMAIN), 
 		'pte_dimensions_display', 
@@ -50,6 +56,11 @@ function pte_options_init(){
 		add_settings_field( 'pte_sizes', 
 			__('Thumbnails', PTE_DOMAIN), 
 			'pte_sizes_display', 
+			'pte', 
+			'pte_site' );
+		add_settings_field( 'pte_jpeg_compression', 
+			__('JPEG Compression', PTE_DOMAIN), 
+			'pte_jpeg_compression_display', 
 			'pte', 
 			'pte_site' );
 	}
@@ -98,8 +109,20 @@ function pte_site_options_validate( $input ){
 		}
 	}
 
+	// Check the JPEG Compression value
+	$tmp_jpeg_compression = (int) preg_replace( "/[\D]/", "", $input['pte_jpeg_compression'] );
+	if ( ! is_int( $tmp_jpeg_compression ) 
+		|| $tmp_jpeg_compression < 0 
+		|| $tmp_jpeg_compression > 100 )
+	{
+		add_settings_error('pte_options_site'
+			, 'pte_options_error'
+			, __( "JPEG Compression needs to be set from 0 to 100.", PTE_DOMAIN ) );
+	}
 
-	$output = array( 'pte_hidden_sizes' => $pte_hidden_sizes );
+	$output = array( 'pte_hidden_sizes' => $pte_hidden_sizes
+		, 'pte_jpeg_compression' => $tmp_jpeg_compression
+  	);
 	return $output;
 }
 
@@ -110,6 +133,7 @@ function pte_options_validate( $input ){
 		return array();
 	}
 	$options['pte_debug'] = isset( $input['pte_debug'] );
+	$options['pte_thickbox'] = isset( $input['pte_thickbox'] );
 
 	$tmp_width = (int) preg_replace( "/[\D]/", "", $input['pte_tb_width'] );
 	if ( !is_int( $tmp_width ) || $tmp_width < 750 ){
@@ -132,6 +156,19 @@ function pte_options_validate( $input ){
 	}
 
 	return $options;
+}
+
+function pte_thickbox_display(){
+	$options = pte_get_options();
+	$option_label = pte_get_option_name();
+	?>
+	<span><input type="checkbox" name="<?php
+		print $option_label
+	?>[pte_thickbox]" <?php 
+		if ( $options['pte_thickbox'] ): print "checked"; endif; 
+	?> id="pte_thickbox"/>&nbsp;<label for="pte_thickbox"><?php _e( 'Enable Thickbox', PTE_DOMAIN ); ?></label>
+	</span>
+	<?php
 }
 
 function pte_dimensions_display(){
@@ -221,5 +258,18 @@ function pte_sizes_display(){
 	}
 
 	print( '</table>' );
+}
+
+function pte_jpeg_compression_display(){
+	$options = pte_get_options();
+	$option_label = pte_get_option_name();
+?>
+	<span><input class="small-text" type="text" 
+			 name="pte-site-options[pte_jpeg_compression]" 
+			 value="<?php print $options['pte_jpeg_compression']; ?>" 
+          id="pte_jpeg_compression">&nbsp; 
+	<?php _e("Set the compression level for resizing jpeg images (0 to 100).", PTE_DOMAIN); ?>
+	</span>
+	<?php
 }
 ?>

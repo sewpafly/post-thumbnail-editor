@@ -4,10 +4,11 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<title>PTE</title>
 		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Amaranth:regular,italic,bold|Puritan|PT+Serif">
-		<style type="text/css" media="screen">
-		</style>
-		<?php wp_print_styles(); ?>
-		<?php wp_print_scripts(); ?>
+      <link rel="stylesheet" type="text/css" href="<?php echo( $style_url ); ?>">
+      <script 
+         src="<?php echo( $script_url ); ?>"
+         type="text/javascript" 
+         charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 			var ajaxurl        = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
 			var thumbnail_info = <?php print( json_encode( $size_information ) ); ?>;
