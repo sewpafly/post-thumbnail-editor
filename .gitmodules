@@ -1,3 +1,0 @@
-[submodule "apps/jquery-tmpl"]
-	path = apps/jquery-tmpl
-	url = git@github.com:sewpafly/jquery-tmpl.git
