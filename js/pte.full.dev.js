@@ -483,11 +483,15 @@
 	}
 })( jQuery );
 (function() {
-  var $, Message, TimerFunc, deleteThumbs, deleteThumbsSuccessCallback, determineAspectRatio, gcd, pte, pte_queue, toType, window;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var $, Message, TimerFunc, deleteThumbs, deleteThumbsSuccessCallback, determineAspectRatio, gcd, pte, pte_queue, toType, window,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
   window = this;
+
   $ = window.jQuery;
+
   window.pte = pte = pte || {};
+
   (function(pte) {
     return pte.fixThickbox = function(parent) {
       var $p, $thickbox, height, width;
@@ -522,14 +526,18 @@
       }, 1000);
     };
   })(pte);
+
   toType = function(obj) {
     return {}.toString.call(obj).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
   };
+
   Message = (function() {
+
     function Message(message) {
       this.message = message;
       this.date = new Date();
     }
+
     Message.prototype.toString = function() {
       var D, M, d, h, m, message, pad, s, y;
       pad = function(num, pad) {
@@ -554,8 +562,11 @@
       }
       return "" + y + M + D + " " + h + ":" + m + ":" + s + " - [" + (toType(this.message)) + "] " + message;
     };
+
     return Message;
+
   })();
+
   (function(pte) {
     pte.messages = [];
     pte.log = function(obj) {
@@ -622,7 +633,9 @@
     };
     return true;
   })(pte);
+
   window.log = pte.log;
+
   $(document).ready(function($) {
     $('#test').click(function(e) {
       e.stopImmediatePropagation();
@@ -647,11 +660,14 @@
       return $('#pte-log').fadeIn('900');
     });
   });
+
   /*
     POST-THUMBNAIL-EDITOR Script for Wordpress
   
     Hooks into the Wordpress Media Library
   */
+
+
   (function(pte) {
     return pte.admin = function() {
       var $getLink, checkExistingThickbox, image_id, injectPTE, launchPTE, pte_url, thickbox, timeout;
@@ -667,13 +683,14 @@
         return $("<a class=\"thickbox\" href=\"" + (pte_url(id)) + "\">" + objectL10n.PTE + "</a>");
       };
       checkExistingThickbox = function(e) {
+        var _this = this;
         log("Start PTE...");
         if (window.parent.frames.length > 0) {
           log("Modifying thickbox...");
-          __bind(function() {
+          (function() {
             window.parent.tb_click();
             return true;
-          }, this)();
+          })();
           return e.stopPropagation();
         }
       };
@@ -710,28 +727,37 @@
       return injectPTE();
     };
   })(pte);
+
   TimerFunc = (function() {
+
     function TimerFunc(fn, timeout) {
       this.fn = fn;
       this.timeout = timeout;
       this.doFunc = __bind(this.doFunc, this);
+
       this.timer = null;
     }
+
     TimerFunc.prototype.doFunc = function(e) {
       window.clearTimeout(this.timer);
       this.timer = window.setTimeout(this.fn, this.timeout);
       return true;
     };
+
     return TimerFunc;
+
   })();
+
   window.randomness = function() {
     return Math.floor(Math.random() * 1000001).toString(16);
   };
+
   window.debugTmpl = function(data) {
     log("===== TEMPLATE DEBUG DATA FOLLOWS =====");
     log(data);
     return true;
   };
+
   deleteThumbs = function(id) {
     var delete_options;
     delete_options = {
@@ -748,12 +774,15 @@
       success: deleteThumbsSuccessCallback
     });
   };
+
   deleteThumbsSuccessCallback = function(data, status, xhr) {
     log("===== DELETE SUCCESSFUL, DATA DUMP FOLLOWS =====");
     log(data);
     return pte.parseServerLog(data.log);
   };
+
   pte_queue = $({});
+
   $.fn.extend({
     move: function(options) {
       var defaults;
@@ -767,9 +796,10 @@
       };
       options = $.extend(defaults, options);
       this.each(function() {
-        return pte_queue.queue(__bind(function(next) {
+        var _this = this;
+        return pte_queue.queue(function(next) {
           var $elem, direction, isVisible, move_to;
-          $elem = $(this);
+          $elem = $(_this);
           direction = options.direction === 'left' ? -1 : 1;
           move_to = $elem.css('left') === "0px" ? $(window).width() * direction : 0;
           isVisible = $elem.is(':visible');
@@ -787,7 +817,7 @@
             $elem.hide(0, next);
           }
           return true;
-        }, this));
+        });
       });
       if (options.callback != null) {
         pte_queue.queue(function(next) {
@@ -817,6 +847,7 @@
       return this.move(options);
     }
   });
+
   window.goBack = function(e) {
     if (e != null) {
       e.preventDefault();
@@ -830,6 +861,7 @@
     });
     return true;
   };
+
   gcd = function(a, b) {
     if (a === 0) {
       return b;
@@ -846,6 +878,7 @@
     }
     return a;
   };
+
   determineAspectRatio = function(current_ar, size_info) {
     var crop, gc, height, tmp_ar, width;
     crop = size_info.crop, width = size_info.width, height = size_info.height;
@@ -855,7 +888,7 @@
     gc = gcd(width, height);
     if ((crop != null) && crop > 0) {
       tmp_ar = null;
-      if ((width != null) > 0 && (height != null) > 0) {
+      if ((width != null) && width > 0 && (height != null) && height > 0) {
         if (gc != null) {
           tmp_ar = "" + (width / gc) + ":" + (height / gc);
         } else {
@@ -869,9 +902,11 @@
     }
     return current_ar;
   };
+
   pte.functions = {
     determineAspectRatio: determineAspectRatio
   };
+
   (function(pte) {
     var addCheckAllNoneListener, addRowListener, addRowListeners, addSubmitListener, addVerifyListener, configureOverlay, configurePageDisplay, editor, iasSetAR, ias_defaults, ias_instance, initImgAreaSelect;
     editor = pte.editor = function() {
@@ -940,7 +975,9 @@
       enableRowFeatures($('#stage2'));
       return enableRowFeatures($('#stage1'));
     };
-    /* Enable imgareaselect plugin */
+    /* Enable imgareaselect plugin
+    */
+
     ias_instance = null;
     ias_defaults = {
       keys: true,
@@ -1044,7 +1081,9 @@
         return true;
       });
       return onResizeImages = function(data, status, xhr) {
-        /* Evaluate data */        log("===== RESIZE-IMAGES SUCCESS =====");
+        /* Evaluate data
+        */
+        log("===== RESIZE-IMAGES SUCCESS =====");
         log(data);
         pte.parseServerLog(data.log);
         if ((data.error != null) && !(data.thumbnails != null)) {
@@ -1058,7 +1097,9 @@
         return false;
       };
     };
-    /* Callback for Stage 2 to 3 */
+    /* Callback for Stage 2 to 3
+    */
+
     addVerifyListener = function() {
       var onConfirmImages;
       $('#pte-confirm').live('click', function(e) {
@@ -1089,23 +1130,25 @@
         return false;
       };
     };
-    /* Select ALL|NONE */
+    /* Select ALL|NONE
+    */
+
     addCheckAllNoneListener = function() {
       var checkAllSizes, uncheckAllSizes;
       uncheckAllSizes = function(e) {
-        var elements, _ref, _ref2;
+        var elements, _ref, _ref1;
         if (e != null) {
           e.preventDefault();
         }
-        elements = (_ref = (_ref2 = e.data) != null ? _ref2.selector : void 0) != null ? _ref : '.pte-size';
+        elements = (_ref = (_ref1 = e.data) != null ? _ref1.selector : void 0) != null ? _ref : '.pte-size';
         return $(elements).filter(':checked').click();
       };
       checkAllSizes = function(e) {
-        var elements, _ref, _ref2;
+        var elements, _ref, _ref1;
         if (e != null) {
           e.preventDefault();
         }
-        elements = (_ref = e != null ? (_ref2 = e.data) != null ? _ref2.selector : void 0 : void 0) != null ? _ref : '.pte-size';
+        elements = (_ref = e != null ? (_ref1 = e.data) != null ? _ref1.selector : void 0 : void 0) != null ? _ref : '.pte-size';
         return $(elements).not(':checked').click();
       };
       $("#pte-selectors .all").click(checkAllSizes);
@@ -1122,4 +1165,5 @@
       iasSetAR: iasSetAR
     });
   })(pte);
+
 }).call(this);
