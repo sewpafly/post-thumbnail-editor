@@ -669,6 +669,13 @@
 
 
   (function(pte) {
+    pte.media = function() {
+      var injectTemplate, template;
+      template = $("#tmpl-attachment-details").text();
+      injectTemplate = "<a target=\"_blank\" href=\"" + ajaxurl + "?action=pte_ajax&pte-action=launch&id={{data.id}}\">\n	" + objectL10n.PTE + "\n</a>";
+      template = template.replace(/(<div class="compat-meta">)/, "" + injectTemplate + "\n$1");
+      return $("#tmpl-attachment-details").text(template);
+    };
     return pte.admin = function() {
       var $getLink, checkExistingThickbox, image_id, injectPTE, launchPTE, pte_url, thickbox, timeout;
       timeout = 300;
@@ -695,6 +702,7 @@
         }
       };
       injectPTE = function() {
+        var $editmenu, matches;
         $('.media-item').each(function(i, elem) {
           var post_id;
           post_id = elem.id.replace("media-item-", "");
@@ -710,6 +718,14 @@
             imageEdit.oldopen(id, nonce);
             return launchPTE();
           };
+        }
+        $editmenu = $("p[id^=\"imgedit-save-target-\"]");
+        if (($editmenu != null ? $editmenu.length : void 0) > 0) {
+          matches = $editmenu[0].id.match(/imgedit-save-target-(\d+)/);
+          if (matches[1] != null) {
+            image_id = matches[1];
+            launchPTE();
+          }
         }
         return true;
       };
@@ -1026,7 +1042,7 @@
           } catch (error) {
             ar = null;
             if (ar !== ias_instance.getOptions().aspectRatio) {
-              alert(error);
+              log("Setting Aspect Ratio to null");
             }
             return false;
           }

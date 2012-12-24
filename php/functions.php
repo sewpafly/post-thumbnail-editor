@@ -248,6 +248,7 @@ function pte_launch(){
 
 	$sizer = $big > 400 ? 400 / $big : 1;
 	$sizer = sprintf( "%.8F", $sizer );
+	$logger->debug( "PTE-VERSION: " . PTE_VERSION );
 	$logger->debug( "USER-AGENT: " . $_SERVER['HTTP_USER_AGENT'] );
 	$logger->debug( "WORDPRESS: " . $GLOBALS['wp_version'] );
 	$logger->debug( "SIZER: ${sizer}" );

@@ -103,6 +103,11 @@ $load = explode(',', $load);
 if ( empty($load) )
    exit;
 
+header('Content-Type: text/css');
+header('Expires: ' . gmdate( "D, d M Y H:i:s", time() + $expires_offset ) . ' GMT');
+header("Cache-Control: public, max-age=$expires_offset");
+
+
 $compress = ( isset($_GET['c']) && $_GET['c'] );
 $force_gzip = ( $compress && 'gzip' == $_GET['c'] );
 $rtl = ( isset($_GET['dir']) && 'rtl' == $_GET['dir'] );
@@ -126,7 +131,7 @@ foreach( $load as $handle ) {
 
    $style = $wp_styles->registered[$handle];
    $path = ABSPATH . $style->src;
-   //print("/** PATH: '$path' **/\n");
+   //$out .= "/** PATH: '$path' **/\n";
 
    $content = get_file($path) . "\n";
 
@@ -135,17 +140,13 @@ foreach( $load as $handle ) {
       $content .= get_file($rtl_path) . "\n";
    }
 
-   if ( strpos( $style->src, '/wp-includes/css/' ) === 0 ) {
-      $content = str_replace( '../images/', '../wp-includes/images/', $content );
-      $out .= str_replace( '../js/tinymce/', '../wp-includes/js/tinymce/', $content );
-   } else {
-      $out .= str_replace( '../images/', 'images/', $content );
-   }
+   // Replace wp-includes links
+   if ( strpos( $style->src, '/wp-includes/' ) === 0 ) {
+      $content = str_replace( 'border-anim-v.gif', '../../../../wp-includes/js/imgareaselect/border-anim-v.gif', $content);
+      $content = str_replace( 'border-anim-h.gif', '../../../../wp-includes/js/imgareaselect/border-anim-h.gif', $content);
+   } 
+   $out .= $content;
 }
-
-header('Content-Type: text/css');
-header('Expires: ' . gmdate( "D, d M Y H:i:s", time() + $expires_offset ) . ' GMT');
-header("Cache-Control: public, max-age=$expires_offset");
 
 if ( $compress && ! ini_get('zlib.output_compression') && 'ob_gzhandler' != ini_get('output_handler') && isset($_SERVER['HTTP_ACCEPT_ENCODING']) ) {
    header('Vary: Accept-Encoding'); // Handle proxies

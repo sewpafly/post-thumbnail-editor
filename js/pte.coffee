@@ -292,7 +292,8 @@ do (pte) ->
 				catch error
 					ar = null
 					if ar isnt ias_instance.getOptions().aspectRatio
-						alert error
+						log "Setting Aspect Ratio to null"
+						#alert error
 					return false
 				true
 			iasSetAR ar

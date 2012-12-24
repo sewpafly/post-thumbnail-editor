@@ -50,7 +50,7 @@ table {
 /* Generated variables */
 a.stage-navigation, a.stage-navigation:visited {
   color: #38ab36;
-  font-family: 'Amaranth', serif;
+  font-family: "Amaranth", serif;
   font-size: 0.8em;
   font-style: italic;
   text-decoration: none;
@@ -61,7 +61,7 @@ a.stage-navigation, a.stage-navigation:visited {
 
 a {
   color: #444;
-  font-family: 'Amaranth', serif;
+  font-family: "Amaranth", serif;
   font-style: italic;
   text-shadow: none; }
   a:visited {
@@ -71,13 +71,13 @@ a {
 
 h1 {
   color: #2386e2;
-  font-family: 'Amaranth', serif;
+  font-family: "Amaranth", serif;
   font-style: italic;
   font-size: 1.6em;
-  text-shadow: white 1px 1px 5px, 2px 2px 10px #999; }
+  text-shadow: white 1px 1px 5px, 2px 2px 10px #999999; }
 
 body {
-  font-family: 'PT Serif', serif;
+  font-family: "PT Serif", serif;
   /*font-family: 'Puritan', serif;*/
   /*overflow: auto;*/
   overflow-x: hidden;
@@ -154,7 +154,7 @@ table td {
   /*background: #bcbcbc;*/
   background: #cdcdcd;
   bottom: 0;
-  font-family: 'Amaranth', serif;
+  font-family: "Amaranth", serif;
   font-weight: bolder;
   padding: 5px 0px 7px 5px;
   /*padding: 5px;*/ }

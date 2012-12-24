@@ -5,6 +5,17 @@
 ###
 do (pte) ->
 
+	pte.media = ->
+		# Add link to attachment-details template
+		template = $("#tmpl-attachment-details").text()
+		injectTemplate = """
+			<a target="_blank" href="#{ajaxurl}?action=pte_ajax&pte-action=launch&id={{data.id}}">
+				#{objectL10n.PTE}
+			</a>
+		"""
+		template = template.replace(/(<div class="compat-meta">)/, "#{injectTemplate}\n$1")
+		$("#tmpl-attachment-details").text(template)
+
 	pte.admin = ->
 		timeout = 300
 		thickbox = """&TB_iframe=true&height=#{ window.options.pte_tb_height }&width=#{ window.options.pte_tb_width }"""
@@ -48,6 +59,14 @@ do (pte) ->
 				imageEdit.open = (id, nonce) ->
 					image_id = id
 					imageEdit.oldopen id,nonce
+					launchPTE()
+			# Does the imgedit-save-target already exist?
+			$editmenu = $("""p[id^="imgedit-save-target-"]""")
+			if $editmenu?.length > 0
+				#set the image_id & launch it
+				matches = $editmenu[0].id.match(/imgedit-save-target-(\d+)/)
+				if matches[1]?
+					image_id = matches[1]
 					launchPTE()
 			true
 

@@ -1,6 +1,6 @@
 # Checklist
 
-1. Update jquery-tmpl and any other apps
+1. ~~Update jquery-tmpl and any other apps~~
    * `cd apps/jquery-tmpl`
    * `git fetch upstream`
    * `git merge upstream/master`

@@ -8,6 +8,7 @@ COFFEE_FILES = js/header.coffee \
 					js/pte_admin.coffee \
 					js/pte.coffee
 JS_FILES     = apps/jquery-tmpl/jquery.tmpl.js
+TMPFILE     := $(shell mktemp)
 
 
 CSSOUTPUT_DEV = css/pte.dev.css
@@ -46,7 +47,8 @@ $(JSOUTPUT_MIN): $(JSOUTPUT_DEV)
 $(JSOUTPUT_DEV): $(COFFEE_FILES) $(JS_FILES)
 	@echo "Building javascript"
 	cat $(JS_FILES) > $(JSOUTPUT_DEV)
-	cat $(COFFEE_FILES) | $(COFFEE) $(COFFEE_FLAGS) >> $(JSOUTPUT_DEV)
+	cat $(COFFEE_FILES) > $(TMPFILE)
+	$(COFFEE) $(COFFEE_FLAGS) < $(TMPFILE) >> $(JSOUTPUT_DEV)
 
 
 # BUILD CSS

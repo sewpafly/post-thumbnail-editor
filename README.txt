@@ -2,8 +2,8 @@
 Contributors: sewpafly
 Donate link: https://www.wepay.com/donate/34543
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, awesome
-Requires at least: 3.2
-Tested up to: 3.3.1
+Requires at least: 3.5
+Tested up to: 3.5
 Stable tag: trunk
 
 Fed up with the lack of automated tools to properly crop and scale post thumbnails? Maybe this plugin can help.
@@ -63,6 +63,10 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Changelog ==
 
+= 1.0.7 =
+* Updated for Wordpress 3.5 (introduces backwards incompatible changes)
+* Other bug fixes
+
 = 1.0.5 =
 * Fix custom sizes with either height or width set to '0'
 * Added German translation
@@ -101,6 +105,9 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 * Initial cut
 
 == Upgrade Notice ==
+
+= 1.0.7 =
+Only for Wordpress 3.5+ (bug fixes)
 
 = 1.0.5 =
 Bugfix & added German translation
