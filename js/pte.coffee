@@ -251,8 +251,10 @@ do (pte) ->
 		onSelectEnd: (img, s) ->
 			# Check that getSelection returns valid information...
 			if s.width && s.width > 0 and s.height && s.height > 0 and $('.pte-size').filter(':checked').size() > 0
+            log "DISABLING SUBMIT"
 				$('#pte-submit').removeAttr('disabled')
 			else
+            log "ENABLING SUBMIT"
 				$('#pte-submit').attr('disabled', true)
 
 

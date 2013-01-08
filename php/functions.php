@@ -254,7 +254,7 @@ function pte_launch(){
 	$logger->debug( "SIZER: ${sizer}" );
 	$logger->debug( "SIZES: " . print_r(${size_information}, true) );
 
-	$script_url = PTE_PLUGINURL . 'php/load-scripts.php?load=jquery,imgareaselect,pte,jquery-json';
+	$script_url = PTE_PLUGINURL . 'php/load-scripts.php?load=jquery,imgareaselect,jquery-json,pte';
 	$style_url = PTE_PLUGINURL . 'php/load-styles.php?load=imgareaselect,pte';
 	if ( $options['pte_debug'] ){
 		$style_url .= "&d=1";
