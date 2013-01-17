@@ -18,6 +18,8 @@ function pte_require_json() {
 function pte_json_encode($mixed = null){
 	$logger = PteLogger::singleton();
 	$options = pte_get_options();
+	$logs['error'] = array();
+	$logs['log'] = array();
 
 	// If a buffer was started this will check for any residual output
 	// and add to the existing errors.
@@ -252,7 +254,7 @@ function pte_launch(){
 	$logger->debug( "USER-AGENT: " . $_SERVER['HTTP_USER_AGENT'] );
 	$logger->debug( "WORDPRESS: " . $GLOBALS['wp_version'] );
 	$logger->debug( "SIZER: ${sizer}" );
-	$logger->debug( "SIZES: " . print_r(${size_information}, true) );
+	$logger->debug( "SIZES: " . print_r($size_information, true) );
 
 	$script_url = PTE_PLUGINURL . 'php/load-scripts.php?load=jquery,imgareaselect,jquery-json,pte';
 	$style_url = PTE_PLUGINURL . 'php/load-styles.php?load=imgareaselect,pte';
@@ -300,15 +302,18 @@ function pte_get_width_height( $size_information, $w, $h ){
 		$dst_w = $size_information['width'];
 		$dst_h = $size_information['height'];
 	}
-	// Crop isn't set so the height / width should be based on the biggest side
+	// Crop isn't set so the height / width should be based on the smallest side
 	// or check if the post_thumbnail has a 0 for a side.
 	else {
 		$use_width = false;
 		if ( $w > $h ) $use_width = true;
 		if ( $size_information['height'] == 0 ) $use_width = true;
+		// This case appeared because theme twentytwelve made a thumbnail 'post-thumbnail'
+		// with 624x9999, no crop... The images it created were huge...
+		if ( $size_information['width'] < $size_information['height'] ) $use_width = true;
 		if ( $size_information['width'] == 0 ) $use_width = false;
 
-		$logger->debug("GETwidthheightPARAMS\nWIDTH: $w\nHEIGHT: $h\nUSE_WIDTH: $use_width");
+		$logger->debug("GETwidthheightPARAMS\nWIDTH: $w\nHEIGHT: $h\nUSE_WIDTH: " . print_r($use_width, true));
 		if ( $use_width ){
 			$dst_w = $size_information['width'];
 			$dst_h = round( ($dst_w/$w) * $h, 0);
@@ -340,78 +345,6 @@ function pte_generate_filename( $file, $w, $h ){
 	$suffix = "{$w}x{$h}";
 	//print_r( compact( "file", "info", "ext", "name", "suffix" ) );
 	return "{$name}-{$suffix}.{$ext}";
-}
-
-/*
- * pte_create_image
- */
-function pte_create_image($original_image, $type,
-	$dst_x, $dst_y, $dst_w, $dst_h,
-	$src_x, $src_y, $src_w, $src_h )
-{
-	$logger = PteLogger::singleton();
-	$logger->debug( print_r( compact( 'type', 'dst_x', 'dst_y', 'dst_w', 'dst_h',
-		'src_x','src_y','src_w','src_h' ), true ) );
-
-	$new_image = wp_imagecreatetruecolor( $dst_w, $dst_h );
-
-	imagecopyresampled( $new_image, $original_image,
-		$dst_x, $dst_y, $src_x, $src_y,
-		$dst_w, $dst_h, $src_w, $src_h 
-	);
-
-	// convert from full colors to index colors, like original PNG.
-	if ( IMAGETYPE_PNG == $type && 
-		function_exists('imageistruecolor') && 
-		!imageistruecolor( $original_image ) 
-		){
-			imagetruecolortopalette( $newimage, false, imagecolorstotal( $original_image ) );
-		}
-
-	return $new_image;
-}
-
-function pte_write_image( $image, $orig_type, $destfilename ){
-	$logger = PteLogger::singleton();
-
-	$dir = dirname( $destfilename );
-	if ( ! is_dir( $dir ) ){
-		if ( ! mkdir( $dir, 0777, true ) ){
-			$logger->warn("Error creating directory: {$dir}");
-		}
-	}
-
-	if ( IMAGETYPE_GIF == $orig_type ) {
-		if ( !imagegif( $image, $destfilename ) ){
-			$logger->error("Resize path invalid");
-			return false;
-		}
-	} 
-	elseif ( IMAGETYPE_PNG == $orig_type ) {
-		if ( !imagepng( $image, $destfilename ) ){
-			$logger->error("Resize path invalid");
-			return false;
-		}
-	} 
-	else {
-		// all other formats are converted to jpg
-		$options = pte_get_options();
-		$quality = apply_filters('jpeg_quality', $options['pte_jpeg_compression'], 'pte_write_image');
-		$logger->debug("JPEG COMPRESSION: {$quality}");
-		if ( !imagejpeg( $image, $destfilename, $quality ) ){
-			$logger->error("Resize path invalid: " . $destfilename);
-			return false;
-		}
-	}
-
-	imagedestroy( $image );
-
-	// Set correct file permissions
-	$stat = stat( dirname( $destfilename ));
-	$perms = $stat['mode'] & 0000666; //same permissions as parent folder, strip off the executable bits
-	@ chmod( $destfilename, $perms );
-
-	return true;
 }
 
 
@@ -454,11 +387,11 @@ function pte_resize_images(){
 	$dst_x          = 0;
 	$dst_y          = 0;
 	$original_file  = get_attached_file( $id );
-	$original_image = wp_load_image( $original_file );
 	$original_size  = @getimagesize( $original_file );
 	$uploads 	    = wp_upload_dir();
 	$PTE_TMP_DIR    = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR;
 	$PTE_TMP_URL    = $uploads['baseurl'] . "/ptetmp/";
+	$thumbnails     = array();
 
 	if ( !$original_size ){
 		return pte_json_error("Could not read image size");
@@ -468,12 +401,16 @@ function pte_resize_images(){
 	list( $orig_w, $orig_h, $orig_type ) = $original_size;
 	// *** End common-info
 
+	// So this never interrupts the jpeg_quality anywhere else
+	add_filter('jpeg_quality', 'pte_get_jpeg_quality');
+
 	foreach ( $sizes as $size => $data ){
 		// Get all the data needed to run image_create
 		//
 		//	$dst_w, $dst_h 
 		extract( pte_get_width_height( $data, $w, $h ) );
-		//
+		$logger->debug( "WIDTHxHEIGHT: $dst_w x $dst_h" );
+
 		// Set the directory
 		$basename = pte_generate_filename( $original_file, $dst_w, $dst_h );
 		// Set the file and URL's - defines set in pte_ajax
@@ -481,16 +418,22 @@ function pte_resize_images(){
 		$tmpurl   = "{$PTE_TMP_URL}{$id}/{$basename}";
 
 		// === CREATE IMAGE ===================
-		$image = pte_create_image( $original_image, $orig_type,
-			$dst_x, $dst_y, $dst_w, $dst_h,
-			$x,     $y,     $w,     $h );
+		// This function is in wp-includes/media.php
+		$editor = wp_get_image_editor( $original_file );
+		$crop_results = $editor->crop($x, $y, $w, $h, $dst_w, $dst_h); 
 
-		if ( ! isset( $image ) ){
+		if ( is_wp_error( $crop_results ) ){
 			$logger->error( "Error creating image: {$size}" );
 			continue;
 		}
 
-		if ( ! pte_write_image( $image, $orig_type, $tmpfile ) ){
+		// The directory containing the original file may no longer exist when
+		// using a replication plugin.
+		wp_mkdir_p( dirname( $tmpfile ) );
+
+		$tmpfile = dirname( $tmpfile ) . '/' . wp_unique_filename( dirname( $tmpfile ), basename( $tmpfile ) );
+
+		if ( is_wp_error( $editor->save( $tmpfile ) ) ){
 			$logger->error( "Error writing image: {$size} to '{$tmpfile}'" );
 			continue;
 		}
@@ -501,9 +444,6 @@ function pte_resize_images(){
 		$thumbnails[$size]['url'] = $tmpurl;
 		$thumbnails[$size]['file'] = basename( $tmpfile );
 	}
-
-	// we don't need the original in memory anymore
-	imagedestroy( $original_image );
 
 	// Did you process anything?
 	if ( count( $thumbnails ) < 1 ){
@@ -647,4 +587,10 @@ function pte_delete_images()
 	return pte_json_encode( array( "success" => "Yay!" ) );
 }
 
+function pte_get_jpeg_quality($quality){
+	$logger = PteLogger::singleton();
+	$options = pte_get_options();
+	$logger->debug( "COMPRESSION: " . $options['pte_jpeg_compression'] );
+	return $options['pte_jpeg_compression'];
+}
 ?>

@@ -1,18 +1,10 @@
 <?php
 
-// Anonymous Functions that can't be anonymous thanks to
-// some versions of PHP
-function pte_noop(){}
-function pte_edit_posts_cap( $capability ){ return 'edit_posts'; }
-function pte_site_options_html(){ 
-	_e( "These site-wide settings can only be changed by an administrator", PTE_DOMAIN ); 
-}
-
 //http://ottopress.com/2009/wordpress-settings-api-tutorial/
 function pte_options_init(){
 	add_filter( 'option_page_capability_pte_options', 'pte_edit_posts_cap' );
 	register_setting( 'pte_options', 
-		pte_get_option_name(),
+		pte_get_option_name(),     // Settings are per user
 		'pte_options_validate' );
 
 	add_settings_section( 'pte_main'
@@ -47,7 +39,7 @@ function pte_options_init(){
 	// Only show for admins...//
 	if ( current_user_can( 'manage_options' ) ){
 		register_setting( 'pte_options', 
-			'pte-site-options',
+			'pte-site-options',     // Settings are site-wide
 			'pte_site_options_validate' );
 		add_settings_section( 'pte_site'
 			, __('Site Options', PTE_DOMAIN)
@@ -109,20 +101,22 @@ function pte_site_options_validate( $input ){
 		}
 	}
 
+	$output = array( 'pte_hidden_sizes' => $pte_hidden_sizes );
+
 	// Check the JPEG Compression value
-	$tmp_jpeg_compression = (int) preg_replace( "/[\D]/", "", $input['pte_jpeg_compression'] );
-	if ( ! is_int( $tmp_jpeg_compression ) 
-		|| $tmp_jpeg_compression < 0 
-		|| $tmp_jpeg_compression > 100 )
-	{
-		add_settings_error('pte_options_site'
-			, 'pte_options_error'
-			, __( "JPEG Compression needs to be set from 0 to 100.", PTE_DOMAIN ) );
+	if ( $input['pte_jpeg_compression'] != "" ){
+		$tmp_jpeg_compression = (int) preg_replace( "/[\D]/", "", $input['pte_jpeg_compression'] );
+		if ( ! is_int( $tmp_jpeg_compression )
+			|| $tmp_jpeg_compression < 0 
+			|| $tmp_jpeg_compression > 100 )
+		{
+			add_settings_error('pte_options_site'
+				, 'pte_options_error'
+				, __( "JPEG Compression needs to be set from 0 to 100.", PTE_DOMAIN ) . $tmp_jpeg_compression . "/" . $input['pte_jpeg_compression']);
+		}
+		$output['pte_jpeg_compression'] = $tmp_jpeg_compression;
 	}
 
-	$output = array( 'pte_hidden_sizes' => $pte_hidden_sizes
-		, 'pte_jpeg_compression' => $tmp_jpeg_compression
-  	);
 	return $output;
 }
 
@@ -196,14 +190,19 @@ function pte_dimensions_display(){
 }
 
 function pte_debug_display(){
-	$options = pte_get_options();
+	$options = pte_get_user_options();
 	$option_label = pte_get_option_name();
 	?>
 	<span><input type="checkbox" name="<?php
-		print $option_label
+		print $option_label;
 	?>[pte_debug]" <?php 
 		if ( $options['pte_debug'] ): print "checked"; endif; 
 	?> id="pte_debug"/>&nbsp;<label for="pte_debug"><?php _e( 'Enable debugging', PTE_DOMAIN ); ?></label>
+	<?php if ( WP_DEBUG ) {
+		print( "<br/><em>" );
+		_e( "WP_DEBUG is currently set to true and will override this setting." ); 
+		print( "</em>" );
+	}?>
 	</span>
 	<?php
 }
@@ -261,15 +260,25 @@ function pte_sizes_display(){
 }
 
 function pte_jpeg_compression_display(){
-	$options = pte_get_options();
+	$options = pte_get_site_options();
 	$option_label = pte_get_option_name();
 ?>
 	<span><input class="small-text" type="text" 
 			 name="pte-site-options[pte_jpeg_compression]" 
-			 value="<?php print $options['pte_jpeg_compression']; ?>" 
-          id="pte_jpeg_compression">&nbsp; 
+			 value="<?php if ( isset( $options['pte_jpeg_compression'] ) ){ print $options['pte_jpeg_compression']; }?>" 
+			 id="pte_jpeg_compression">&nbsp; 
 	<?php _e("Set the compression level for resizing jpeg images (0 to 100).", PTE_DOMAIN); ?>
+	<br/><em><?php _e("No entry defaults to using the 'jpeg_quality' filter or 90", PTE_DOMAIN); ?></em>
 	</span>
 	<?php
 }
+
+// Anonymous Functions that can't be anonymous thanks to
+// some versions of PHP
+function pte_noop(){}
+function pte_edit_posts_cap( $capability ){ return 'edit_posts'; }
+function pte_site_options_html(){ 
+	_e( "These site-wide settings can only be changed by an administrator", PTE_DOMAIN ); 
+}
+
 ?>

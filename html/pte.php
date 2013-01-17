@@ -79,7 +79,7 @@
 					_e( 'Back', PTE_DOMAIN ); 
 				?></a>
 			<h1 class="stage-header"><?php echo( __( 'Post Thumbnail Editor - Step 2', PTE_DOMAIN ) ); ?></h1>
-			{{if $data['error']}}
+			{{if $data['error'] && $data['error'].length > 0}}
 			<div id="error"><?php 
 								_e( 'We noticed some potential issues:', PTE_DOMAIN );
 								echo( "&nbsp;" );
@@ -142,7 +142,7 @@
 					?></p>
 			</div>
 			{{/if}}
-			{{if $data['error']}}
+			{{if $data['error'] && $data['error'].length > 0}}
 			<div id="error"><?php _e( 'We noticed some potential issues:', PTE_DOMAIN ); ?>
 				<ul>
 					{{each $data['error']}}<li>${$value}</li>{{/each}}

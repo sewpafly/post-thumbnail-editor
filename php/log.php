@@ -80,7 +80,9 @@ class PteLogger {
 	}
 
 	public function get_log_count( $type ){
-		return is_int( $this->counts[ $type ] ) ? $this->counts[$type] : 0;
+		if ( !isset( $this->counts[ $type ] ) || !is_int( $this->counts[ $type ] ) )
+			return 0;
+		return $this->counts[$type];
 	}
 
 	/*

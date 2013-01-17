@@ -130,7 +130,7 @@ $force_gzip = ( $compress && 'gzip' == $_GET['c'] );
 $expires_offset = 31536000;
 $out = '';
 $suffix = ( isset($_GET['d']) && $_GET['d'] ) ? '.dev' : '';
-//print("/** SUFFIX: '$suffix' **/\n");
+//$out .= "/** SUFFIX: '$suffix' **/\n";
 
 $wp_scripts = new WP_Scripts();
 wp_default_scripts($wp_scripts);
@@ -157,7 +157,7 @@ foreach( $load as $handle ) {
 		continue;
 
 	$path = ABSPATH . $wp_scripts->registered[$handle]->src;
-	//print("/** PATH: '$path' **/\n");
+	//$out .= "/** PATH: '$path' **/\n";
 	$out .= get_file($path) . "\n";
 	$localized = $wp_scripts->get_data($handle, 'data');
 	if ( !empty($localized) )

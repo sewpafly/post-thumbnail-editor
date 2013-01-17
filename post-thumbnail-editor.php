@@ -3,13 +3,13 @@
    Plugin URI: http://wordpress.org/extend/plugins/post-thumbnail-editor/
    Author: sewpafly
    Author URI: http://sewpafly.github.com/post-thumbnail-editor
-   Version: 1.0.7
+   Version: 2.0.0-alpha
    Description: Individually manage your post thumbnails
 
     LICENSE
 	 =======
 
-    Copyright 2012  (email : sewpafly@gmail.com)
+    Copyright 2013  (email : sewpafly@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@
 define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
 define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
 define( 'PTE_DOMAIN', "post-thumbnail-editor");
-define( 'PTE_VERSION', "1.0.7");
+define( 'PTE_VERSION', "2.0.0-alpha");
 
 /*
  * Option Functionality
@@ -58,6 +58,8 @@ function pte_get_user_options(){
 		, 'pte_debug' => false
 		, 'pte_thickbox' => true
 	);
+
+	// WORDPRESS DEBUG overrides user setting...
 	return array_merge( $defaults, $pte_options );
 }
 
@@ -66,9 +68,7 @@ function pte_get_site_options(){
 	if ( !is_array( $pte_site_options ) ){
 		$pte_site_options = array();
 	}
-	$defaults = array( 'pte_hidden_sizes' => array()
-		, 'pte_jpeg_compression' => 90
-  	);
+	$defaults = array( 'pte_hidden_sizes' => array() );
 	return array_merge( $defaults, $pte_site_options );
 }
 
@@ -79,6 +79,13 @@ function pte_get_options(){
 	}
 
 	$pte_options = array_merge( pte_get_user_options(), pte_get_site_options() );
+
+	if ( WP_DEBUG )
+			$pte_options['pte_debug'] = true;
+
+	if ( !isset( $pte_options['pte_jpeg_compression'] ) ){
+			$pte_options['pte_jpeg_compression'] = apply_filters( 'jpeg_quality', 90, 'pte_options' );
+	}
 
 	return $pte_options;
 }
@@ -200,13 +207,32 @@ function pte_media_row_actions($actions, $post, $detached){
 function pte_launch_options_page(){
    require_once( PTE_PLUGINPATH . 'php/options.php' ); pte_options_page();
 }
+function pte_edit_page(){
+   print("HEY Yah");
+}
 
+/**
+ * These pages are linked into the hook system of wordpress, this means
+ * that almost any wp_admin page will work as long as you append "?page=pte"
+ * or "?page=pte-edit".  Try the function `'admin_url("index.php") . '?page=pte';`
+ *
+ * The function referred to here will output the HTML for the page that you want
+ * to display. However if you want to hook into enqueue_scripts or styles you
+ * should use the page-suffix that is returned from the function. (e.g.
+ * `add_action("load-".$hook, hook_func);`)
+ */
 function pte_admin_menu(){
 	add_options_page( __('Post Thumbnail Editor', PTE_DOMAIN) . "-title",
 		__('Post Thumbnail Editor', PTE_DOMAIN),
-		'edit_posts', // Set the capability to null as every user can have different settings set
+		'edit_posts',
 		'pte',
 		'pte_launch_options_page'
+	);
+	add_submenu_page( NULL, __('Post Thumbnail Editor', PTE_DOMAIN) . "-edit",
+		__('Post Thumbnail Editor', PTE_DOMAIN),
+		'edit_posts',
+		'pte-edit',
+		'pte_edit_page'
 	);
 }
 
@@ -231,9 +257,11 @@ add_filter('media_row_actions', 'pte_media_row_actions', 10, 3); // priority: 10
 /* For all purpose needs */
 add_action('wp_ajax_pte_ajax', 'pte_ajax');
 
-/* Add Settings Page */
+/* Add SubMenus/Pages */
 add_action( 'admin_menu', 'pte_admin_menu' );
-add_action( 'settings_page_pte', 'pte_options' );
+/* Add Settings Page */
+add_action( 'load-settings_page_pte', 'pte_options' );
+/* Add Settings Page -> Submit/Update options */
 add_action( 'load-options.php', 'pte_options' );
 //add_action( 'admin_init', 'pte_options' );
 
