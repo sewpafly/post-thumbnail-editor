@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Post Thumbnail Editor 2.0.0-beta\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
-"POT-Creation-Date: 2013-03-07 02:18:49+00:00\n"
+"POT-Creation-Date: 2013-03-07 07:52:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -72,8 +72,16 @@ msgstr ""
 msgid "Compare/View"
 msgstr ""
 
+#: html/pte.php:285
+msgid "Original"
+msgstr ""
+
 #: html/pte.php:292
 msgid "No image has been generated yet for image: "
+msgstr ""
+
+#: html/pte.php:299
+msgid "Proposed"
 msgstr ""
 
 #: php/functions.php:239

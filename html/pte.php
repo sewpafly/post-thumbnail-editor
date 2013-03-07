@@ -282,7 +282,7 @@ function ep(){
                         ng-dblclick="changePage('crop');event.stopPropagation();"
                         ng-click="thumbnail.selected = !thumbnail.selected;updateSelected();" 
                         ng-hide="thumbnail.showProposed">
-                        <span ng-show="thumbnail.proposed"><strong>Original: {{ thumbnail.name }}</strong><br/></span>
+                        <span ng-show="thumbnail.proposed"><strong><?php _e( "Original", PTE_DOMAIN ); ?>: {{ thumbnail.name }}</strong><br/></span>
                         <img ng-src="{{ thumbnail.current.url | randomizeUrl }}" 
                               ng-show="thumbnail.current"
                               alt="{{ thumbnail.name }}" 
@@ -296,7 +296,7 @@ function ep(){
                         ng-dblclick="changePage('crop');event.stopPropagation();"
                         ng-click="thumbnail.selected = !thumbnail.selected;updateSelected();"
                         ng-show="thumbnail.showProposed">
-                        <span><strong>Proposed: {{ thumbnail.name }}</strong><br/></span>
+                        <span><strong><?php _e( "Proposed", PTE_DOMAIN ); ?>: {{ thumbnail.name }}</strong><br/></span>
                               <!--ng-click="selectThumb(thumbnail)"-->
                         <img ng-src="{{ thumbnail.proposed.url | randomizeUrl }}" 
                               ng-show="thumbnail.showProposed"
