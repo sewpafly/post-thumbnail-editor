@@ -12,18 +12,6 @@ function pte_options_init(){
 		, 'pte_noop'
 		, 'pte' );
 	
-	add_settings_field( 'pte_thickbox', 
-		__('Thickbox', PTE_DOMAIN), 
-		'pte_thickbox_display', 
-		'pte', 
-		'pte_main' );
-
-	add_settings_field( 'pte_dimensions', 
-		__('Thickbox dimensions', PTE_DOMAIN), 
-		'pte_dimensions_display', 
-		'pte', 
-		'pte_main' );
-
 	add_settings_field( 'pte_debug', 
 		__('Debug', PTE_DOMAIN), 
 		'pte_debug_display', 
@@ -127,66 +115,7 @@ function pte_options_validate( $input ){
 		return array();
 	}
 	$options['pte_debug'] = isset( $input['pte_debug'] );
-	$options['pte_thickbox'] = isset( $input['pte_thickbox'] );
-
-	$tmp_width = (int) preg_replace( "/[\D]/", "", $input['pte_tb_width'] );
-	if ( !is_int( $tmp_width ) || $tmp_width < 750 ){
-		add_settings_error('pte_options'
-			, 'pte_options_error'
-			, __( "Thickbox width must be at least 750 pixels.", PTE_DOMAIN ) );
-	}
-	else {
-		$options['pte_tb_width'] = $tmp_width;
-	}
-
-	$tmp_height = (int) preg_replace( "/[\D]/", "", $input['pte_tb_height'] );
-	if ( !is_int( $tmp_height ) || $tmp_height < 550 ){
-		add_settings_error('pte_options'
-			, 'pte_options_error'
-			, __( "Thickbox height must be greater than 550 pixels.", PTE_DOMAIN ) );
-	}
-	else {
-		$options['pte_tb_height'] = $tmp_height;
-	}
-
 	return $options;
-}
-
-function pte_thickbox_display(){
-	$options = pte_get_options();
-	$option_label = pte_get_option_name();
-	?>
-	<span><input type="checkbox" name="<?php
-		print $option_label
-	?>[pte_thickbox]" <?php 
-		if ( $options['pte_thickbox'] ): print "checked"; endif; 
-	?> id="pte_thickbox"/>&nbsp;<label for="pte_thickbox"><?php _e( 'Enable Thickbox', PTE_DOMAIN ); ?></label>
-	</span>
-	<?php
-}
-
-function pte_dimensions_display(){
-	$options = pte_get_options();
-	$option_label = pte_get_option_name();
-
-	?>
-	<label for="pte_tb_width"><?php _e( 'Width:', PTE_DOMAIN ); ?></label><br/>
-	<span><input class="small-text" type="text" name="<?php
-		print $option_label;
-	?>[pte_tb_width]" value="<?php print $options['pte_tb_width']; ?>" id="pte_tb_width">&nbsp; 
-	<?php _e("Set this to a value greater than 750.", PTE_DOMAIN); ?>
-	</span>
-
-	<br/>
-
-	<span>
-	<label for="pte_tb_height"><?php 
-		_e( 'Height:', PTE_DOMAIN ); 
-	?></label><br/><input class="small-text" type="text" name="<?php
-		print $option_label; 
-	?>[pte_tb_height]" value="<?php print $options['pte_tb_height']; ?>" id="pte_tb_height">&nbsp;
-	<?php _e("Set this to a value greater than 550.", PTE_DOMAIN);
-	print( "</span>" );
 }
 
 function pte_debug_display(){

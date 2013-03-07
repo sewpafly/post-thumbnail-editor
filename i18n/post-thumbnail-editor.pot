@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Post Thumbnail Editor package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Post Thumbnail Editor 2.0.0-alpha\n"
+"Project-Id-Version: Post Thumbnail Editor 2.0.0-beta\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
-"POT-Creation-Date: 2013-01-26 06:15:21+00:00\n"
+"POT-Creation-Date: 2013-03-07 02:18:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,133 +12,76 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: html/pte.php:21
-msgid "Post Thumbnail Editor - Step 1"
-msgstr ""
-
-#: html/pte.php:34
-msgid "Create Thumbnails"
-msgstr ""
-
-#: html/pte.php:40
-msgid "Choose the images/thumbnails that you want to edit:"
-msgstr ""
-
-#: html/pte.php:43
-msgid "Select: %1$sAll%2$s | %3$sNone%4$s"
-msgstr ""
-
-#: html/pte.php:60
-msgid "Current image:"
-msgstr ""
-
-#: html/pte.php:79
-msgid "Back"
-msgstr ""
-
-#: html/pte.php:81
-msgid "Post Thumbnail Editor - Step 2"
-msgstr ""
-
-#: html/pte.php:84 html/pte.php:146
-msgid "We noticed some potential issues:"
-msgstr ""
-
-#: html/pte.php:87
-msgid "View %1$slogs%2$s for further information"
-msgstr ""
-
-#: html/pte.php:92
-msgid "%1$sEnable debugging%2$s for additional information"
-msgstr ""
-
-#: html/pte.php:102
-msgid "Select the images you want to keep: %1$sAll%2$s | %3$sNone%4$s"
-msgstr ""
-
-#: html/pte.php:125
-msgid "Okay, these look good..."
-msgstr ""
-
-#: html/pte.php:129
-msgid "I'd rather start over..."
-msgstr ""
-
-#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.0.0-alpha)  #-#-#-#-#
+#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.0.0-beta)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: html/pte.php:136 php/options.php:67 post-thumbnail-editor.php:128
-#: post-thumbnail-editor.php:225 post-thumbnail-editor.php:226
-#: post-thumbnail-editor.php:231 post-thumbnail-editor.php:232
+#: html/pte.php:159 php/options.php:55 post-thumbnail-editor.php:107
+#: post-thumbnail-editor.php:207 post-thumbnail-editor.php:208
+#: post-thumbnail-editor.php:216 post-thumbnail-editor.php:217
 msgid "Post Thumbnail Editor"
 msgstr ""
 
-#: html/pte.php:139
-msgid "Images were created successfully."
+#: html/pte.php:160
+msgid "crop and resize"
 msgstr ""
 
-#: html/pte.php:141
-msgid "Click %1$shere%2$s to modify another thumbnail."
+#: html/pte.php:164 html/pte.php:199
+msgid "Crop"
 msgstr ""
 
-#: html/pte.php:157
-msgid "Please wait"
+#: html/pte.php:165
+msgid "View"
 msgstr ""
 
-#: html/pte.php:161
-msgid "Click here to show application logs"
+#: html/pte.php:194
+msgid "Options"
 msgstr ""
 
-#: html/pte.php:163 php/options.php:28
-msgid "Debug"
+#: html/pte.php:207
+msgid "Aspect Ratio"
 msgstr ""
 
-#: html/pte.php:168
-msgid ""
-"If you are having any issues with this plugin, create a problem report on "
-"%1$sgithub%2$s or %3$swordpress.org%4$s so that I can look into it. Copy "
-"these log statements and include some information about what you were trying "
-"to do, the expected output, and the output you got (the more information the "
-"better).  Thanks and good luck!"
+#: html/pte.php:208
+msgid "width/height"
 msgstr ""
 
-#: html/pte.php:182
-msgid "Send to Pastebin"
+#: html/pte.php:222 php/options.php:37 post-thumbnail-editor.php:178
+msgid "Thumbnails"
 msgstr ""
 
-#: html/pte.php:183
-msgid "Clear Messages"
+#: html/pte.php:228
+msgid "Save all"
 msgstr ""
 
-#: html/pte.php:186
-msgid "Run Tests"
+#: html/pte.php:233
+msgid "Reset all"
 msgstr ""
 
-#: html/pte.php:187
-msgid "Close"
+#: html/pte.php:237
+msgid "View all/modified"
 msgstr ""
 
-#: php/functions.php:243
+#: html/pte.php:256
+msgid "Save"
+msgstr ""
+
+#: html/pte.php:259
+msgid "Reset"
+msgstr ""
+
+#: html/pte.php:262
+msgid "Compare/View"
+msgstr ""
+
+#: html/pte.php:292
+msgid "No image has been generated yet for image: "
+msgstr ""
+
+#: php/functions.php:239
 msgid "Invalid meta data for POST #%d: %s"
 msgstr ""
 
-#: php/functions.php:248
+#: php/functions.php:244
 msgid "Please contact support"
-msgstr ""
-
-#: php/load-scripts.php:148
-msgid "Sorry, there was a problem trying to send to pastebin"
-msgstr ""
-
-#: php/load-scripts.php:149
-msgid "PASTEBIN URL:"
-msgstr ""
-
-#: php/load-scripts.php:150
-msgid "Disabling aspect ratio"
-msgstr ""
-
-#: php/load-scripts.php:151
-msgid "Error parsing selection information"
 msgstr ""
 
 #: php/log.php:15
@@ -162,105 +105,85 @@ msgid "User Options"
 msgstr ""
 
 #: php/options.php:16
-msgid "Thickbox"
+msgid "Debug"
 msgstr ""
 
 #: php/options.php:22
-msgid "Thickbox dimensions"
-msgstr ""
-
-#: php/options.php:34
 msgid "Reset to defaults"
 msgstr ""
 
-#: php/options.php:45
+#: php/options.php:33
 msgid "Site Options"
 msgstr ""
 
-#: php/options.php:49 post-thumbnail-editor.php:202
-msgid "Thumbnails"
-msgstr ""
-
-#: php/options.php:54
+#: php/options.php:42
 msgid "JPEG Compression"
 msgstr ""
 
-#: php/options.php:75
+#: php/options.php:63
 msgid "Save Changes"
 msgstr ""
 
-#: php/options.php:89
+#: php/options.php:77
 msgid ""
 "Only users with the 'manage_options' capability may make changes to these "
 "settings."
 msgstr ""
 
-#: php/options.php:115
+#: php/options.php:103
 msgid "JPEG Compression needs to be set from 0 to 100."
 msgstr ""
 
-#: php/options.php:136
-msgid "Thickbox width must be at least 750 pixels."
-msgstr ""
-
-#: php/options.php:146
-msgid "Thickbox height must be greater than 550 pixels."
-msgstr ""
-
-#: php/options.php:163
-msgid "Enable Thickbox"
-msgstr ""
-
-#: php/options.php:173
-msgid "Width:"
-msgstr ""
-
-#: php/options.php:177
-msgid "Set this to a value greater than 750."
-msgstr ""
-
-#: php/options.php:184
-msgid "Height:"
-msgstr ""
-
-#: php/options.php:188
-msgid "Set this to a value greater than 550."
-msgstr ""
-
-#: php/options.php:200
+#: php/options.php:129
 msgid "Enable debugging"
 msgstr ""
 
-#: php/options.php:203
+#: php/options.php:132
 msgid "WP_DEBUG is currently set to true and will override this setting."
 msgstr ""
 
-#: php/options.php:214
+#: php/options.php:143
 msgid "Reset User Options"
 msgstr ""
 
-#: php/options.php:240
+#: php/options.php:169
 msgid "Post Thumbnail"
 msgstr ""
 
-#: php/options.php:241
+#: php/options.php:170
 msgid "Hidden"
 msgstr ""
 
-#: php/options.php:270
+#: php/options.php:199
 msgid "Set the compression level for resizing jpeg images (0 to 100)."
 msgstr ""
 
-#: php/options.php:271
+#: php/options.php:200
 msgid "No entry defaults to using the 'jpeg_quality' filter or 90"
 msgstr ""
 
-#: php/options.php:281
+#: php/options.php:210
 msgid "These site-wide settings can only be changed by an administrator"
 msgstr ""
 
-#: post-thumbnail-editor.php:201
+#: post-thumbnail-editor.php:177
 msgid "Edit Thumbnails"
+msgstr ""
+
+#: post-thumbnail-editor.php:276
+msgid "No thumbnails selected"
+msgstr ""
+
+#: post-thumbnail-editor.php:277
+msgid "No crop selected"
+msgstr ""
+
+#: post-thumbnail-editor.php:278
+msgid "Cropping will likely result in skewed imagery"
+msgstr ""
+
+#: post-thumbnail-editor.php:279
+msgid "There was a problem saving the crop..."
 msgstr ""
 
 #. Plugin URI of the plugin/theme

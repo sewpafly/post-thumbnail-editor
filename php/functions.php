@@ -222,13 +222,9 @@ function pte_test(){
  *
  * Requires post id as $_GET['id']
  */
-function pte_launch(){
+function pte_launch( $page, $id ){
 	$logger = PteLogger::singleton();
 	$options = pte_get_options();
-
-	$id = pte_check_id((int) $_GET['id']);
-
-	$size_information = pte_get_all_alternate_size_information( $id );
 
 	// Get the information needed for image preview 
 	//   (See wp-admin/includes/image-edit.php)
@@ -253,8 +249,6 @@ function pte_launch(){
 	$logger->debug( "PTE-VERSION: " . PTE_VERSION );
 	$logger->debug( "USER-AGENT: " . $_SERVER['HTTP_USER_AGENT'] );
 	$logger->debug( "WORDPRESS: " . $GLOBALS['wp_version'] );
-	$logger->debug( "SIZER: ${sizer}" );
-	$logger->debug( "SIZES: " . print_r($size_information, true) );
 
 	$script_url = PTE_PLUGINURL . 'php/load-scripts.php?load=jquery,imgareaselect,jquery-json,pte';
 	$style_url = PTE_PLUGINURL . 'php/load-styles.php?load=imgareaselect,pte';
@@ -263,7 +257,7 @@ function pte_launch(){
 		$script_url .= "&d=1";
 	}
 
-	require( PTE_PLUGINPATH . "html/pte.php" );
+	require( $page );
 }
 
 function pte_check_id( $id ){
@@ -379,7 +373,11 @@ function pte_resize_images(){
 	}
 
 	// Get the sizes to process
-	$pte_sizes      = $_GET['pte-sizes'];
+   $pte_sizes      = $_GET['pte-sizes'];
+   if ( !is_array( $pte_sizes ) ){
+      $logger->debug( "Converting pte_sizes to array" );
+      $pte_sizes = explode( ",", $pte_sizes );
+   }
 	$sizes          = pte_get_all_alternate_size_information( $id );
 
 	// The following information is common to all sizes
@@ -403,6 +401,7 @@ function pte_resize_images(){
 
 	// So this never interrupts the jpeg_quality anywhere else
 	add_filter('jpeg_quality', 'pte_get_jpeg_quality');
+	add_filter('wp_editor_set_quality', 'pte_get_jpeg_quality');
 
 	foreach ( $sizes as $size => $data ){
 		// Get all the data needed to run image_create
@@ -415,11 +414,12 @@ function pte_resize_images(){
 		$basename = pte_generate_filename( $original_file, $dst_w, $dst_h );
 		// Set the file and URL's - defines set in pte_ajax
 		$tmpfile  = "{$PTE_TMP_DIR}{$id}" . DIRECTORY_SEPARATOR . "{$basename}";
-		$tmpurl   = "{$PTE_TMP_URL}{$id}/{$basename}";
 
 		// === CREATE IMAGE ===================
 		// This function is in wp-includes/media.php
 		$editor = wp_get_image_editor( $original_file );
+      if ( is_a( $editor, "WP_Image_Editor_Imagick" ) ) $logger->debug( "EDITOR: ImageMagick" );
+      if ( is_a( $editor, "WP_Image_Editor_GD" ) ) $logger->debug( "EDITOR: GD" );
 		$crop_results = $editor->crop($x, $y, $w, $h, $dst_w, $dst_h); 
 
 		if ( is_wp_error( $crop_results ) ){
@@ -432,6 +432,7 @@ function pte_resize_images(){
 		wp_mkdir_p( dirname( $tmpfile ) );
 
 		$tmpfile = dirname( $tmpfile ) . '/' . wp_unique_filename( dirname( $tmpfile ), basename( $tmpfile ) );
+		$tmpurl   = "{$PTE_TMP_URL}{$id}/" . basename( $tmpfile );
 
 		if ( is_wp_error( $editor->save( $tmpfile ) ) ){
 			$logger->error( "Error writing image: {$size} to '{$tmpfile}'" );
@@ -548,7 +549,7 @@ function pte_confirm_images(){
 		wp_update_attachment_metadata( $id, $metadata);
 	}
 	// Delete tmpdir
-	pte_rmdir( $PTE_TMP_DIR );
+	//pte_rmdir( $PTE_TMP_DIR );
 	return pte_json_encode( array( 'success' => "Yay!" ) );
 }
 

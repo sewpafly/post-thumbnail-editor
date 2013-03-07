@@ -36,8 +36,8 @@ To meet the needs of themes where the post-thumbnails have random and capricious
 3. Using Post Thumbnail Editor Interface
 	1. Select the thumbnails you want to edit. If a thumbnail defines a specific aspect ratio it will be applied to the editor.  If you select thumbnails with more than 1 different aspect ratios, this feature is disabled.  Be careful or you might make some of your pictures look funny.
 	2. Select the cropped/scaled area, by clicking and dragging on the left-hand image. 
-	3. Click "Create Thumbnails" -- this button is only enabled if you have thumbnails selected and a crop area defined.
-	4. Thumbnail Preview: select all the thumbnails you want to keep and click "Okay, these look good".
+	3. Click the "Crop" button.
+	4. Use the save icon to save the pictures, or use the view tab to compare the old and new versions before you commit.
 4. It's possible that you might have to refresh the cache (ctrl+f5 on the page) to see changes, but they should be there.
 
 = Did you even test this? =
@@ -57,11 +57,14 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 1. Before/After
 2. To edit from Media Library click "Thumbnail" in the rollover options for the row.
 3. In the Edit subpage for media locate the box titled "Thumbnail Settings", and click the link to "Post Thumbnail Editor".
-4. Crop the image as you see fit and click "Create Thumbnails".
-5. Verify you want to keep the resized/recropped images by clicking "Okay, these look good..."
-6. Shortcut to edit the thumbnails from the picture metadata screen.
+4. Crop the image as you see fit, select the thumbnails you wish to change, and click "Crop".
+5. Save the resized/recropped images by clicking the save icon.
 
 == Changelog ==
+
+= 2.0.0-beta =
+* New UI based off angularjs -- awesome framework btw -- same backend
+* In view tab, click the pictures to select (double-click switches to crop view).
 
 = 1.0.7 =
 * Updated for Wordpress 3.5 (introduces backwards incompatible changes)
@@ -105,6 +108,9 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 * Initial cut
 
 == Upgrade Notice ==
+
+= 2.0.0-beta =
+Upgrade, if you dare...
 
 = 1.0.7 =
 Only for Wordpress 3.5+ (bug fixes)
