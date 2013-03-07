@@ -5,6 +5,7 @@ Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, a
 Requires at least: 3.5
 Tested up to: 3.5
 Stable tag: trunk
+License: GPLv2
 
 Fed up with the lack of automated tools to properly crop and scale post thumbnails? Maybe this plugin can help.
 

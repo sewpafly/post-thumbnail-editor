@@ -1,95 +1,112 @@
-# Copyright (C) 2013 Post Thumbnail Editor
+# Copyright (C) 2010 Post Thumbnail Editor
 # This file is distributed under the same license as the Post Thumbnail Editor package.
 msgid ""
 msgstr ""
 "Project-Id-Version: Post Thumbnail Editor 2.0.0-beta\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
-"POT-Creation-Date: 2013-03-07 07:52:46+00:00\n"
+"POT-Creation-Date: 2013-03-07 16:58:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2013-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
 #. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.0.0-beta)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: html/pte.php:159 php/options.php:55 post-thumbnail-editor.php:107
+#: html/pte.php:166 post-thumbnail-editor.php:107
 #: post-thumbnail-editor.php:207 post-thumbnail-editor.php:208
 #: post-thumbnail-editor.php:216 post-thumbnail-editor.php:217
+#: php/options.php:55
 msgid "Post Thumbnail Editor"
 msgstr ""
 
-#: html/pte.php:160
+#: html/pte.php:167
 msgid "crop and resize"
 msgstr ""
 
-#: html/pte.php:164 html/pte.php:199
+#: html/pte.php:171 html/pte.php:206
 msgid "Crop"
 msgstr ""
 
-#: html/pte.php:165
+#: html/pte.php:172
 msgid "View"
 msgstr ""
 
-#: html/pte.php:194
+#: html/pte.php:201
 msgid "Options"
 msgstr ""
 
-#: html/pte.php:207
+#: html/pte.php:214
 msgid "Aspect Ratio"
 msgstr ""
 
-#: html/pte.php:208
+#: html/pte.php:215
 msgid "width/height"
 msgstr ""
 
-#: html/pte.php:222 php/options.php:37 post-thumbnail-editor.php:178
+#: html/pte.php:229 post-thumbnail-editor.php:178 php/options.php:37
 msgid "Thumbnails"
 msgstr ""
 
-#: html/pte.php:228
+#: html/pte.php:235
 msgid "Save all"
 msgstr ""
 
-#: html/pte.php:233
+#: html/pte.php:240
 msgid "Reset all"
 msgstr ""
 
-#: html/pte.php:237
+#: html/pte.php:244
 msgid "View all/modified"
 msgstr ""
 
-#: html/pte.php:256
+#: html/pte.php:263
 msgid "Save"
 msgstr ""
 
-#: html/pte.php:259
+#: html/pte.php:266
 msgid "Reset"
 msgstr ""
 
-#: html/pte.php:262
+#: html/pte.php:269
 msgid "Compare/View"
 msgstr ""
 
-#: html/pte.php:285
+#: html/pte.php:276
+msgid "These thumbnails have an aspect ratio set:"
+msgstr ""
+
+#: html/pte.php:301
 msgid "Original"
 msgstr ""
 
-#: html/pte.php:292
+#: html/pte.php:308
 msgid "No image has been generated yet for image: "
 msgstr ""
 
-#: html/pte.php:299
+#: html/pte.php:315
 msgid "Proposed"
 msgstr ""
 
-#: php/functions.php:239
-msgid "Invalid meta data for POST #%d: %s"
+#: post-thumbnail-editor.php:177
+msgid "Edit Thumbnails"
 msgstr ""
 
-#: php/functions.php:244
-msgid "Please contact support"
+#: post-thumbnail-editor.php:276
+msgid "No thumbnails selected"
+msgstr ""
+
+#: post-thumbnail-editor.php:277
+msgid "No crop selected"
+msgstr ""
+
+#: post-thumbnail-editor.php:278
+msgid "Cropping will likely result in skewed imagery"
+msgstr ""
+
+#: post-thumbnail-editor.php:279
+msgid "There was a problem saving the crop..."
 msgstr ""
 
 #: php/log.php:15
@@ -174,24 +191,12 @@ msgstr ""
 msgid "These site-wide settings can only be changed by an administrator"
 msgstr ""
 
-#: post-thumbnail-editor.php:177
-msgid "Edit Thumbnails"
+#: php/functions.php:239
+msgid "Invalid meta data for POST #%d: %s"
 msgstr ""
 
-#: post-thumbnail-editor.php:276
-msgid "No thumbnails selected"
-msgstr ""
-
-#: post-thumbnail-editor.php:277
-msgid "No crop selected"
-msgstr ""
-
-#: post-thumbnail-editor.php:278
-msgid "Cropping will likely result in skewed imagery"
-msgstr ""
-
-#: post-thumbnail-editor.php:279
-msgid "There was a problem saving the crop..."
+#: php/functions.php:244
+msgid "Please contact support"
 msgstr ""
 
 #. Plugin URI of the plugin/theme

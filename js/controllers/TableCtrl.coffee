@@ -1,6 +1,7 @@
 define [
+   'angular'
    'cs!apps/pteApp'
-], (app) ->
+], (angular, app) ->
    app.controller "TableCtrl", ['$scope', ($scope) ->
       ###
       # Toggles the selected value from true to false on a row click
@@ -25,6 +26,24 @@ define [
       $scope.toggleAll = ->
          for name, thumbnail of $scope.thumbnails
             thumbnail.selected = $scope.tableSelector
+         $scope.updateSelected()
+         return
+
+      ###
+      # Toggle the thumbnails based on their aspectRatio
+      #
+      # If there are multiple thumbnails, use the value of the first thumbnail.selected
+      # to determine the rest.
+      ###
+      $scope.selectAspectRatio = (ar) ->
+         event?.stopPropagation?()
+         selectVal = null
+         angular.forEach $scope.thumbnails, (thumb) ->
+            if thumb.name in ar.thumbnails
+               if not selectVal?
+                  selectVal = if thumb.selected? and thumb.selected then false else true
+               thumb.selected = selectVal
+            return
          $scope.updateSelected()
          return
 

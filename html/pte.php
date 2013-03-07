@@ -21,6 +21,7 @@ function ep(){
       font-size: .7em;
       color: #444444;
    }
+   #aspect-ratio-selector a,
    .nav-tab-wrapper a {
       cursor: pointer;
    }
@@ -69,6 +70,12 @@ function ep(){
    #pte-thumbnail-table td input {
       margin: 1px 0 0;
    }
+
+   #aspect-ratio-selector {
+      margin-top: 20px;
+      font-size: 1.3em;
+   }
+
    .info-message {
       background-color: #ddddff;
       border: 1px solid blue;
@@ -265,6 +272,15 @@ function ep(){
                      </tr>
                   </tbody>
                </table>
+               <div id="aspect-ratio-selector">
+                  <?php _e( "These thumbnails have an aspect ratio set:", PTE_DOMAIN ); ?>
+                  <ul>
+                     <li ng-repeat="aspectRatio in aspectRatios | orderBy:size">
+                        <a ng-click="selectAspectRatio(aspectRatio)" ng-href="">
+                           <i class="icon-ok"></i>
+                           {{ aspectRatio.thumbnails.toString().replace(",",", ") }}</a></li>
+                  </ul>
+               </div>
             </div>
             </div>
             <div class="pte-page-switcher" ng-show="page.view" ng-controller="ViewCtrl">

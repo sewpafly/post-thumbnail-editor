@@ -142,6 +142,31 @@ define [
          deleteTemp()
          return
 
+
+      ###
+      # Allow selecting based on the aspect ratio
+      ###
+      $scope.aspectRatios = []
+      addToAspectRatios = (thumb) ->
+         ar = thumb.width/thumb.height
+
+         # Check for valid AspectRatio
+         if !ar? or ar is Infinity
+            return
+
+         if !thumb.crop or +thumb.crop < 1
+            return
+
+         for aspectRatio in $scope.aspectRatios
+            if aspectRatio.size is ar
+               aspectRatio.thumbnails.push thumb.name
+               return
+         $scope.aspectRatios.push
+            size: ar
+            thumbnails: [thumb.name]
+         return
+
+
       ###
       # Initialization
       ###
@@ -164,12 +189,13 @@ define [
          nonces = nonceObj
 
       $scope.thumbnails = []
-
       $scope.thumbnailObject = $scope.thumbnailResource.get {id: id}, ->
          angular.forEach $scope.thumbnailObject, (thumb, name) ->
             thumb.name = name
-            this.push thumb
-         , $scope.thumbnails
+            @thumbnails.push thumb
+            addToAspectRatios thumb
+            return
+         , $scope
          return
 
       $scope.anyProposed = ->
@@ -181,5 +207,3 @@ define [
       return
    ]
    return app
-
-

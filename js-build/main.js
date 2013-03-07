@@ -266,7 +266,7 @@ define("angular-resource", ["angular"], (function (global) {
         # Switch the enabled page to change the view
         */
 
-        var deleteTemp, id, nonces;
+        var addToAspectRatios, deleteTemp, id, nonces;
         $scope.page = {
           crop: true,
           view: false
@@ -436,6 +436,33 @@ define("angular-resource", ["angular"], (function (global) {
           deleteTemp();
         });
         /*
+        # Allow selecting based on the aspect ratio
+        */
+
+        $scope.aspectRatios = [];
+        addToAspectRatios = function(thumb) {
+          var ar, aspectRatio, _i, _len, _ref;
+          ar = thumb.width / thumb.height;
+          if ((ar == null) || ar === Infinity) {
+            return;
+          }
+          if (!thumb.crop || +thumb.crop < 1) {
+            return;
+          }
+          _ref = $scope.aspectRatios;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            aspectRatio = _ref[_i];
+            if (aspectRatio.size === ar) {
+              aspectRatio.thumbnails.push(thumb.name);
+              return;
+            }
+          }
+          $scope.aspectRatios.push({
+            size: ar,
+            thumbnails: [thumb.name]
+          });
+        };
+        /*
         # Initialization
         */
 
@@ -462,8 +489,9 @@ define("angular-resource", ["angular"], (function (global) {
         }, function() {
           angular.forEach($scope.thumbnailObject, function(thumb, name) {
             thumb.name = name;
-            return this.push(thumb);
-          }, $scope.thumbnails);
+            this.thumbnails.push(thumb);
+            addToAspectRatios(thumb);
+          }, $scope);
         });
         $scope.anyProposed = function() {
           var thumb, _i, _len, _ref;
@@ -484,8 +512,9 @@ define("angular-resource", ["angular"], (function (global) {
 }).call(this);
 
 (function() {
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  define('cs!controllers/TableCtrl',['cs!apps/pteApp'], function(app) {
+  define('cs!controllers/TableCtrl',['angular', 'cs!apps/pteApp'], function(angular, app) {
     app.controller("TableCtrl", [
       '$scope', function($scope) {
         /*
@@ -514,6 +543,32 @@ define("angular-resource", ["angular"], (function (global) {
             thumbnail = _ref[name];
             thumbnail.selected = $scope.tableSelector;
           }
+          $scope.updateSelected();
+        };
+        /*
+        # Toggle the thumbnails based on their aspectRatio
+        #
+        # If there are multiple thumbnails, use the value of the first thumbnail.selected
+        # to determine the rest.
+        */
+
+        $scope.selectAspectRatio = function(ar) {
+          var selectVal;
+          if (typeof event !== "undefined" && event !== null) {
+            if (typeof event.stopPropagation === "function") {
+              event.stopPropagation();
+            }
+          }
+          selectVal = null;
+          angular.forEach($scope.thumbnails, function(thumb) {
+            var _ref;
+            if (_ref = thumb.name, __indexOf.call(ar.thumbnails, _ref) >= 0) {
+              if (selectVal == null) {
+                selectVal = (thumb.selected != null) && thumb.selected ? false : true;
+              }
+              thumb.selected = selectVal;
+            }
+          });
           $scope.updateSelected();
         };
       }
