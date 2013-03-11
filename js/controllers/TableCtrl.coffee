@@ -13,11 +13,10 @@ define [
       # @param thumbnail The thumbnail to change
       ###
       $scope.toggleSelected = (thumbnail) ->
-         if event.target.nodeName isnt 'INPUT'
-            thumbnail.selected = !thumbnail.selected
+         thumbnail.selected = !thumbnail.selected
          # This is for telling other Controllers that the selection changed
          $scope.updateSelected()
-
+         return
 
 
       ###

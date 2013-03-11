@@ -331,14 +331,20 @@ function pte_get_width_height( $size_information, $w, $h ){
  * ================
  * See image_resize function in wp-includes/media.php to follow the same conventions
  *  - Check if the file exists
+ *
+ * Using the cache buster is a good idea because:
+ *  * we shouldn't overwrite old images that have been placed into posts
+ *  * keeps problems from occuring when I try to debug and people think picture
+ *    didn't save, when it's just a caching issue
  */
 function pte_generate_filename( $file, $w, $h ){
-	$info   = pathinfo( $file );
-	$ext    = $info['extension'];
-	$name   = wp_basename( $file, ".$ext" );
-	$suffix = "{$w}x{$h}";
+	$info         = pathinfo( $file );
+	$ext          = $info['extension'];
+	$name         = wp_basename( $file, ".$ext" );
+	$suffix       = "{$w}x{$h}";
+   $cache_buster = time();
 	//print_r( compact( "file", "info", "ext", "name", "suffix" ) );
-	return "{$name}-{$suffix}.{$ext}";
+	return "{$name}-{$suffix}-{$cache_buster}.{$ext}";
 }
 
 
@@ -550,7 +556,9 @@ function pte_confirm_images(){
 	}
 	// Delete tmpdir
 	//pte_rmdir( $PTE_TMP_DIR );
-	return pte_json_encode( array( 'success' => "Yay!" ) );
+   return pte_json_encode( array( 
+      'thumbnails' => pte_get_all_alternate_size_information( $id )
+   ) );
 }
 
 function pte_rmdir( $dir ){

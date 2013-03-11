@@ -4,7 +4,7 @@ define [
    'cs!settings'
    'cs!jquery'
 ], (angular, app, settings, $) ->
-   app.controller "PteCtrl", ['$scope','$resource','$log', ($scope, $resource, $log) ->
+   app.controller "PteCtrl", ['$scope','$resource','$log', '$filter', ($scope, $resource, $log, $filter) ->
       ###
       # Page handling feature
       #
@@ -82,29 +82,42 @@ define [
       ###
       # SAVE
       ###
-      $scope.save = (thumbnail_array) ->
-         event.stopPropagation()
+      $scope.save = (thumbnail) ->
+         #event?.stopPropagation?()
          #$log.log thumbnail_array
          data =
             'pte-action': 'confirm-images'
             'pte-nonce': nonces['pte-nonce']
             id: id
+         thumbnail_array = []
+         if !thumbnail
+            angular.forEach $scope.thumbnails, (thumb) ->
+               if thumb.proposed
+                  thumbnail_array.push thumb
+               return
+            if thumbnail_array.length < 1
+               return
+         else
+            thumbnail_array.push thumbnail
+
          for thumbnail in thumbnail_array
-            if thumbnail.selected
-               key = 'pte-confirm['+thumbnail.name+']'
-               data[key] = thumbnail.proposed.file
+            key = 'pte-confirm['+thumbnail.name+']'
+            data[key] = thumbnail.proposed.file
+
          $log.log data
+
          confirm_results = $scope.thumbnailResource.get data, ->
-            if !confirm_results.success
+            if !confirm_results.thumbnails
                $scope.setErrorMessage $scope.i18n.save_crop_problem
                return
+            #$filter('randomizeUrl') {reset: true}
             for thumbnail in thumbnail_array
-               if thumbnail.selected
-                  if !angular.isObject thumbnail.current
-                     thumbnail.current = {}
-                  thumbnail.current.url = thumbnail.proposed.url
-                  thumbnail.selected = false
-                  $scope.trash thumbnail
+               thumbnail.current = confirm_results.thumbnails[thumbnail.name].current
+               #if !angular.isObject thumbnail.current
+               #   thumbnail.current = {}
+               #thumbnail.current.url = thumbnail.proposed.url
+               #thumbnail.selected = false
+               $scope.trash thumbnail
             return
 
          return
@@ -127,7 +140,7 @@ define [
             $scope.trash thumb
 
       deleteTemp = ->
-         if not nonces['pte-delete-nonce']?
+         if not nonces?['pte-delete-nonce']?
             return
          deleteResults = $.ajax settings.getWindowVar('ajaxurl'),
             async: false

@@ -11,6 +11,10 @@ define [
       (url) ->
          if not url? then return url
 
+         if (angular.isObject url) and url.reset
+            urlMap = {}
+            return
+
          if url not of urlMap
             urlMap[url] = random()
 

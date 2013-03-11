@@ -114,8 +114,10 @@ define [
                'pte-delete-nonce': crop_results['pte-delete-nonce']
             $.each $scope.thumbnails, (i, thumb) ->
                if crop_results.thumbnails[thumb.name]
-                  thumb.proposed = crop_results.thumbnails[thumb.name]
-                  #thumb.proposed.file = crop_results.thumbnails[thumb.name].file
+                  proposed =
+                     url: crop_results.thumbnails[thumb.name].url
+                     file: crop_results.thumbnails[thumb.name].file
+                  thumb.proposed = proposed
                   thumb.showProposed = true
                return
             return

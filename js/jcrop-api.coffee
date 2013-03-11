@@ -6,6 +6,9 @@ define [
 ], ($, settings) ->
    jcrop = null
    crop_options =
+      # TODO
+      # Make the bgColor an option (dropdown, black or transparent)
+      bgColor: 'transparent'
       onRelease: ->
          {x, y, w, h, x2, y2} = this.tellSelect()
          if x isnt 0 or
