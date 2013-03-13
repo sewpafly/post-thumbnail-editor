@@ -3,7 +3,7 @@ Contributors: sewpafly
 Donate link: https://www.wepay.com/donate/34543
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, awesome
 Requires at least: 3.5
-Tested up to: 3.5
+Tested up to: 3.5.1
 Stable tag: trunk
 License: GPLv2
 
@@ -63,9 +63,10 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Changelog ==
 
-= 2.0.0-beta =
+= 2.0.0 =
 * New UI based off angularjs -- awesome framework btw -- same backend
 * In view tab, click the pictures to select (double-click switches to crop view).
+* Works on iPhone/iPad.
 
 = 1.0.7 =
 * Updated for Wordpress 3.5 (introduces backwards incompatible changes)
@@ -110,40 +111,5 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Upgrade Notice ==
 
-= 2.0.0-beta =
-Upgrade, if you dare...
-
-= 1.0.7 =
-Only for Wordpress 3.5+ (bug fixes)
-
-= 1.0.5 =
-Bugfix & added German translation
-
-= 1.0.4 =
-Bugfixes & portuguese translation
-
-= 1.0.3 =
-Fixed javascript problems & added italian translation
-
-= 1.0.2 =
-Problem with SVN commit of 1.0.1
-
-= 1.0.1 =
-Added translation support, french language, options menu and fixed incompatibility with other thickbox enabled plugins.
-
-= 1.0.0 =
-Now with more awesome.  Redesigned interface will challenge your perceptions of the universe.
-
-= 0.2.2 =
-Fixed version information
-Fixed plugin specific defines
-
-= 0.2.1 =
-Fixed PHP round() issue.
-
-= 0.2 =
-Change thumbnails aspect ratio (only works for medium/large. Will work for thumbnail if the crop checkbox isn't checked under Media Settings)
-
-= 0.1.1 =
-This version fixes a IE8/firefox javascript error.
-
+= 2.0.0 =
+New UI (since 1.0.7)
