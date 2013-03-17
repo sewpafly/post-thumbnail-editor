@@ -338,13 +338,22 @@ function pte_get_width_height( $size_information, $w, $h ){
  *    didn't save, when it's just a caching issue
  */
 function pte_generate_filename( $file, $w, $h ){
+	$options      = pte_get_options();
 	$info         = pathinfo( $file );
 	$ext          = $info['extension'];
 	$name         = wp_basename( $file, ".$ext" );
 	$suffix       = "{$w}x{$h}";
-   $cache_buster = time();
+
+	if ( $options['cache_buster'] ){
+		$cache_buster = time();
+		return sprintf( "%s-%s-%s.%s",
+			$name,
+			$suffix,
+			$cache_buster,
+			$ext );
+	}
 	//print_r( compact( "file", "info", "ext", "name", "suffix" ) );
-	return "{$name}-{$suffix}-{$cache_buster}.{$ext}";
+	return "{$name}-{$suffix}.{$ext}";
 }
 
 
@@ -379,11 +388,11 @@ function pte_resize_images(){
 	}
 
 	// Get the sizes to process
-   $pte_sizes      = $_GET['pte-sizes'];
-   if ( !is_array( $pte_sizes ) ){
-      $logger->debug( "Converting pte_sizes to array" );
-      $pte_sizes = explode( ",", $pte_sizes );
-   }
+	$pte_sizes      = $_GET['pte-sizes'];
+	if ( !is_array( $pte_sizes ) ){
+		$logger->debug( "Converting pte_sizes to array" );
+		$pte_sizes = explode( ",", $pte_sizes );
+	}
 	$sizes          = pte_get_all_alternate_size_information( $id );
 
 	// The following information is common to all sizes
@@ -424,8 +433,8 @@ function pte_resize_images(){
 		// === CREATE IMAGE ===================
 		// This function is in wp-includes/media.php
 		$editor = wp_get_image_editor( $original_file );
-      if ( is_a( $editor, "WP_Image_Editor_Imagick" ) ) $logger->debug( "EDITOR: ImageMagick" );
-      if ( is_a( $editor, "WP_Image_Editor_GD" ) ) $logger->debug( "EDITOR: GD" );
+		if ( is_a( $editor, "WP_Image_Editor_Imagick" ) ) $logger->debug( "EDITOR: ImageMagick" );
+		if ( is_a( $editor, "WP_Image_Editor_GD" ) ) $logger->debug( "EDITOR: GD" );
 		$crop_results = $editor->crop($x, $y, $w, $h, $dst_w, $dst_h); 
 
 		if ( is_wp_error( $crop_results ) ){
@@ -556,9 +565,9 @@ function pte_confirm_images(){
 	}
 	// Delete tmpdir
 	//pte_rmdir( $PTE_TMP_DIR );
-   return pte_json_encode( array( 
-      'thumbnails' => pte_get_all_alternate_size_information( $id )
-   ) );
+	return pte_json_encode( array( 
+		'thumbnails' => pte_get_all_alternate_size_information( $id )
+	) );
 }
 
 function pte_rmdir( $dir ){

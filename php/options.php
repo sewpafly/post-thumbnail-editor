@@ -43,6 +43,11 @@ function pte_options_init(){
 			'pte_jpeg_compression_display', 
 			'pte', 
 			'pte_site' );
+		add_settings_field( 'pte_cache_buster', 
+			__('Cache Buster', PTE_DOMAIN), 
+			'pte_cache_buster_display', 
+			'pte', 
+			'pte_site' );
 	}
 	// End Admin only
 
@@ -104,6 +109,9 @@ function pte_site_options_validate( $input ){
 		}
 		$output['pte_jpeg_compression'] = $tmp_jpeg_compression;
 	}
+
+	// Cache Buster
+	$output['cache_buster'] = isset( $input['pte_cache_buster'] );
 
 	return $output;
 }
@@ -190,7 +198,6 @@ function pte_sizes_display(){
 
 function pte_jpeg_compression_display(){
 	$options = pte_get_site_options();
-	$option_label = pte_get_option_name();
 ?>
 	<span><input class="small-text" type="text" 
 			 name="pte-site-options[pte_jpeg_compression]" 
@@ -198,6 +205,19 @@ function pte_jpeg_compression_display(){
 			 id="pte_jpeg_compression">&nbsp; 
 	<?php _e("Set the compression level for resizing jpeg images (0 to 100).", PTE_DOMAIN); ?>
 	<br/><em><?php _e("No entry defaults to using the 'jpeg_quality' filter or 90", PTE_DOMAIN); ?></em>
+	</span>
+	<?php
+}
+
+function pte_cache_buster_display(){
+	$options = pte_get_site_options();
+	?>
+	<span><input type="checkbox" name="pte-site-options[pte_cache_buster]" <?php 
+		if ( $options['cache_buster'] ): print "checked"; endif; 
+	?> id="pte_cache_buster"/>&nbsp;
+	<label for="pte_cache_buster"><?php
+		_e( 'Append timestamp to filename. Useful for solving caching problems.', PTE_DOMAIN ); 
+	?></label>
 	</span>
 	<?php
 }

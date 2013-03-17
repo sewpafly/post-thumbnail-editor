@@ -63,12 +63,14 @@ function pte_get_user_options(){
 }
 
 function pte_get_site_options(){
-    $pte_site_options = get_option( 'pte-site-options' );
-    if ( !is_array( $pte_site_options ) ){
-        $pte_site_options = array();
-    }
-    $defaults = array( 'pte_hidden_sizes' => array() );
-    return array_merge( $defaults, $pte_site_options );
+	$pte_site_options = get_option( 'pte-site-options' );
+	if ( !is_array( $pte_site_options ) ){
+		$pte_site_options = array();
+	}
+	$defaults = array( 'pte_hidden_sizes' => array(),
+		'cache_buster' => true
+	);
+	return array_merge( $defaults, $pte_site_options );
 }
 
 function pte_get_options(){
