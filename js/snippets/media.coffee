@@ -2,7 +2,7 @@ do (jQuery) ->
    # Add link to attachment-details template
    template = jQuery("#tmpl-attachment-details").text()
    injectTemplate = """
-      <a target="_blank" href="upload.php?page=pte-edit&post={{data.id}}">
+      <a target="_blank" href="upload.php?page=pte-edit&pte-id={{data.id}}">
          #{objectL10n.PTE}
       </a>
    """

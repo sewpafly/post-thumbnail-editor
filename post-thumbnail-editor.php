@@ -171,7 +171,7 @@ function pte_media_row_actions($actions, $post, $detached){
     $options = pte_get_options();
 
     $pte_url = admin_url('upload.php') 
-        . "?page=pte-edit&post=" 
+        . "?page=pte-edit&pte-id=" 
         . $post->ID;
         //. "&TB_iframe=true&height={$options['pte_tb_height']}&width={$options['pte_tb_width']}";
 
@@ -263,7 +263,7 @@ add_action( 'load-options.php', 'pte_options' );
 add_action( 'load-media_page_pte-edit', 'pte_edit_setup' );
 function pte_edit_setup() {
    global $post;
-   $post_id = (int) $_GET['post'];
+   $post_id = (int) $_GET['pte-id'];
    if ( !isset( $post_id ) || !is_int( $post_id ) || !wp_attachment_is_image( $post_id ) ){
       //die("POST: $post_id IS_INT:" . is_int( $post_id ) . " ATTACHMENT: " . wp_attachment_is_image( $post_id ));
       wp_redirect( admin_url( "upload.php" ) );
