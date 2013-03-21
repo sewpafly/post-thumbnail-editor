@@ -110,24 +110,28 @@ function pte_update_user_options(){
 
 /* Hook into the Edit Image page */
 function pte_admin_media_scripts($post_type){
-   //print("yessir:$post_type:\n");
-    $options = pte_get_options();
-    wp_enqueue_script( 'pte'
-       , PTE_PLUGINURL . 'apps/coffee-script.js'
-       , array()
-       , PTE_VERSION
-    );
-    wp_localize_script('pte'
-        , 'objectL10n'
-        , array('PTE' => __('Post Thumbnail Editor', PTE_DOMAIN))
-    );
-   if ($post_type == "attachment") {
-      add_action("admin_print_footer_scripts","pte_enable_admin_js",100);
-   }
-   else {
-      add_action("admin_print_footer_scripts","pte_enable_media_js",100);
-   }
+	$options = pte_get_options();
+	wp_enqueue_script( 'pte'
+		, PTE_PLUGINURL . 'apps/coffee-script.js'
+		, array('underscore')
+		, PTE_VERSION
+	);
+	wp_localize_script('pte'
+		, 'pteL10n'
+		, array('PTE' => __('Post Thumbnail Editor', PTE_DOMAIN)
+			, 'url' => pte_url( "<%= id %>" )
+		)
+	);
+	if ($post_type == "attachment") {
+		add_action("admin_print_footer_scripts","pte_enable_admin_js",100);
+	}
+	else {
+		add_action( 'admin_print_footer_scripts', 'pte_enable_media_js', 100);
+	}
 }
+// Add the PTE link to the featured image in the post screen
+// Called in wp-admin/includes/post.php
+add_filter( 'admin_post_thumbnail_html', 'pte_admin_post_thumbnail_html', 10, 2 );
 
 function pte_enable_admin_js(){
    injectCoffeeScript( PTE_PLUGINPATH . "js/snippets/admin.coffee" );
@@ -136,6 +140,29 @@ function pte_enable_admin_js(){
 function pte_enable_media_js(){
    injectCoffeeScript( PTE_PLUGINPATH . "js/snippets/media.coffee" );
 }
+
+
+function pte_url( $id ){
+	$pte_url = admin_url('upload.php') 
+		. "?page=pte-edit&pte-id=" 
+		. $id;
+
+	return $pte_url;
+}
+
+
+function pte_admin_post_thumbnail_html( $content, $post_id ){
+	$thumbnail_id = get_post_thumbnail_id( $post_id );
+	if ( $thumbnail_id == null )
+		return $content;
+
+	return $content .= '<p id="pte-link" class="hide-if-no-js"><a target="_blank" href="' 
+		. pte_url( $thumbnail_id )
+		. '">' 
+		. esc_html__( 'Post Thumbnail Editor', PTE_DOMAIN ) 
+		. '</a></p>';
+}
+
 
 function injectCoffeeScript($coffeeFile){
     $coffee = @file_get_contents( $coffeeFile );
@@ -186,10 +213,7 @@ function pte_media_row_actions($actions, $post, $detached){
     }
     $options = pte_get_options();
 
-    $pte_url = admin_url('upload.php') 
-        . "?page=pte-edit&pte-id=" 
-        . $post->ID;
-        //. "&TB_iframe=true&height={$options['pte_tb_height']}&width={$options['pte_tb_width']}";
+	 $pte_url = pte_url( $post->ID );
 
     $actions['pte'] = "<a href='${pte_url}' title='"
         . __( 'Edit Thumbnails', PTE_DOMAIN )
@@ -306,6 +330,7 @@ function pte_edit_setup() {
     load_plugin_textdomain( PTE_DOMAIN
         , false
         , basename( PTE_PLUGINPATH ) . DIRECTORY_SEPARATOR . "i18n" );
+
 
 /** Test Settings **/
 //add_image_size( 'pte test 1', 100, 0 );

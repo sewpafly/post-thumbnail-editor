@@ -3,9 +3,9 @@ do (jQuery) ->
    image_id = null
    pte_url = (override_id) ->
       id = override_id || image_id || jQuery("#attachment-id").val()
-      "upload.php?page=pte-edit&pte-id=#{ id }"
+      _.template pteL10n.url, {'id': id}
    $getLink = (id) ->
-      jQuery("""<a class="thickbox" href="#{ pte_url id }">#{ objectL10n.PTE }</a>""")
+      jQuery """<a href="#{ pte_url id }">#{ pteL10n.PTE }</a>"""
 
 
 
