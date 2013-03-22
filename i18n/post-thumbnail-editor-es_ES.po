@@ -1,0 +1,223 @@
+# Copyright (C) 2013 Post Thumbnail Editor
+# This file is distributed under the same license as the Post Thumbnail Editor package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Post Thumbnail Editor 2.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
+"POT-Creation-Date: 2013-03-08 04:51:59+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2013-03-22 20:52+0100\n"
+"Last-Translator: Samuel Aguilera <correo@samuelaguilera.com>\n"
+"Language-Team: Samuel Aguilera <correo@samuelaguilera.com>\n"
+"Language: Spanish\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.0.0-beta)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: html/pte.php:166 php/options.php:55 post-thumbnail-editor.php:107
+#: post-thumbnail-editor.php:207 post-thumbnail-editor.php:208
+#: post-thumbnail-editor.php:216 post-thumbnail-editor.php:217
+msgid "Post Thumbnail Editor"
+msgstr "Post Thumbnail Editor"
+
+#: html/pte.php:167
+msgid "crop and resize"
+msgstr "recortar y redimensionar"
+
+#: html/pte.php:171 html/pte.php:206
+msgid "Crop"
+msgstr "Recortar"
+
+#: html/pte.php:172
+msgid "View"
+msgstr "Ver"
+
+#: html/pte.php:201
+msgid "Options"
+msgstr "Opciones"
+
+#: html/pte.php:214
+msgid "Aspect Ratio"
+msgstr "Relación de aspecto"
+
+#: html/pte.php:215
+msgid "width/height"
+msgstr "anchura/altura"
+
+#: html/pte.php:229 php/options.php:37 post-thumbnail-editor.php:178
+msgid "Thumbnails"
+msgstr "Miniaturas"
+
+#: html/pte.php:235
+msgid "Save all"
+msgstr "Guardar todo"
+
+#: html/pte.php:240
+msgid "Reset all"
+msgstr "Reiniciar todo"
+
+#: html/pte.php:244
+msgid "View all/modified"
+msgstr "Ver todo/modificado"
+
+#: html/pte.php:263
+msgid "Save"
+msgstr "Guardar"
+
+#: html/pte.php:266
+msgid "Reset"
+msgstr "Reiniciar"
+
+#: html/pte.php:269
+msgid "Compare/View"
+msgstr "Comparar/Ver"
+
+#: html/pte.php:276
+msgid "These thumbnails have an aspect ratio set:"
+msgstr "Estas miniaturas tienen fijada una relación de aspecto:"
+
+#: html/pte.php:301
+msgid "Original"
+msgstr "Original"
+
+#: html/pte.php:308
+msgid "No image has been generated yet for image: "
+msgstr "Todavía no se ha generado una imagen: "
+
+#: html/pte.php:315
+msgid "Proposed"
+msgstr "Propuesta"
+
+#: php/functions.php:239
+msgid "Invalid meta data for POST #%d: %s"
+msgstr "Datos meta no válidos para el POST #%d: %s"
+
+#: php/functions.php:244
+msgid "Please contact support"
+msgstr "Por favor contacta con el soporte"
+
+#: php/log.php:15
+msgid "ERROR"
+msgstr "ERROR"
+
+#: php/log.php:18
+msgid "WARNING"
+msgstr "ATENCIÓN"
+
+#: php/log.php:21
+msgid "DEBUG"
+msgstr "DEPURACIÓN"
+
+#: php/log.php:101
+msgid "ERROR Logging Message: %s"
+msgstr "Registro de mensaje de ERROR: %s"
+
+#: php/options.php:11
+msgid "User Options"
+msgstr "Opciones de usuario"
+
+#: php/options.php:16
+msgid "Debug"
+msgstr "Depuración"
+
+#: php/options.php:22
+msgid "Reset to defaults"
+msgstr "Reiniciar a valores predeterminados"
+
+#: php/options.php:33
+msgid "Site Options"
+msgstr "Opciones del sitio"
+
+#: php/options.php:42
+msgid "JPEG Compression"
+msgstr "Compresión JPEG"
+
+#: php/options.php:63
+msgid "Save Changes"
+msgstr "Guardar cambios"
+
+#: php/options.php:77
+msgid ""
+"Only users with the 'manage_options' capability may make changes to these "
+"settings."
+msgstr ""
+"Sólo los usuarios con la capacidad 'manage_options' pueden hacer cambios a "
+"estos ajustes."
+
+#: php/options.php:103
+msgid "JPEG Compression needs to be set from 0 to 100."
+msgstr "La compresión JPEG debe fijarse de 0 a 100."
+
+#: php/options.php:129
+msgid "Enable debugging"
+msgstr "Activar depuración"
+
+#: php/options.php:132
+msgid "WP_DEBUG is currently set to true and will override this setting."
+msgstr ""
+"WP_DEBUG está fijado actualmente a 'true' por lo que reemplazará este ajuste."
+
+#: php/options.php:143
+msgid "Reset User Options"
+msgstr "Reiniciar opciones de usuario"
+
+#: php/options.php:169
+msgid "Post Thumbnail"
+msgstr "Miniatura de entrada"
+
+#: php/options.php:170
+msgid "Hidden"
+msgstr "Oculta"
+
+#: php/options.php:199
+msgid "Set the compression level for resizing jpeg images (0 to 100)."
+msgstr ""
+"Fija el nivel de compresión para las imágenes JPEG redimensionadas (0 a 100)."
+
+#: php/options.php:200
+msgid "No entry defaults to using the 'jpeg_quality' filter or 90"
+msgstr "Sin valor se usará el filtro predeterminado 'jpeg_quality' ó 90"
+
+#: php/options.php:210
+msgid "These site-wide settings can only be changed by an administrator"
+msgstr ""
+"Estos ajustes que afectan a todo el sitio sólo pueden cambiarse por un "
+"administrador"
+
+#: post-thumbnail-editor.php:177
+msgid "Edit Thumbnails"
+msgstr "Editar miniaturas"
+
+#: post-thumbnail-editor.php:276
+msgid "No thumbnails selected"
+msgstr "No hay miniaturas seleccionadas"
+
+#: post-thumbnail-editor.php:277
+msgid "No crop selected"
+msgstr "No hay recorte seleccionado"
+
+#: post-thumbnail-editor.php:278
+msgid "Cropping will likely result in skewed imagery"
+msgstr "El recorte probablemente dará como resultado imágenes sesgadas"
+
+#: post-thumbnail-editor.php:279
+msgid "There was a problem saving the crop..."
+msgstr "Hubo un problema al guardar el recorte..."
+
+#. Plugin URI of the plugin/theme
+msgid "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
+msgstr "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
+
+#. Description of the plugin/theme
+msgid "Individually manage your post thumbnails"
+msgstr "Gestiona individualmente tus miniaturas"
+
+#. Author of the plugin/theme
+msgid "sewpafly"
+msgstr "sewpafly"
+
+#. Author URI of the plugin/theme
+msgid "http://sewpafly.github.com/post-thumbnail-editor"
+msgstr "http://sewpafly.github.com/post-thumbnail-editor"
