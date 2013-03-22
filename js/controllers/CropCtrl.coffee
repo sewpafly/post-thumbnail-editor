@@ -5,7 +5,19 @@ define [
    'cs!settings'
 ], (app, jcrop, $, settings) ->
    app.controller "CropCtrl", ['$scope','$log', ($scope, $log) ->
-      #$scope.aspectRatioPattern = /(^\d+(\.\d+)*)/
+      $scope.$watch 'pteCropSave', (x,y) ->
+         if x is y
+            return
+
+         update_options =
+            'pte-action': 'change-options'
+            'pte_crop_save': if $scope.pteCropSave? then 'true' else 'false'
+         $log.log update_options
+
+         updated = $scope.thumbnailResource.get update_options, ->
+            $log.log "Updated options"
+         return
+
       $scope.$watch 'aspectRatio', ->
          ar = $scope.aspectRatio || null
          jcrop.setOptions
@@ -35,11 +47,14 @@ define [
       #    until the user closes the options. If the user clears the AR
       #    manually with the refresh button, respect that.
       #
-      # 2. In order to set the AR, each selected thumbnail needs to have the
+      # 2. If wordpress' crop setting is set then set the AR.
+      #
+      # 3. In order to set the AR, each selected thumbnail needs to have the
       #    same AR.
       #
-      # 3. If wordpress' crop setting is set then you can set the AR, but
-      #    if it isn't set, then don't worry about unsetting it yet
+      # 4. For the default AR:
+      #    if all the thumbnails have the same crop use it.
+      #    else width/height
       #
       ###
       $scope.updateSelected = ->
@@ -50,18 +65,39 @@ define [
 
          ar = null
          try
-            angular.forEach $scope.thumbnails, (thumbnail) ->
+            selected = false
+            allCrop = null
+            for thumbnail in $scope.thumbnails
                # Get the crop/width/height and convert to numerals
                {crop, width, height} = thumbnail
                crop = +crop
                width = +width
                height = +height
+               tmp_ar = width/height
 
-               if thumbnail.selected and thumbnail.crop > 0
-                  tmp_ar = width/height
+               if thumbnail.selected
+                  selected = true
+
+               # Check if all the thumbnails have the same crop
+               if crop > 0
+                  if allCrop is null
+                     allCrop = tmp_ar
+                  else if allCrop > 0 and allCrop != tmp_ar
+                     allCrop = -1
+
+               # Check Wordpress Crop setting (#2)
+               if thumbnail.selected and crop > 0
+                  # Every AR should be the same (#3)
                   if ar isnt null and ar != tmp_ar
                      throw "PTE_EXCEPTION"
                   ar = tmp_ar
+
+            # (#4) Set the default
+            if ar is null and selected is false
+               if allCrop isnt null and allCrop > 0
+                  ar = allCrop
+               else
+                  ar = settings.width/settings.height
          catch error
             $scope.setInfoMessage $scope.i18n.crop_problems
             $scope.aspectRatio = null
@@ -70,6 +106,9 @@ define [
          $scope.aspectRatio = ar
          return # end updateSelected
 
+      ###
+      # Submit Crop to server
+      ###
       $scope.submitCrop = ->
          if $scope.cropInProgress
             return
@@ -98,20 +137,28 @@ define [
             $scope.cropInProgress = false
             return
 
-         crop_options = 
+         crop_options =
             'pte-action': 'resize-images'
-            'id': settings.getWindowVar 'post_id'
+            'id': settings.id
             'pte-sizes': selected_thumbs
             'w':w
             'h':h
             'x':x
             'y':y
 
+         if $scope.pteCropSave
+            crop_options['save'] = 'true'
+
          crop_results = $scope.thumbnailResource.get crop_options, ->
             $scope.cropInProgress = false
+
+            if crop_results?.saved
+               return $scope.confirmResults crop_results
+
             $scope.setNonces
                'pte-nonce': crop_results['pte-nonce']
                'pte-delete-nonce': crop_results['pte-delete-nonce']
+
             $.each $scope.thumbnails, (i, thumb) ->
                if crop_results.thumbnails[thumb.name]
                   proposed =
@@ -126,6 +173,12 @@ define [
 
       #$scope.thumbnailObject = $scope.thumbnailResource.get {id: id}, ->
 
+      # For Crop and Save
+      $scope.cropText = ->
+         if $scope.pteCropSave is on
+            return $scope.i18n.cropSave
+         return $scope.i18n.crop
+
       ###
       # Listener
       ###
@@ -133,6 +186,7 @@ define [
          $scope.updateSelected()
          return
 
+      $scope.updateSelected()
       return
    ]
    return app

@@ -1,4 +1,4 @@
-JS_FILES = build.js
+.PHONY: js
 JS_OUTPUT = js-build
 
 # local.mk is not tracked in git project
@@ -11,7 +11,7 @@ include $(wildcard local.mk)
 all: gzip-js trans
 
 # Build javascript
-js: $(JS_FILES)
+js:
 	@echo "Building javascript"
 	r.js -o build.js
 

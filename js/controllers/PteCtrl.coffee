@@ -33,7 +33,7 @@ define [
       ###
       # Resource
       ###
-      $scope.thumbnailResource = $resource settings.getWindowVar('ajaxurl'),
+      $scope.thumbnailResource = $resource settings.ajaxurl,
          'action': 'pte_ajax'
          'pte-action': 'get-thumbnail-info'
       
@@ -107,20 +107,26 @@ define [
          $log.log data
 
          confirm_results = $scope.thumbnailResource.get data, ->
-            if !confirm_results.thumbnails
-               $scope.setErrorMessage $scope.i18n.save_crop_problem
-               return
-            #$filter('randomizeUrl') {reset: true}
-            for thumbnail in thumbnail_array
+            $scope.confirmResults confirm_results
+
+         return
+
+      $scope.confirmResults = (confirm_results) ->
+         if !confirm_results.thumbnails
+            $scope.setErrorMessage $scope.i18n.save_crop_problem
+            return
+         #$filter('randomizeUrl') {reset: true}
+         for thumbnail in $scope.thumbnails
+            if confirm_results.thumbnails[thumbnail.name]
                thumbnail.current = confirm_results.thumbnails[thumbnail.name].current
                #if !angular.isObject thumbnail.current
                #   thumbnail.current = {}
                #thumbnail.current.url = thumbnail.proposed.url
                #thumbnail.selected = false
                $scope.trash thumbnail
-            return
-
+         $filter('randomizeUrl') {reset: true}
          return
+
 
       ###
       # Clean up procedures
@@ -142,7 +148,7 @@ define [
       deleteTemp = ->
          if not nonces?['pte-delete-nonce']?
             return
-         deleteResults = $.ajax settings.getWindowVar('ajaxurl'),
+         deleteResults = $.ajax settings.ajaxurl,
             async: false
             data:
                'action': 'pte_ajax'
@@ -183,11 +189,11 @@ define [
       ###
       # Initialization
       ###
-      id = settings.getWindowVar('post_id')
+      id = settings.id
       if !id
          $log.error "No ID Found"
 
-      $scope.i18n = settings.getWindowVar 'pteI18n'
+      $scope.i18n = settings.i18n
 
       $scope.infoMessage = null
       $scope.setInfoMessage = (message) ->
@@ -209,6 +215,7 @@ define [
             addToAspectRatios thumb
             return
          , $scope
+         $scope.updateSelected()
          return
 
       $scope.anyProposed = ->

@@ -377,6 +377,7 @@ function pte_resize_images(){
 	$h  = pte_check_int( $_GET['h'] );
 	$x  = pte_check_int( $_GET['x'] );
 	$y  = pte_check_int( $_GET['y'] );
+	$save = isset( $_GET['save'] ) && ( strtolower( $_GET['save'] ) === "true" );
 
 	if ( $id === false
 		|| $w === false
@@ -466,9 +467,23 @@ function pte_resize_images(){
 		return pte_json_error("No images processed");
 	}
 
+	$ptenonce = wp_create_nonce( "pte-{$id}" );
+
+	// If save -- return pte_confirm_images
+	if ( $save ){
+		function create_pte_confirm($thumbnail){
+			return $thumbnail['file'];
+		}
+		$_REQUEST['pte-nonce'] = $ptenonce;
+		$_GET['pte-confirm'] = array_map('create_pte_confirm', $thumbnails);
+		$logger->debug( "CONFIRM:" );
+		$logger->debug( print_r( $_GET, true ) );
+		return pte_confirm_images();
+	}
+
 	return pte_json_encode( array( 
 		'thumbnails'        => $thumbnails,
-		'pte-nonce'         => wp_create_nonce( "pte-{$id}" ),
+		'pte-nonce'         => $ptenonce,
 		'pte-delete-nonce'  => wp_create_nonce( "pte-delete-{$id}" )
 	) );
 }
@@ -566,7 +581,8 @@ function pte_confirm_images(){
 	// Delete tmpdir
 	//pte_rmdir( $PTE_TMP_DIR );
 	return pte_json_encode( array( 
-		'thumbnails' => pte_get_all_alternate_size_information( $id )
+		'thumbnails' => pte_get_all_alternate_size_information( $id ),
+		'saved' => 'true'
 	) );
 }
 

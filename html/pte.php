@@ -3,6 +3,8 @@ global $post;
 function ep(){
    echo PTE_PLUGINURL;
 }
+
+$options = pte_get_options();
 ?>
 
 <!--
@@ -197,28 +199,43 @@ function ep(){
                ?>"/>
       
                <div id="pte-crop-controls">
-               <a ng-click="toggleOptions()" class="button button-secondary" ng-href=""><?php
-                  _e( "Options", PTE_DOMAIN ); ?>
-   <i class="icon-caret-down" ng-hide="cropOptions"></i>
-   <i class="icon-caret-up" ng-show="cropOptions"></i>
-</a>
-<a ng-disabled="cropInProgress" class="button button-primary" ng-href="" ng-click="submitCrop()">
-<span ng-hide="cropInProgress"><?php _e( "Crop", PTE_DOMAIN ); ?></span>
-   <i ng-show="cropInProgress" class="icon-spin icon-spinner"></i>
-</a>
+						<a ng-click="toggleOptions()" class="button button-secondary" ng-href=""><?php
+							_e( "Options", PTE_DOMAIN ); ?>
+							<i class="icon-caret-down" ng-hide="cropOptions"></i>
+							<i class="icon-caret-up" ng-show="cropOptions"></i>
+						</a>
+						<a ng-disabled="cropInProgress" class="button button-primary" ng-href="" ng-click="submitCrop()">
+							<span ng-hide="cropInProgress">{{ cropText() }}</span>
+							<i ng-show="cropInProgress" class="icon-spin icon-spinner"></i>
+						</a>
                </div>
-<div style="position: relative">
-   <div id="pte-crop-settings" ng-show="cropOptions">
-      <i class="icon-remove" ng-click="toggleOptions()"></i>
-      <!--ui-event="{blur : 'aspectRatioBlur()'}"-->
-      <label for="pte-aspect-ratio"><?php _e( "Aspect Ratio", PTE_DOMAIN ); ?>: </label>
-      <input id="pte-aspect-ratio" type="number" placeholder="<?php _e( "width/height", PTE_DOMAIN ); ?>"
-            ng-model="aspectRatio" ng-change="changeAR()"/>
-            <!--ng-pattern="aspectRatioPattern"/>-->
-      <i class="icon-undo" ng-click="aspectRatio = null"></i>
-   </div>
-</div>
-            </div>
+					<div style="position: relative">
+						<div id="pte-crop-settings" ng-show="cropOptions">
+							<i class="icon-remove" ng-click="toggleOptions()"></i>
+							<ul>
+								<li>
+									<!--ui-event="{blur : 'aspectRatioBlur()'}"-->
+									<label for="pte-aspect-ratio"><?php _e( "Aspect Ratio", PTE_DOMAIN ); ?>: </label>
+									<input id="pte-aspect-ratio" 
+											type="number"
+											placeholder="<?php _e( "width/height", PTE_DOMAIN ); ?>"
+											ng-model="aspectRatio" ng-change="changeAR()"/>
+									<!--ng-pattern="aspectRatioPattern"/>-->
+									<i class="icon-undo" ng-click="aspectRatio = null"></i>
+								</li>
+								<li>
+									<label for="pte-crop-and-save"><?php _e("Crop and save", PTE_DOMAIN); ?></label>
+									<input ng-model="pteCropSave"
+											ng-init="pteCropSave = <?php print( ( $options['pte_crop_save'] ) ? 'true':'false' ); ?>"
+											ng-change=""
+											type="checkbox"
+											name="pte-crop-and-save"
+											id="pte-crop-and-save"/>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
             <div id="pte-thumbnail-column" ng-controller="TableCtrl">
                <table id="pte-thumbnail-table" class="wp-list-table widefat" >
                   <thead>
