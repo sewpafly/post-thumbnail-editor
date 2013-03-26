@@ -308,7 +308,7 @@ function pte_edit_setup() {
         , basename( PTE_PLUGINPATH ) . DIRECTORY_SEPARATOR . "i18n" );
 
 /** Test Settings **/
-add_image_size( 'pte test 1', 100, 0 );
-add_image_size( 'pte test 2', 100, 150, true );
+//add_image_size( 'pte test 1', 100, 0 );
+//add_image_size( 'pte test 2', 100, 150, true );
 
 ?>
