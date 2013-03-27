@@ -11,7 +11,7 @@ define [
 
          update_options =
             'pte-action': 'change-options'
-            'pte_crop_save': if $scope.pteCropSave? then 'true' else 'false'
+            'pte_crop_save': if $scope.pteCropSave then 'true' else 'false'
          $log.log update_options
 
          updated = $scope.thumbnailResource.get update_options, ->
@@ -152,7 +152,7 @@ define [
          crop_results = $scope.thumbnailResource.get crop_options, ->
             $scope.cropInProgress = false
 
-            if crop_results?.saved
+            if crop_results?.immediate
                return $scope.confirmResults crop_results
 
             $scope.setNonces
@@ -167,6 +167,7 @@ define [
                   thumb.proposed = proposed
                   thumb.showProposed = true
                return
+            $scope.view on
             return
 
          return # end submitCrop

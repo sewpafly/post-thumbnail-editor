@@ -478,7 +478,7 @@ function pte_resize_images(){
 		$_GET['pte-confirm'] = array_map('create_pte_confirm', $thumbnails);
 		$logger->debug( "CONFIRM:" );
 		$logger->debug( print_r( $_GET, true ) );
-		return pte_confirm_images();
+		return pte_confirm_images(true);
 	}
 
 	return pte_json_encode( array( 
@@ -496,7 +496,7 @@ function pte_resize_images(){
  *
  * Clean up and return error/success information...
  */
-function pte_confirm_images(){
+function pte_confirm_images($immediate = false){
 	global $pte_sizes;
 	$logger = PteLogger::singleton();
 
@@ -582,7 +582,7 @@ function pte_confirm_images(){
 	//pte_rmdir( $PTE_TMP_DIR );
 	return pte_json_encode( array( 
 		'thumbnails' => pte_get_all_alternate_size_information( $id ),
-		'saved' => 'true'
+		'immediate' => $immediate
 	) );
 }
 

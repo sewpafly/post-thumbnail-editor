@@ -14,12 +14,12 @@ define [
          crop: on
          view: off
       $scope.changePage = (page) ->
-         $scope.viewFilterValue = false
+         $scope.viewFilterValue = off
          for key, value of $scope.page
             if key == page
-               $scope.page[key] = true
+               $scope.page[key] = on
             else
-               $scope.page[key] = false
+               $scope.page[key] = off
 
       ###
       # Set the Tab Class to active when the page is enabled
@@ -57,14 +57,14 @@ define [
       # 
       # Using the tab buttons will reset this feature.
       ###
-      $scope.viewFilterValue = false
+      $scope.viewFilterValue = off
       $scope.view = (val) ->
          event?.stopPropagation?()
          $scope.changePage('view')
          $scope.viewFilterValue = val
          return
       $scope.viewFilterFunc = (thumbnail) ->
-         if $scope.viewFilterValue is false
+         if $scope.viewFilterValue is off
             return true
          if angular.isString $scope.viewFilterValue
             if thumbnail.name is $scope.viewFilterValue
@@ -75,6 +75,7 @@ define [
             # check if thumbnail.name is in array
             if thumbnail.name in $scope.viewFilterValue
                return true
+         # This sets the view to show only the recently changed images
          if $scope.viewFilterValue
             return thumbnail.proposed?
          return true
@@ -116,15 +117,26 @@ define [
             $scope.setErrorMessage $scope.i18n.save_crop_problem
             return
          #$filter('randomizeUrl') {reset: true}
+         viewFilter = []
+         resetUrls = []
          for thumbnail in $scope.thumbnails
             if confirm_results.thumbnails[thumbnail.name]
+               viewFilter.push thumbnail.name
                thumbnail.current = confirm_results.thumbnails[thumbnail.name].current
+               resetUrls.push thumbnail.current.url
+               resetUrls.push thumbnail.proposed.url
                #if !angular.isObject thumbnail.current
                #   thumbnail.current = {}
                #thumbnail.current.url = thumbnail.proposed.url
                #thumbnail.selected = false
                $scope.trash thumbnail
-         $filter('randomizeUrl') {reset: true}
+         if confirm_results.immediate
+            # Change to the view
+            $scope.view viewFilter
+         else
+            checkFilter()
+
+         $filter('randomizeUrl') {reset: true, urls: resetUrls}
          return
 
 
@@ -139,6 +151,14 @@ define [
          event?.stopPropagation?()
          delete thumbnail.proposed
          thumbnail.showProposed = false
+         # if there aren't any other proposed, set the viewFilter to false
+         checkFilter()
+
+      checkFilter = ->
+         for thumbnail in $scope.thumbnails
+            if thumbnail.proposed
+               return
+         $scope.viewFilterValue = off
 
       $scope.trashAll = ->
          deleteTemp()
