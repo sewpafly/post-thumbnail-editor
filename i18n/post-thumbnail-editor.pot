@@ -1,14 +1,14 @@
-# Copyright (C) 2010 Post Thumbnail Editor
+# Copyright (C) 2013 Post Thumbnail Editor
 # This file is distributed under the same license as the Post Thumbnail Editor package.
 msgid ""
 msgstr ""
 "Project-Id-Version: Post Thumbnail Editor 2.0.1-alpha\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
-"POT-Creation-Date: 2013-03-25 20:53:20+00:00\n"
+"POT-Creation-Date: 2013-03-27 22:08:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2013-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 

@@ -124,7 +124,8 @@ define [
                viewFilter.push thumbnail.name
                thumbnail.current = confirm_results.thumbnails[thumbnail.name].current
                resetUrls.push thumbnail.current.url
-               resetUrls.push thumbnail.proposed.url
+               if thumbnail.proposed?.url
+                   resetUrls.push thumbnail.proposed.url
                #if !angular.isObject thumbnail.current
                #   thumbnail.current = {}
                #thumbnail.current.url = thumbnail.proposed.url

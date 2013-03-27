@@ -45,7 +45,11 @@ msgstr "Ratio de taille"
 
 #: html/pte.php:215
 msgid "width/height"
-msgstr "largeur/hauteur"
+msgstr ""
+
+#: html/pte.php:227
+msgid "Crop and save"
+msgstr "Retailler et sauvegarder"
 
 #: html/pte.php:229 php/options.php:37 post-thumbnail-editor.php:178
 msgid "Thumbnails"
@@ -123,7 +127,11 @@ msgstr "Options de l'utilisateur"
 msgid "Debug"
 msgstr "Debugger"
 
-#: php/options.php:22
+#: php/options.php:22 post-thumbnail-editor.php:298
+msgid "Crop and Save"
+msgstr "Retailler et Sauvegarder"
+
+#: php/options.php:28
 msgid "Reset to defaults"
 msgstr "Remettre aux réglages par défaut"
 
@@ -135,7 +143,11 @@ msgstr "Options de site"
 msgid "JPEG Compression"
 msgstr "Compression JPEG"
 
-#: php/options.php:63
+#: php/options.php:53
+msgid "Cache Buster"
+msgstr ""
+
+#: php/options.php:74
 msgid "Save Changes"
 msgstr "Sauvegarder les modifications"
 
@@ -159,7 +171,11 @@ msgstr "Activer le debuggage"
 msgid "WP_DEBUG is currently set to true and will override this setting."
 msgstr "WP_DEBUG est actuellement activé et annule ces réglages."
 
-#: php/options.php:143
+#: php/options.php:162
+msgid "I know what I'm doing, bypass the image verification."
+msgstr ""
+
+#: php/options.php:171
 msgid "Reset User Options"
 msgstr "Réinitialiser les options d'utilisateur"
 
@@ -177,7 +193,11 @@ msgstr "Définissez le niveau de compression jpeg des images (0 à 100)"
 
 #: php/options.php:200
 msgid "No entry defaults to using the 'jpeg_quality' filter or 90"
-msgstr "Laisser vide applique une qualité jpeg de 90"
+msgstr ""
+
+#: php/options.php:239
+msgid "Append timestamp to filename. Useful for solving caching problems."
+msgstr ""
 
 #: php/options.php:210
 msgid "These site-wide settings can only be changed by an administrator"

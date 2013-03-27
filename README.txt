@@ -63,6 +63,14 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Changelog ==
 
+= 2.0.1-beta =
+* IE fix with the jcrop api
+* Now go into the view mode after cropping
+* Added option to crop and save without verifying.
+* updated coffee-script to 1.6.2
+* Added French and Spanish translations
+* Made the cache buster an option
+
 = 2.0.0 =
 * New UI based off angularjs -- awesome framework btw -- same backend
 * In view tab, click the pictures to select (double-click switches to crop view).
@@ -111,5 +119,5 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Upgrade Notice ==
 
-= 2.0.0 =
-New UI (since 1.0.7)
+= 2.0.1-beta =
+Upgrade if you're willing to see some rough edges...
