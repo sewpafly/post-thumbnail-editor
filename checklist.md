@@ -5,6 +5,7 @@
    * `git fetch upstream`
    * `git merge upstream/master`
    * `git push origin master`
+1. Update the php/override functions to have the latest wordpress code...
 2. Run build script: `make`
    * compiles & minifies css/js 
    * concatenates into one file

@@ -24,6 +24,12 @@ function pte_options_init(){
 		'pte', 
 		'pte_main' );
 
+	add_settings_field( 'pte_imgedit_max_size', 
+		__('Crop Picture Size', PTE_DOMAIN), 
+		'pte_imgedit_size_display', 
+		'pte', 
+		'pte_main' );
+
 	add_settings_field( 'pte_reset', 
 		__('Reset to defaults', PTE_DOMAIN), 
 		'pte_reset_display', 
@@ -130,6 +136,19 @@ function pte_options_validate( $input ){
 	}
 	$options['pte_debug'] = isset( $input['pte_debug'] );
 	$options['pte_crop_save'] = isset( $input['pte_crop_save'] );
+	// Check the imgedit_max_size value
+	if ( $input['pte_imgedit_max_size'] != "" ){
+		$tmp_size = (int) preg_replace( "/[\D]/", "", $input['pte_imgedit_max_size'] );
+		if ( $tmp_size < 0 || $tmp_size > 10000 ) {
+			add_settings_error( pte_get_option_name()
+				, 'pte_options_error'
+				, __( "Crop Size must be between 0 and 10000.", PTE_DOMAIN ) );
+		}
+		$options['pte_imgedit_max_size'] = $tmp_size;
+	}
+	else{
+		unset( $options['pte_imgedit_max_size'] );
+	}
 	return $options;
 }
 
@@ -160,6 +179,20 @@ function pte_crop_save_display(){
 	?>[pte_crop_save]" <?php 
 		if ( $options['pte_crop_save'] ): print "checked"; endif; 
 	?> id="pte_crop_save"/>&nbsp;<label for="pte_crop_save"><?php _e( 'I know what I\'m doing, bypass the image verification.', PTE_DOMAIN ); ?></label>
+	</span>
+	<?php
+}
+
+function pte_imgedit_size_display(){
+	$options = pte_get_user_options();
+	$option_label = pte_get_option_name();
+	?>
+	<span><input class="small-text" type="text" 
+			name="<?php print $option_label; ?>[pte_imgedit_max_size]" 
+			value="<?php if ( isset( $options['pte_imgedit_max_size'] ) ){ print $options['pte_imgedit_max_size']; }?>" 
+			id="pte_imgedit_max_size">&nbsp; 
+	<?php _e("Set the max size for the crop image.", PTE_DOMAIN); ?>
+	<br/><em><?php _e("No entry defaults to 600", PTE_DOMAIN); ?></em>
 	</span>
 	<?php
 }

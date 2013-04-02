@@ -55,6 +55,7 @@ function pte_get_user_options(){
     }
     $defaults = array( 'pte_debug' => false
         , 'pte_crop_save' => false
+		, 'pte_imgedit_max_size' => 600
     );
 
     // WORDPRESS DEBUG overrides user setting...
@@ -325,6 +326,19 @@ function pte_edit_setup() {
    );
 }
 
+/**
+ * This code creates the image used for the crop
+ *
+ * By overwriting the wordpress code (same functions), we can change the default size
+ * to our own option.
+ */
+add_action('wp_ajax_pte_imgedit_preview','pte_wp_ajax_imgedit_preview_wrapper');
+function pte_wp_ajax_imgedit_preview_wrapper(){
+   require_once( PTE_PLUGINPATH . "php/overwrite_imgedit_preview.php" );
+   pte_wp_ajax_imgedit_preview();
+}
+
+   
 /** End Settings Hooks **/
 
     load_plugin_textdomain( PTE_DOMAIN
