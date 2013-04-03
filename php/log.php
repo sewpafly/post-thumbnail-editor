@@ -56,7 +56,7 @@ class PteLogger {
 
 	private function __construct() {
 		$this->defaulttype = PteLogMessage::$DEBUG;
-  	}
+	}
 
 	public static function singleton()
 	{

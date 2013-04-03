@@ -3,7 +3,6 @@
 /**
  * Kind of lame all I really need to do is change the ratio number, but in order to 
  * do that I have to overwrite 3 functions
- *
  */
 
 
@@ -34,8 +33,8 @@ function pte_stream_preview_image( $post_id ) {
 
 	$img = wp_get_image_editor( _load_image_to_edit_path( $post_id ) );
 
-    if ( is_wp_error( $img ) )
-        return false;
+	if ( is_wp_error( $img ) )
+		return false;
 
 	// scale the image
 	$size = $img->get_size();
