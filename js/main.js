@@ -5,7 +5,7 @@ require({
     'cs':               '../apps/requirejs/cs',
     'coffee-script':    '../apps/coffee-script',
     'jcrop':            '../apps/jcrop/js/jquery.Jcrop.min',
-    'domReady':         '../apps/requirejs/domReady',
+    'domReady':         '../apps/requirejs/domReady'
  },
  shim: {
     'angular': {

@@ -274,7 +274,8 @@ function pte_admin_menu(){
 		'pte',
 		'pte_launch_options_page'
 	);
-	add_media_page( __('Post Thumbnail Editor', PTE_DOMAIN),
+	// The submenu page function does not put a menu item in the wordpress sidebar.
+	add_submenu_page(NULL, __('Post Thumbnail Editor', PTE_DOMAIN),
 		__('Post Thumbnail Editor', PTE_DOMAIN),
 		'edit_posts',
 		'pte-edit',
