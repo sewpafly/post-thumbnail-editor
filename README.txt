@@ -63,12 +63,13 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Changelog ==
 
-= 2.0.1-beta =
+= 2.0.1 =
 * IE fix with the jcrop api
 * Now go into the view mode after cropping
-* Added option to crop and save without verifying.
-* updated coffee-script to 1.6.2
-* Added French and Spanish translations
+* Added option to crop and save without verifying
+* Featured images now have link to launch the Post Thumbnail Editor
+* Updated coffee-script to 1.6.2
+* Updated French and Spanish translations
 * Made the cache buster an option
 
 = 2.0.0 =
@@ -119,5 +120,5 @@ Using a version with [json_encode](http://www.php.net/manual/en/function.json-en
 
 == Upgrade Notice ==
 
-= 2.0.1-beta =
-Upgrade if you're willing to see some rough edges...
+= 2.0.1 =
+Several new features and bug fixes since 2.0.0
