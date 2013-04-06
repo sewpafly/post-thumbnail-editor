@@ -85,10 +85,10 @@ define [
 
                if thumbnail.selected
                   [cropW, cropH] = cropConstraints
-                  if !cropW or cropW > thumbnail.width
-                     cropW = thumbnail.width
-                  if !cropH or cropH > thumbnail.height
-                     cropH = thumbnail.height
+                  if !cropW or (0 < width and cropW < width)
+                     cropW = width
+                  if !cropH or (0 < height and cropH < height)
+                     cropH = height
                   cropConstraints = [cropW, cropH]
                   selected = true
 
