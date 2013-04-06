@@ -131,6 +131,7 @@ function pte_get_alternate_sizes($filter=true){
 				$crop = intval( $_wp_additional_image_sizes[$s]['crop'] );
 			else                                                      // For default sizes set in options
 				$crop = get_option( "{$s}_crop" );
+
 			$pte_gas[$s] = array(
 				'width'  => $width,
 				'height' => $height,

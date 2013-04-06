@@ -24,6 +24,13 @@ define [
             aspectRatio: ar
          return
 
+      $scope.$watch 'cropConstraints', ->
+         cropConstraints = $scope.cropConstraints || [null, null]
+         jcrop.setOptions
+            cropConstraints: cropConstraints
+         return
+
+
       $scope.changeAR = ->
          $scope.userChanged = true
 
@@ -64,6 +71,7 @@ define [
             return
 
          ar = null
+         cropConstraints = [null, null]
          try
             selected = false
             allCrop = null
@@ -76,6 +84,12 @@ define [
                tmp_ar = width/height
 
                if thumbnail.selected
+                  [cropW, cropH] = cropConstraints
+                  if !cropW or cropW > thumbnail.width
+                     cropW = thumbnail.width
+                  if !cropH or cropH > thumbnail.height
+                     cropH = thumbnail.height
+                  cropConstraints = [cropW, cropH]
                   selected = true
 
                # Check if all the thumbnails have the same crop
@@ -100,10 +114,10 @@ define [
                   ar = settings.width/settings.height
          catch error
             $scope.setInfoMessage $scope.i18n.crop_problems
-            $scope.aspectRatio = null
-            return
+            ar = null
 
          $scope.aspectRatio = ar
+         $scope.cropConstraints = cropConstraints
          return # end updateSelected
 
       ###

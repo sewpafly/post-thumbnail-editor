@@ -190,7 +190,7 @@ $options = pte_get_options();
             <div id="pte-image" ng-controller="CropCtrl">
                <img id="pte-preview" src="<?php 
                echo admin_url('admin-ajax.php'); 
-               ?>?action=imgedit-preview&amp;_ajax_nonce=<?php
+               ?>?action=pte_imgedit_preview&amp;_ajax_nonce=<?php
                echo $nonce; 
                ?>&amp;postid=<?php
                echo $post->ID;
