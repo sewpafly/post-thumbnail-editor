@@ -21,7 +21,7 @@ define [
                   bgColor: color
             return
 
-         if (crop_w and crop_w > 0 and crop_w > w) or (crop_h and crop_h > 0 and crop_h > h)
+         if (crop_w and crop_w > w) or (crop_h and crop_h > h)
             changeBgColor 'red'
          else
             changeBgColor 'green'
