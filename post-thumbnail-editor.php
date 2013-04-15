@@ -3,7 +3,7 @@
 Plugin name: Post Thumbnail Editor
 Plugin URI: http://wordpress.org/extend/plugins/post-thumbnail-editor/
 Author: sewpafly
-Author URI: http://sewpafly.github.com/post-thumbnail-editor
+Author URI: http://sewpafly.github.io/post-thumbnail-editor
 Version: 2.0.2-beta
 Description: Individually manage your post thumbnails
 
@@ -305,7 +305,7 @@ function pte_edit_page(){
  */
 add_action( 'load-media_page_pte-edit', 'pte_edit_setup' );
 function pte_edit_setup() {
-	global $post;
+	global $post, $title;
 	$post_id = (int) $_GET['pte-id'];
 	if ( !isset( $post_id ) || !is_int( $post_id ) || !wp_attachment_is_image( $post_id ) ){
 		//die("POST: $post_id IS_INT:" . is_int( $post_id ) . " ATTACHMENT: " . wp_attachment_is_image( $post_id ));
@@ -313,6 +313,7 @@ function pte_edit_setup() {
 		exit();
 	}
 	$post = get_post( $post_id );
+	$title = __( "Post Thumbnail Editor", PTE_DOMAIN );
 
 	// Enqueue Scripts
 	wp_localize_script( 'jquery' // Called on every admin page :)

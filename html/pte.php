@@ -72,6 +72,9 @@ $options = pte_get_options();
    #pte-thumbnail-table td input {
       margin: 1px 0 0;
    }
+   .align-right {
+      text-align: right !important;
+   }
 
    #aspect-ratio-selector {
       margin-top: 20px;
@@ -244,6 +247,9 @@ $options = pte_get_options();
                            <input type="checkbox" ng-model="tableSelector" ng-change="toggleAll()"/>
                         </th>
                         <th><?php _e( "Thumbnails" ); ?></th>
+                        <th class="align-right"><?php _e( "W" ); ?></th>
+                        <th class="align-right"><?php _e( "H" ); ?></th>
+                        <th><?php _e( "C" ); ?></th>
                         <th class="center">
                            <span class="pte-thumbnails-menu">
                               <i ng-show="anyProposed()" 
@@ -277,6 +283,9 @@ $options = pte_get_options();
 
                         </td>
                         <td>{{ thumbnail.name }}</td>
+                        <td class="align-right">{{ thumbnail.width }}</td>
+                        <td class="align-right">{{ thumbnail.height }}</td>
+                        <td>{{ thumbnail.crop }}</td>
                         <td class="center pte-thumbnail-options">
                            <span class="pte-thumbnail-menu">
                               <i ng-show="thumbnail.proposed" 

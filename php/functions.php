@@ -195,6 +195,10 @@ function pte_get_image_data( $id, $size, $size_data ){
 function pte_get_all_alternate_size_information( $id ){
 	$sizes = pte_get_alternate_sizes();
 	foreach ( $sizes as $size => &$info ){
+		if ( $info['crop'] )
+			$info['crop'] = true;
+		else
+			$info['crop'] = false;
 		$info['current'] = pte_get_image_data( $id, $size, $info );
 	}
 	return $sizes;
