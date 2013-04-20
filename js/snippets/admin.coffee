@@ -24,14 +24,14 @@ do (jQuery) ->
    #
    injectPTE = ->
       # Find and inject pte-url into size cell...
-      jQuery('.media-item').each (i,elem) ->
-         post_id = elem.id.replace "media-item-",""
-         $getLink(post_id)
-         .css
-            'font-size': '.8em'
-            'margin-left': '5px'
-         .click(checkExistingThickbox)
-         .appendTo jQuery 'tr.image-size th.label', elem
+      #jQuery('.media-item').each (i,elem) ->
+      #   post_id = elem.id.replace "media-item-",""
+      #   $getLink(post_id)
+      #   .css
+      #      'font-size': '.8em'
+      #      'margin-left': '5px'
+      #   .click(checkExistingThickbox)
+      #   .appendTo jQuery 'tr.image-size th.label', elem
 
       if imageEdit.open?
          imageEdit.oldopen = imageEdit.open
@@ -59,7 +59,10 @@ do (jQuery) ->
          return false
 
       # Add convenience functions to menu
-      $editmenu.append $getLink().click checkExistingThickbox
+      $link = $getLink().click checkExistingThickbox
+      $link.addClass "button-primary"
+      $link.css "margin-top", "10px"
+      $editmenu.append $link
 
    injectPTE()
 
