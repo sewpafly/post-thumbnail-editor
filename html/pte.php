@@ -11,9 +11,19 @@ $options = pte_get_options();
 <base href="/wp-admin/"/>
 -->
 <script type="text/javascript" charset="utf-8">
-   var post_id     = <?php echo $post->ID; ?>
-     , post_width  = <?php echo $meta['width']; ?>
-     , post_height = <?php echo $meta['height']; ?>
+   var post_id     = <?php echo $post->ID; ?> 
+     , post_width  = <?php echo $meta['width']; ?> 
+     , post_height = <?php echo $meta['height']; ?> 
+     , pteI18n     = <?php echo json_encode( 
+			  array( 'no_t_selected' => __( 'No thumbnails selected', PTE_DOMAIN )
+			  , 'no_c_selected' => __( 'No crop selected', PTE_DOMAIN )
+			  , 'crop_problems' => __( 'Cropping will likely result in skewed imagery', PTE_DOMAIN )
+			  , 'save_crop_problem' => __( 'There was a problem saving the crop...', PTE_DOMAIN )
+			  , 'cropSave' => __( 'Crop and Save', PTE_DOMAIN )
+			  , 'crop' => __( 'Crop', PTE_DOMAIN )
+		  ));
+?>;
+
 </script>
  
 <link rel="stylesheet" href="<?php ep() ?>apps/font-awesome/css/font-awesome.css"/>

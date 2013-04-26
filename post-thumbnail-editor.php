@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
 define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
 define( 'PTE_DOMAIN', "post-thumbnail-editor");
-define( 'PTE_VERSION', "2.0.2-beta");
+define( 'PTE_VERSION', "2.1.0");
 
 /*
  * Option Functionality
@@ -314,18 +314,6 @@ function pte_edit_setup() {
 	}
 	$post = get_post( $post_id );
 	$title = __( "Post Thumbnail Editor", PTE_DOMAIN );
-
-	// Enqueue Scripts
-	wp_localize_script( 'jquery' // Called on every admin page :)
-		, 'pteI18n'
-		, array( 'no_t_selected' => __( 'No thumbnails selected', PTE_DOMAIN )
-			, 'no_c_selected' => __( 'No crop selected', PTE_DOMAIN )
-			, 'crop_problems' => __( 'Cropping will likely result in skewed imagery', PTE_DOMAIN )
-			, 'save_crop_problem' => __( 'There was a problem saving the crop...', PTE_DOMAIN )
-			, 'cropSave' => __( 'Crop and Save', PTE_DOMAIN )
-			, 'crop' => __( 'Crop', PTE_DOMAIN )
-		)
-	);
 }
 
 /**
