@@ -405,7 +405,7 @@ function pte_resize_images(){
 	// *** common-info
 	$dst_x          = 0;
 	$dst_y          = 0;
-	$original_file  = get_attached_file( $id );
+	$original_file  = _load_image_to_edit_path( $id );
 	$original_size  = @getimagesize( $original_file );
 	$uploads 	    = wp_upload_dir();
 	$PTE_TMP_DIR    = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR;
@@ -558,15 +558,15 @@ function pte_confirm_images($immediate = false){
 		}
 
 		// Delete/unlink old file
-		if ( isset( $old_file ) 
-			&& file_exists( $old_file ) )
+		if ( isset( $old_file ) )
 		{
 			$logger->debug( "Deleting old thumbnail: {$old_file}" );
-			unlink( $old_file );
+			@unlink( apply_filters( 'wp_delete_file', $old_file ) );
 		}
 
 		// Move good image
 		$logger->debug( "Moving '{$good_file}' to '{$new_file}'" );
+		wp_mkdir_p( dirname( $new_file ) );
 		rename( $good_file, $new_file );
 
 		// Update metadata
