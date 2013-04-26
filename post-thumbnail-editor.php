@@ -4,7 +4,7 @@ Plugin name: Post Thumbnail Editor
 Plugin URI: http://wordpress.org/extend/plugins/post-thumbnail-editor/
 Author: sewpafly
 Author URI: http://sewpafly.github.io/post-thumbnail-editor
-Version: 2.0.2-beta
+Version: 2.1.0
 Description: Individually manage your post thumbnails
 
 LICENSE

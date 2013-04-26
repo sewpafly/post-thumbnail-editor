@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Post Thumbnail Editor package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Post Thumbnail Editor 2.0.1-alpha\n"
+"Project-Id-Version: Post Thumbnail Editor 2.0.2-beta\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
-"POT-Creation-Date: 2013-03-27 22:08:07+00:00\n"
+"POT-Creation-Date: 2013-04-26 19:43:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,91 +12,124 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.0.1-alpha)  #-#-#-#-#
-#. Plugin Name of the plugin/theme
-#: html/pte.php:168 php/options.php:66 post-thumbnail-editor.php:122
-#: post-thumbnail-editor.php:225 post-thumbnail-editor.php:226
-#: post-thumbnail-editor.php:234 post-thumbnail-editor.php:235
-msgid "Post Thumbnail Editor"
+#: html/pte.php:18
+msgid "No thumbnails selected"
 msgstr ""
 
-#: html/pte.php:169
-msgid "crop and resize"
+#: html/pte.php:19
+msgid "No crop selected"
 msgstr ""
 
-#: html/pte.php:173 post-thumbnail-editor.php:299
+#: html/pte.php:20
+msgid "Cropping will likely result in skewed imagery"
+msgstr ""
+
+#: html/pte.php:21
+msgid "There was a problem saving the crop..."
+msgstr ""
+
+#: html/pte.php:22 php/options.php:22
+msgid "Crop and Save"
+msgstr ""
+
+#: html/pte.php:23 html/pte.php:186
 msgid "Crop"
 msgstr ""
 
-#: html/pte.php:174
+#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.0.2-beta)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: html/pte.php:181 php/options.php:72 post-thumbnail-editor.php:143
+#: post-thumbnail-editor.php:187 post-thumbnail-editor.php:271
+#: post-thumbnail-editor.php:272 post-thumbnail-editor.php:278
+#: post-thumbnail-editor.php:279 post-thumbnail-editor.php:316
+msgid "Post Thumbnail Editor"
+msgstr ""
+
+#: html/pte.php:182
+msgid "crop and resize"
+msgstr ""
+
+#: html/pte.php:187
 msgid "View"
 msgstr ""
 
-#: html/pte.php:203
+#: html/pte.php:216
 msgid "Options"
 msgstr ""
 
-#: html/pte.php:218
+#: html/pte.php:231
 msgid "Aspect Ratio"
 msgstr ""
 
-#: html/pte.php:221
+#: html/pte.php:234
 msgid "width/height"
 msgstr ""
 
-#: html/pte.php:227
+#: html/pte.php:240
 msgid "Crop and save"
 msgstr ""
 
-#: html/pte.php:246 php/options.php:43 post-thumbnail-editor.php:196
+#: html/pte.php:259 php/options.php:49 post-thumbnail-editor.php:239
 msgid "Thumbnails"
 msgstr ""
 
-#: html/pte.php:252
-msgid "Save all"
-msgstr ""
-
-#: html/pte.php:257
-msgid "Reset all"
+#: html/pte.php:260
+msgid "W"
 msgstr ""
 
 #: html/pte.php:261
+msgid "H"
+msgstr ""
+
+#: html/pte.php:262
+msgid "C"
+msgstr ""
+
+#: html/pte.php:268
+msgid "Save all"
+msgstr ""
+
+#: html/pte.php:273
+msgid "Reset all"
+msgstr ""
+
+#: html/pte.php:277
 msgid "View all/modified"
 msgstr ""
 
-#: html/pte.php:284
+#: html/pte.php:303
 msgid "Save"
 msgstr ""
 
-#: html/pte.php:287
+#: html/pte.php:306
 msgid "Reset"
 msgstr ""
 
-#: html/pte.php:290
+#: html/pte.php:309
 msgid "Compare/View"
 msgstr ""
 
-#: html/pte.php:297
+#: html/pte.php:316
 msgid "These thumbnails have an aspect ratio set:"
 msgstr ""
 
-#: html/pte.php:322
+#: html/pte.php:341
 msgid "Original"
 msgstr ""
 
-#: html/pte.php:329
+#: html/pte.php:348
 msgid "No image has been generated yet for image: "
 msgstr ""
 
-#: html/pte.php:336
+#: html/pte.php:355
 msgid "Proposed"
 msgstr ""
 
-#: php/functions.php:239
+#: php/functions.php:244
 msgid "Invalid meta data for POST #%d: %s"
 msgstr ""
 
-#: php/functions.php:244
+#: php/functions.php:249
 msgid "Please contact support"
 msgstr ""
 
@@ -124,98 +157,94 @@ msgstr ""
 msgid "Debug"
 msgstr ""
 
-#: php/options.php:22 post-thumbnail-editor.php:298
-msgid "Crop and Save"
+#: php/options.php:28
+msgid "Crop Picture Size"
 msgstr ""
 
-#: php/options.php:28
+#: php/options.php:34
 msgid "Reset to defaults"
 msgstr ""
 
-#: php/options.php:39
+#: php/options.php:45
 msgid "Site Options"
 msgstr ""
 
-#: php/options.php:48
+#: php/options.php:54
 msgid "JPEG Compression"
 msgstr ""
 
-#: php/options.php:53
+#: php/options.php:59
 msgid "Cache Buster"
 msgstr ""
 
-#: php/options.php:74
+#: php/options.php:80
 msgid "Save Changes"
 msgstr ""
 
-#: php/options.php:88
+#: php/options.php:94
 msgid ""
 "Only users with the 'manage_options' capability may make changes to these "
 "settings."
 msgstr ""
 
-#: php/options.php:114
+#: php/options.php:120
 msgid "JPEG Compression needs to be set from 0 to 100."
 msgstr ""
 
-#: php/options.php:144
+#: php/options.php:145
+msgid "Crop Size must be between 0 and 10000."
+msgstr ""
+
+#: php/options.php:163
 msgid "Enable debugging"
 msgstr ""
 
-#: php/options.php:147
+#: php/options.php:166
 msgid "WP_DEBUG is currently set to true and will override this setting."
 msgstr ""
 
-#: php/options.php:162
+#: php/options.php:181
 msgid "I know what I'm doing, bypass the image verification."
 msgstr ""
 
-#: php/options.php:171
+#: php/options.php:194
+msgid "Set the max size for the crop image."
+msgstr ""
+
+#: php/options.php:195
+msgid "No entry defaults to 600"
+msgstr ""
+
+#: php/options.php:204
 msgid "Reset User Options"
 msgstr ""
 
-#: php/options.php:197
+#: php/options.php:230
 msgid "Post Thumbnail"
 msgstr ""
 
-#: php/options.php:198
+#: php/options.php:231
 msgid "Hidden"
 msgstr ""
 
-#: php/options.php:226
+#: php/options.php:259
 msgid "Set the compression level for resizing jpeg images (0 to 100)."
 msgstr ""
 
-#: php/options.php:227
+#: php/options.php:260
 msgid "No entry defaults to using the 'jpeg_quality' filter or 90"
 msgstr ""
 
-#: php/options.php:239
+#: php/options.php:272
 msgid "Append timestamp to filename. Useful for solving caching problems."
 msgstr ""
 
-#: php/options.php:250
+#: php/options.php:283
 msgid "These site-wide settings can only be changed by an administrator"
 msgstr ""
 
-#: post-thumbnail-editor.php:195
+#: post-thumbnail-editor.php:238
 msgid "Edit Thumbnails"
-msgstr ""
-
-#: post-thumbnail-editor.php:294
-msgid "No thumbnails selected"
-msgstr ""
-
-#: post-thumbnail-editor.php:295
-msgid "No crop selected"
-msgstr ""
-
-#: post-thumbnail-editor.php:296
-msgid "Cropping will likely result in skewed imagery"
-msgstr ""
-
-#: post-thumbnail-editor.php:297
-msgid "There was a problem saving the crop..."
 msgstr ""
 
 #. Plugin URI of the plugin/theme
@@ -231,5 +260,5 @@ msgid "sewpafly"
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "http://sewpafly.github.com/post-thumbnail-editor"
+msgid "http://sewpafly.github.io/post-thumbnail-editor"
 msgstr ""
