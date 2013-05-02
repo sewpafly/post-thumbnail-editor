@@ -4,7 +4,7 @@ Plugin name: Post Thumbnail Editor
 Plugin URI: http://wordpress.org/extend/plugins/post-thumbnail-editor/
 Author: sewpafly
 Author URI: http://sewpafly.github.io/post-thumbnail-editor
-Version: 2.1.0
+Version: 2.2.0-alpha
 Description: Individually manage your post thumbnails
 
 LICENSE
@@ -212,8 +212,9 @@ function pte_ajax(){
 		pte_delete_images();
 		break;
 	case "get-thumbnail-info":
-		$id = pte_check_id((int) $_GET['id']);
-		print( json_encode( pte_get_all_alternate_size_information( $id ) ) );
+		$id = (int) $_GET['id'];
+		if ( pte_check_id( $id ) )
+			print( json_encode( pte_get_all_alternate_size_information( $id ) ) );
 		break;
 	case "change-options":
 		pte_update_user_options();
@@ -222,12 +223,30 @@ function pte_ajax(){
 	die();
 }
 
+/**
+ * Perform the capability check
+ *
+ * @param $id References the post that the user needs to have permission to edit
+ * @returns boolean true if the current user has permission else false
+ */
+function pte_check_id( $id ) {
+	if ( !$post =& get_post( $id ) ) {
+		return false;
+	}
+	if ( current_user_can( 'edit_post', $id )
+		|| current_user_can( 'pte-edit', $id ) )
+   	{
+		return apply_filters( 'pte-capability-check', true, $id );
+	}
+	return apply_filters( 'pte-capability-check', false, $id );
+}
+
 /* Adds the Thumbnail option to the media library list */
 add_filter('media_row_actions', 'pte_media_row_actions', 10, 3); // priority: 10, args: 3
 
 function pte_media_row_actions($actions, $post, $detached){
 	// Add capability check
-	if ( !current_user_can( 'edit_post', $post->ID ) ){
+	if ( !pte_check_id( $post->ID ) ) {
 		return $actions;
 	}
 	$options = pte_get_options();
@@ -307,7 +326,10 @@ add_action( 'load-media_page_pte-edit', 'pte_edit_setup' );
 function pte_edit_setup() {
 	global $post, $title;
 	$post_id = (int) $_GET['pte-id'];
-	if ( !isset( $post_id ) || !is_int( $post_id ) || !wp_attachment_is_image( $post_id ) ){
+	if ( !isset( $post_id ) 
+			|| !is_int( $post_id )
+			|| !wp_attachment_is_image( $post_id )
+			|| !pte_check_id( $post_id ) ) {
 		//die("POST: $post_id IS_INT:" . is_int( $post_id ) . " ATTACHMENT: " . wp_attachment_is_image( $post_id ));
 		wp_redirect( admin_url( "upload.php" ) );
 		exit();

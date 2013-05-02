@@ -12,7 +12,7 @@
  */
 function pte_wp_ajax_imgedit_preview() {
 	$post_id = intval($_GET['postid']);
-	if ( empty($post_id) || !current_user_can('edit_post', $post_id) )
+	if ( empty( $post_id ) || !pte_check_id( $post_id ) )
 		wp_die( -1 );
 
 	check_ajax_referer( "image_editor-$post_id" );

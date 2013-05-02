@@ -212,8 +212,8 @@ function pte_get_all_alternate_size_information( $id ){
  * Requires post id as $_GET['id']
  */
 function pte_test(){
-	$id = pte_check_id((int) $_GET['id']);
-	if ( $id ){
+	$id = (int) $_GET['id'];
+	if ( pte_check_id( $id ) ){
 		$testurl = admin_url('admin-ajax.php') . "?action=pte_ajax&pte-action=launch&id=${id}";
 		require( PTE_PLUGINPATH . "html/test.php" );
 	}
@@ -263,19 +263,6 @@ function pte_launch( $page, $id ){
 	}
 
 	require( $page );
-}
-
-function pte_check_id( $id ){
-	$logger = PteLogger::singleton();
-	if ( !$post =& get_post( $id ) ){
-		$logger->warn( "Invalid id: {$id}" );
-		return false;
-	}
-	if ( !current_user_can( 'edit_post', $id ) ){
-		$logger->warn( "User does not have permission to edit this item" );
-		return false;
-	}
-	return $id;
 }
 
 function pte_check_int( $int ){
@@ -377,19 +364,19 @@ function pte_resize_images(){
 	// Require JSON output
 	pte_require_json();
 
-	$id = pte_check_id( $_GET['id'] );
+	$id = intval( $_GET['id'] );
 	$w  = pte_check_int( $_GET['w'] );
 	$h  = pte_check_int( $_GET['h'] );
 	$x  = pte_check_int( $_GET['x'] );
 	$y  = pte_check_int( $_GET['y'] );
 	$save = isset( $_GET['save'] ) && ( strtolower( $_GET['save'] ) === "true" );
 
-	if ( $id === false
+	if ( pte_check_id( $id ) === false
 		|| $w === false
 		|| $h === false
 		|| $x === false
 		|| $y === false
-	){
+	) {
 		return pte_json_error( "ResizeImages initialization failed: '{$id}-{$w}-{$h}-{$x}-{$y}'" );
 	}
 
@@ -508,8 +495,8 @@ function pte_confirm_images($immediate = false){
 	// Require JSON output
 	pte_require_json();
 
-	$id = pte_check_id( (int) $_GET['id'] );
-	if ( $id === false ){
+	$id = (int) $_GET['id'];
+	if ( pte_check_id( $id ) === false ){
 		return pte_json_error( "ID invalid: {$id}" );
 	}
 
@@ -611,8 +598,8 @@ function pte_delete_images()
 	// Require JSON output
 	pte_require_json();
 
-	$id = pte_check_id( (int) $_GET['id'] );
-	if ( $id === false ){
+	$id = (int) $_GET['id'];
+	if ( pte_check_id( $id ) === false ){
 		return pte_json_error( "ID invalid: {$id}" );
 	}
 	// Check nonce
