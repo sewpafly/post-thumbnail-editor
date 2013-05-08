@@ -131,6 +131,12 @@ add_action('dbx_post_advanced', 'pte_edit_form_hook_redirect');
 function pte_edit_form_hook_redirect(){
 	add_action('add_meta_boxes', 'pte_admin_media_scripts');
 }
+
+add_action( 'media_upload_library', 'pte_admin_media_scripts_editor' );
+function pte_admin_media_scripts_editor(){
+	pte_admin_media_scripts('attachment');
+}
+
 function pte_admin_media_scripts($post_type){
 	$options = pte_get_options();
 	wp_enqueue_script( 'pte'
@@ -145,15 +151,15 @@ function pte_admin_media_scripts($post_type){
 		)
 	);
 	if ($post_type == "attachment") {
-		add_action( 'admin_print_footer_scripts', 'pte_enable_admin_js', 100);
+		add_action( 'admin_print_footer_scripts', 'pte_enable_editor_js', 100);
 	}
 	else {
 		add_action( 'admin_print_footer_scripts', 'pte_enable_media_js', 100);
 	}
 }
 
-function pte_enable_admin_js(){
-	injectCoffeeScript( PTE_PLUGINPATH . "js/snippets/admin.coffee" );
+function pte_enable_editor_js(){
+	injectCoffeeScript( PTE_PLUGINPATH . "js/snippets/editor.coffee" );
 }
 
 function pte_enable_media_js(){
