@@ -25,7 +25,7 @@ define [
          return
 
       $scope.$watch 'cropConstraints', ->
-         cropConstraints = $scope.cropConstraints || [null, null]
+         cropConstraints = $scope.cropConstraints || [null, null, false]
          jcrop.setOptions
             cropConstraints: cropConstraints
          return
@@ -71,7 +71,7 @@ define [
             return
 
          ar = null
-         cropConstraints = [null, null]
+         cropConstraints = [null, null, false]
          try
             selected = false
             allCrop = null
@@ -84,12 +84,13 @@ define [
                tmp_ar = width/height
 
                if thumbnail.selected
-                  [cropW, cropH] = cropConstraints
+                  [cropW, cropH, isAR] = cropConstraints
                   if !cropW or (0 < width and cropW < width)
                      cropW = width
                   if !cropH or (0 < height and cropH < height)
                      cropH = height
-                  cropConstraints = [cropW, cropH]
+                  isAR = isAR or crop
+                  cropConstraints = [cropW, cropH, isAR]
                   selected = true
 
                # Check if all the thumbnails have the same crop

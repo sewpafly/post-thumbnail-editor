@@ -14,6 +14,7 @@ all: gzip-js trans
 js:
 	@echo "Building javascript"
 	r.js -o build.js
+	chmod -R 777 $(JS_OUTPUT)
 
 $(JS_OUTPUT): js
 gzip-js: $(JS_OUTPUT)
