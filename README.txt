@@ -35,7 +35,7 @@ To meet the needs of themes where the post-thumbnails have random and capricious
 	1. Click "Edit Image"
 	2. Click the "Post Thumbnail Editor" link under the other thumbnail options.
 3. Using Post Thumbnail Editor Interface
-	1. Select the thumbnails you want to edit. If a thumbnail defines a specific aspect ratio it will be applied to the editor.  If you select thumbnails with more than 1 different aspect ratios, this feature is disabled.  Be careful or you might make some of your pictures look funny.
+	1. Select the thumbnails you want to edit. If a thumbnail defines a specific aspect ratio it will be applied to the editor.  If you select thumbnails with different aspect ratios (`width / height`), this feature is disabled.  Be careful or you might make some of your pictures look funny.
 	2. Select the cropped/scaled area, by clicking and dragging on the left-hand image. 
 	3. Click the "Crop" button.
 	4. Use the save icon to save the pictures, or use the view tab to compare the old and new versions before you commit.
@@ -43,15 +43,27 @@ To meet the needs of themes where the post-thumbnails have random and capricious
 
 = Did you even test this? =
 
-Yes. No. Sort of. Thanks for asking. But [let me know if you're having problems](https://github.com/sewpafly/post-thumbnail-editor/issues) and I'll see what I can do.
+Yes. No. Sort of. Thanks for asking. But [let me know if you're having problems][gh] and I'll see what I can do.
 
-= Is there a way to regenerate images created by this plugin? =
+= So it's installed but it doesn't appear to be working, how do I troubleshoot the problems? =
 
-Do you really want this?  I haven't gotten any feedback that this is desirable... So imma let it go for now.
+Before posting a question or requesting support, disable all other plugins to verify that the problem isn't caused by some esoteric conflict. If you find a conflict with another plugin, let me know and I will fix it.
 
-= What version of PHP do I need? =
+If you want to post a problem on the [support forums][wp] or at [github][gh] please include the following information:
 
-Using a version with [json_encode](http://www.php.net/manual/en/function.json-encode.php) enabled would be nice...
+1. What browser (and version) are you using, or which browsers have you seen the behavior in?
+2. What wordpress version are you using?
+3. Does the javascript console report any exceptions/errors?
+   * Google Chrome: ctrl+shift+j
+   * Firefox: ctrl+shift+j
+   * IE: F12 to open developer tools, click on the "Script" tab and view the "Console" sidebar.
+4. Detail the steps to reproduce your problem
+   * What did you do?
+   * What did you expect to happen?
+   * What actually happened?
+
+[wp]: http://wordpress.org/support/plugin/post-thumbnail-editor
+[gh]: https://github.com/sewpafly/post-thumbnail-editor/issues
 
 == Screenshots ==
 
