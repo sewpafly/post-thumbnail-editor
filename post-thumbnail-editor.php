@@ -293,7 +293,7 @@ add_action( 'admin_menu', 'pte_admin_menu' );
  * code is in admin-header.php.
  */
 function pte_admin_menu(){
-	add_options_page( __('Post Thumbnail Editor', PTE_DOMAIN) . "-title",
+	add_options_page( __('Post Thumbnail Editor', PTE_DOMAIN),
 		__('Post Thumbnail Editor', PTE_DOMAIN),
 		'edit_posts',
 		'pte',
