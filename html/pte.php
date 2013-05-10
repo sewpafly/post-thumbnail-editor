@@ -366,6 +366,35 @@ $options = pte_get_options();
       </div>
    </div>
 </div>
+<?php
+
+					function evaluate_attributes( $array ) {
+						foreach ( $array as $key => $value ) {
+							$attributes[] = "$key=\"$value\"";
+						}
+						return $attributes;
+					}
+
+					$script_tag = "<script %s></script>";
+               $options = pte_get_options();
+					if ( $options['pte_debug'] ) {
+						$script_attributes = evaluate_attributes( array(
+							'src' => PTE_PLUGINURL . "apps/requirejs/require.js",
+							'data-main' => PTE_PLUGINURL . 'js/main'
+						) );
+					}
+					else {
+						$script_attributes = evaluate_attributes( array(
+							'src' => PTE_PLUGINURL . "js-build/main.js"
+						) );
+					}
+
+
+					echo sprintf( $script_tag, join( $script_attributes, " " ) );
+
+					//echo "<script src='" . PTE_PLUGINURL . 
+						//"js-build/main.js'></script>";
+					/**
                <script src="<?php ep(); ?>apps/requirejs/require.js" data-main="<?php 
                ep();
                $options = pte_get_options();
@@ -378,3 +407,4 @@ $options = pte_get_options();
                }
 
                ?>/main"></script>
+					//*/

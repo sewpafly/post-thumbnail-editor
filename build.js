@@ -12,6 +12,16 @@
 
     mainConfigFile: 'js/main.js',
 
-    name: 'main',
+    name: '../apps/requirejs/almond',
+    wrap: true,
+    include: [
+       'main',
+       'cs!apps/pteApp',
+       'cs!controllers/PteCtrl',
+       'cs!controllers/TableCtrl',
+       'cs!controllers/CropCtrl',
+       'cs!controllers/ViewCtrl'
+    ],
+    insertRequire: ['main'],
     exclude: ['coffee-script']
 })

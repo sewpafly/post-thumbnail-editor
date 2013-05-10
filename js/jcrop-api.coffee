@@ -2,7 +2,6 @@ define [
    'cs!jquery'
    'cs!settings'
    'jcrop'
-   'domReady!'
 ], ($, settings) ->
    # Adapted from underscore (underscorejs.org) source
    throttle = (func, wait) ->
@@ -34,6 +33,7 @@ define [
       # Make the bgColor an option (dropdown, black or transparent)
       #bgColor: 'green' # make it an option?
       onChange: throttle( ->
+         #jcrop = this
          changeBgColor = (color) ->
             if color != bgColor
                jcrop.setOptions
@@ -71,7 +71,6 @@ define [
          {bgColor} = this.getOptions()
          {w, h} = this.tellSelect()
          #console.log w, h, crop_w, crop_h
-         jcrop = this
 
          if isBad()
             changeBgColor 'red'
@@ -83,6 +82,8 @@ define [
 
       onRelease: ->
          {x, y, w, h, x2, y2} = this.tellSelect()
+         if isNaN x
+            return
          if x isnt 0 or
          y isnt 0 or
          w isnt 0 or
@@ -101,4 +102,5 @@ define [
 
    jcrop = $.Jcrop "#pte-preview", crop_options
    jcrop.release()
+
    return jcrop
