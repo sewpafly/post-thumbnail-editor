@@ -40,6 +40,7 @@ $options = pte_get_options();
    #pte-image { float: left; margin-right: 10px;}
    #pte-thumbnail-column {
       float: left;
+      position: relative;
       width: 400px;
    }
    #pte-thumbnail-column button {
@@ -175,8 +176,34 @@ $options = pte_get_options();
    [ng\:cloak], [ng-cloak], .ng-cloak {
       display: none;
    }
+
+   /** For thumbnail review **/
+   #pte-remember, #pte-remember-list {
+       margin: 0;
+       padding: 0;
+       z-index: 1000;
+   }
+   #pte-remember.horizontal {
+       width: 100%;
+   }
+   #pte-remember.vertical {
+       position: absolute;
+       top: -15px;
+       right: -130px;
+       /*top: -0px;*/
+   }
+   #pte-remember.horizontal #pte-remember-list {
+       overflow-x: auto;
+       width: 100%;
+       white-space: nowrap;
+       margin-right: -10px;
+   }
+   #pte-remember.horizontal li { display: inline-block; margin-left: 10px; }
+   #pte-remember.horizontal #pte-remember-list li:first-child { margin-left: 0; }
+   #pte-remember.horizontal li img { height: 100px; }
+   #pte-remember.vertical li img { width: 100px; }
 </style>
-<div class="wrap ng-cloak" ng-controller="PteCtrl">
+<div class="wrap ng-cloak" ng-init="rememberState='horizontal'" ng-controller="PteCtrl">
    <?php screen_icon(); ?>
    <h2><?php _e("Post Thumbnail Editor", PTE_DOMAIN);?> &ndash; 
       <span id="pte-subtitle"><?php _e("crop and resize", PTE_DOMAIN); ?></span>
@@ -244,6 +271,9 @@ $options = pte_get_options();
 											type="checkbox"
 											name="pte-crop-and-save"
 											id="pte-crop-and-save"/>
+								</li>
+								<li>
+                                    <?php _e( "Change the current thumbnails position:" ); ?>&nbsp;<button ng-click="toggleRememberState()">{{ rememberState }}</button>
 								</li>
 							</ul>
 						</div>
@@ -320,6 +350,20 @@ $options = pte_get_options();
                            <i class="icon-chevron-right"></i>
                            {{ aspectRatio.thumbnails.toString().replace(",",", ") }}</a></li>
                   </ul>
+               </div>
+               <div ng-class="rememberState" id="pte-remember" ng-show="anySelected()">
+                   <h4><?php _e( "Current Thumbnails", PTE_DOMAIN ); ?></h4>
+                   <ul id="pte-remember-list">
+                       <li ng-repeat="thumbnail in thumbnails | filter:{selected:true}">
+                           <img ng-src="{{ thumbnail.current.url | randomizeUrl }}" 
+                                   ng-show="thumbnail.current"
+                                   alt="{{ thumbnail.name }}" 
+                                   title="{{ thumbnail.name }}"/>
+                           <span title="{{ thumbnail.name }}" class="no-current-image" ng-hide="thumbnail.current">
+                               <i class="icon-exclamation-sign"></i>
+                           </span>
+                       </li>
+                   </ul>
                </div>
             </div>
             </div>

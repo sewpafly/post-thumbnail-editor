@@ -245,6 +245,26 @@ define [
                return true
          return false
 
+      ###
+      # Used to hide/show the existing thumbnails
+      # 
+      # @since 2.2.0
+      ###
+      $scope.anySelected = ->
+         for thumb in $scope.thumbnails
+            if thumb.selected
+               return true
+         return false
+
+      $scope.toggleRememberState = ->
+         states = ["vertical", "horizontal"]
+         if $scope.rememberState is states[0]
+            $scope.rememberState = states[1]
+         else
+            $scope.rememberState = states[0]
+         return
+
+      ### STOP THE MADNESS ###
       return
    ]
    return app
