@@ -54,6 +54,7 @@ function pte_get_user_options(){
 	}
 	$defaults = array( 'pte_debug' => false
 		, 'pte_crop_save' => false
+		, 'pte_thumbnail_bar' => 'vertical'
 		, 'pte_imgedit_max_size' => 600
 	);
 
@@ -94,11 +95,19 @@ function pte_update_user_options(){
 	require_once( PTE_PLUGINPATH . 'php/options.php' );
 	$options = pte_get_user_options();
 
-	if ( isset( $_REQUEST['pte_crop_save'] )
-		&& strtolower( $_REQUEST['pte_crop_save'] ) === "true" )
-		$options['pte_crop_save'] = true;
-	else
-		$options['pte_crop_save'] = false;
+	if ( isset( $_REQUEST['pte_crop_save'] ) ) {
+		if ( strtolower( $_REQUEST['pte_crop_save'] ) === "true" )
+			$options['pte_crop_save'] = true;
+		else
+			$options['pte_crop_save'] = false;
+	}
+
+	if ( isset( $_REQUEST['pte_thumbnail_bar'] ) ) {
+		if ( strtolower( $_REQUEST['pte_thumbnail_bar'] ) == 'vertical' )
+			$options['pte_thumbnail_bar'] = 'vertical';
+		else
+			$options['pte_thumbnail_bar'] = 'horizontal';
+	}
 
 	update_option( pte_get_option_name(), $options );
 }

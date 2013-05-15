@@ -203,7 +203,7 @@ $options = pte_get_options();
    #pte-remember.horizontal li img { height: 100px; }
    #pte-remember.vertical li img { width: 100px; }
 </style>
-<div class="wrap ng-cloak" ng-init="rememberState='horizontal'" ng-controller="PteCtrl">
+<div class="wrap ng-cloak" ng-init="currentThumbnailBarPosition='<?php echo $options['pte_thumbnail_bar'];?>'" ng-controller="PteCtrl">
    <?php screen_icon(); ?>
    <h2><?php _e("Post Thumbnail Editor", PTE_DOMAIN);?> &ndash; 
       <span id="pte-subtitle"><?php _e("crop and resize", PTE_DOMAIN); ?></span>
@@ -273,7 +273,7 @@ $options = pte_get_options();
 											id="pte-crop-and-save"/>
 								</li>
 								<li>
-                                    <?php _e( "Change the current thumbnails position:" ); ?>&nbsp;<button ng-click="toggleRememberState()">{{ rememberState }}</button>
+                                    <?php _e( "Change the current thumbnails position:" ); ?>&nbsp;<button ng-click="toggleCurrentThumbnailBarPosition()">{{ currentThumbnailBarPosition }}</button>
 								</li>
 							</ul>
 						</div>
@@ -351,7 +351,7 @@ $options = pte_get_options();
                            {{ aspectRatio.thumbnails.toString().replace(",",", ") }}</a></li>
                   </ul>
                </div>
-               <div ng-class="rememberState" id="pte-remember" ng-show="anySelected()">
+               <div ng-class="currentThumbnailBarPosition" id="pte-remember" ng-show="anySelected()">
                    <h4><?php _e( "Current Thumbnails", PTE_DOMAIN ); ?></h4>
                    <ul id="pte-remember-list">
                        <li ng-repeat="thumbnail in thumbnails | filter:{selected:true}">
@@ -420,7 +420,7 @@ $options = pte_get_options();
 					}
 
 					$script_tag = "<script %s></script>";
-               $options = pte_get_options();
+					$options = pte_get_options();
 					if ( $options['pte_debug'] ) {
 						$script_attributes = evaluate_attributes( array(
 							'src' => PTE_PLUGINURL . "apps/requirejs/require.js",
@@ -435,20 +435,3 @@ $options = pte_get_options();
 
 
 					echo sprintf( $script_tag, join( $script_attributes, " " ) );
-
-					//echo "<script src='" . PTE_PLUGINURL . 
-						//"js-build/main.js'></script>";
-					/**
-               <script src="<?php ep(); ?>apps/requirejs/require.js" data-main="<?php 
-               ep();
-               $options = pte_get_options();
-
-               if ( $options['pte_debug'] ){
-                  print "js";
-               }
-               else {
-                  print "js-build";
-               }
-
-               ?>/main"></script>
-					//*/

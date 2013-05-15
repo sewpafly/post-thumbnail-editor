@@ -50,6 +50,20 @@ define [
       $scope.updateSelected = ->
          $scope.$broadcast 'thumbnail_selected'
 
+        
+      ###
+      # Update options
+      #
+      # Use this to update user/site options
+      ###
+      $scope.updateOptions = (update_options) ->
+         update_options['pte-action'] = 'change-options'
+         $log.log "Updating Options", update_options
+
+         updated = $scope.thumbnailResource.get update_options, ->
+            $log.log "Updated options"
+         return
+
 
       ###
       # ViewFilter is a filter expression that checks if the viewFilter specifies
@@ -256,12 +270,24 @@ define [
                return true
          return false
 
-      $scope.toggleRememberState = ->
-         states = ["vertical", "horizontal"]
-         if $scope.rememberState is states[0]
-            $scope.rememberState = states[1]
+      ###
+      # Update wordpress option when the currentThumbnailBarPosition changes
+      ###
+      $scope.$watch 'currentThumbnailBarPosition', (x,y) ->
+         if x is y
+            return
+
+         $scope.updateOptions
+            'pte_thumbnail_bar': $scope.currentThumbnailBarPosition
+
+         return
+
+      $scope.toggleCurrentThumbnailBarPosition = ->
+         positions = ["vertical", "horizontal"]
+         if $scope.currentThumbnailBarPosition is positions[0]
+            $scope.currentThumbnailBarPosition = positions[1]
          else
-            $scope.rememberState = states[0]
+            $scope.currentThumbnailBarPosition = positions[0]
          return
 
       ### STOP THE MADNESS ###

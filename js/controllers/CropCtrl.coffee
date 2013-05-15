@@ -9,13 +9,9 @@ define [
          if x is y
             return
 
-         update_options =
-            'pte-action': 'change-options'
+         $scope.updateOptions
             'pte_crop_save': if $scope.pteCropSave then 'true' else 'false'
-         $log.log update_options
 
-         updated = $scope.thumbnailResource.get update_options, ->
-            $log.log "Updated options"
          return
 
       $scope.$watch 'aspectRatio', ->
