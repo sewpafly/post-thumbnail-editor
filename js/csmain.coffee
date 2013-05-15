@@ -1,11 +1,9 @@
 define [
    'require'
-   'domReady'
    'cs!jquery'
    'angular'
-], (require, domReady, $, angular) ->
-#], ($, angular, pteApp, domReady) ->
-   domReady ->
+], (require, $, angular) ->
+   $(window).load ->
       require [
          'cs!apps/pteApp'
          'cs!controllers/PteCtrl'
