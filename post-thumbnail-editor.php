@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
 define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
 define( 'PTE_DOMAIN', "post-thumbnail-editor");
-define( 'PTE_VERSION', "2.1.0");
+define( 'PTE_VERSION', "2.2.0-alpha");
 
 /*
  * Option Functionality
@@ -142,6 +142,8 @@ function pte_edit_form_hook_redirect(){
 }
 
 add_action( 'media_upload_library', 'pte_admin_media_scripts_editor' );
+add_action( 'media_upload_gallery', 'pte_admin_media_scripts_editor' );
+add_action( 'media_upload_image', 'pte_admin_media_scripts_editor' );
 function pte_admin_media_scripts_editor(){
 	pte_admin_media_scripts('attachment');
 }
