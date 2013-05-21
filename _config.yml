@@ -1,0 +1,21 @@
+destination: /tmp/jekyll
+markdown: redcarpet
+pygments: true
+permalink: "/:title"
+
+#rdiscount:
+#  extensions:
+#    - autolink      # greedily urlify links
+#    - footnotes     # footnotes
+#    - smart         # typographic substitutions with SmartyPants
+
+redcarpet:
+  extensions:
+    - "smart"
+    - "with_toc_data"
+    - "fenced_code_blocks"
+    - "no_intra_emphasis"
+    - "disable_indented_code_blocks"
+    - "strikethrough"
+    - "superscript"
+    - "underline"

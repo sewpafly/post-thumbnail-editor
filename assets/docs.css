@@ -1,0 +1,70 @@
+body {
+    margin-top: 40px;
+    position: relative;
+}
+
+pre {
+    background-color: #222222;
+}
+
+.affix {
+    bottom: auto;
+    position: fixed;
+    top: 70px; 
+    width: inherit;
+}
+
+.affix-bottom {
+    top: auto;
+    width: inherit;
+    position: absolute;
+    bottom: 690px;
+}
+
+img.content-header {
+    margin: 20px 0 20px 20px;
+}
+
+#pte-content {
+    margin-top: 60px;
+}
+
+#pte-content h2,
+#pte-content h3 {
+    padding-top: 70px;
+    margin-top: -60px;
+}
+
+#pte-nav .active a {
+    background-color: #0088cc;
+    color: #ffffff;
+}
+
+#pte-nav a.h3 {
+    font-size:smaller;
+    padding-left: 20px;
+}
+
+/** JUMBOTRON **/
+.jumbotron {
+    margin: 80px 0;
+    text-align: center;
+}
+.jumbotron h1 {
+    font-size: 80px;
+    line-height: 1;
+}
+.jumbotron .lead {
+    font-size: 20px;
+    line-height: 1.25;
+}
+.jumbotron .btn {
+    font-size: 18px;
+    padding: 14px 24px;
+}
+
+
+/** WePay Widget **/
+.wepay_widget {
+    float:right;
+}

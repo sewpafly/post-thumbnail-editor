@@ -1,0 +1,62 @@
+---
+donation-txt: >
+    If you've found this plugin valuable in any way, consider donating to my tip
+    jar. (This is so my wife doesn't murder me for staying on the computer too
+    late. :D)
+---
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   
+      <title>Wordpress PTE Plugins - Post Thumbnail Editor/Extras</title>
+
+      <!-- Bootstrap -->
+      <link rel="stylesheet" href="assets/docs.css" />
+      <link rel="shortcut icon" href="favicon.ico" />
+      <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+      <!--<link href="assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">-->
+      <link rel="stylesheet" href="assets/pygments/monokai.css" />
+   </head>
+   <body id="top">
+       <div class="navbar navbar-inverse navbar-fixed-top">
+           <div class="navbar-inner">
+               <div class="container">
+                   <a class="brand" href="./">PTE</a>
+                   <ul class="nav">
+                       <li><a href="editor.html">Editor</a></li>
+                       <li><a href="extras.html">Extras</a></li>
+                   </ul>
+               </div>
+           </div>
+       </div>
+       <div class="container">
+           {{ content }}
+           <div class="row">
+               <div class="span12">
+                   <div class="hero-unit">
+                       <div class="row">
+                           <div class="span5">
+                               <h2 id="toc_donations">Donations</h2>
+                               {{ page.donation-txt | markdownify }}
+                           </div>
+                           <div class="span5 text-center">
+                               <script>
+var CoinWidget_Config = {
+    address : '1yQ9khMu8grrbtfe3dNQ3qoonadVatJad',
+    text: 'Donate Bitcoin',
+    counter : 'amount',
+    text_label : 'Post Thumbnail Editor'
+};
+                               </script>
+                               <script src="http://c.coinwidget.com/widget.js"></script>
+                               <a class="wepay-widget" href="https://www.wepay.com/donate/34543/?widget_type=donations&widget_donation_id=34543&widget_auth_token=8af0c8d1030cb39acf8be63a2aea19344cae6fc9&widget_show_description=1&widget_show_thermometer=0&widget_show_donations=1">Donate to Post Thumbnail Editor Plugin</a><script id="wepay-widget_script" type="text/javascript" src="https://www.wepay.com/js/widget.wepay.js"></script>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </body>
+
+</html>
