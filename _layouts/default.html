@@ -12,20 +12,20 @@ donation-txt: >
       <title>Wordpress PTE Plugins - Post Thumbnail Editor/Extras</title>
 
       <!-- Bootstrap -->
-      <link rel="stylesheet" href="assets/docs.css" />
-      <link rel="shortcut icon" href="favicon.ico" />
-      <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+      <link rel="stylesheet" href="{{ site.baseurl }}assets/docs.css" />
+      <link rel="shortcut icon" href="{{ site.baseurl }}favicon.ico" />
+      <link href="{{ site.baseurl }}assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
       <!--<link href="assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">-->
-      <link rel="stylesheet" href="assets/pygments/monokai.css" />
+      <link rel="stylesheet" href="{{ site.baseurl }}assets/pygments/monokai.css" />
    </head>
    <body id="top">
        <div class="navbar navbar-inverse navbar-fixed-top">
            <div class="navbar-inner">
                <div class="container">
-                   <a class="brand" href="./">PTE</a>
+                  <a class="brand" href="{{ site.baseurl }}">PTE</a>
                    <ul class="nav">
-                       <li><a href="editor.html">Editor</a></li>
-                       <li><a href="extras.html">Extras</a></li>
+                      <li><a href="{{ site.baseurl }}editor">Editor</a></li>
+                      <li><a href="{{ site.baseurl }}extras">Extras</a></li>
                    </ul>
                </div>
            </div>
@@ -57,6 +57,11 @@ var CoinWidget_Config = {
                </div>
            </div>
        </div>
+       {% if page.footer-js %}
+       {% for js in page.footer-js %}
+       <script src="{{js | replace_first:'ptesiteurl',site.baseurl}}"></script>
+       {% endfor %}
+       {% endif %}
    </body>
 
 </html>
