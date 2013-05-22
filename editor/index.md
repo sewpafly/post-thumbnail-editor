@@ -53,7 +53,7 @@ Once the editor is installed there will be a new Settings Menu at Settings
 &rarr; Post Thumbnail Editor. The options available depend on the permissions
 given the current user.
 
-**Screenshot here**
+![Post Thumbnail Editor Options](options.jpg)
 
 ##### User Options
 
@@ -107,10 +107,20 @@ Site Admininstrators have access to change the following options:
 The editor can be started through:
 
 * The media library **(most stable method)**
+
+  ![Media Library](launch-library.jpg)
+
 * Image Editor
+
+  ![Image Editor](launch-editor.jpg)
+
 * Post:
-  * Media Library
+
+  * Media Library  
+    ![Post: Media Library](launch-post-library.jpg)  
+
   * Featured Image meta-box
+    ![Post: Feature Image](launch-post-featured.jpg)
 
 #### Cropping
 
@@ -118,6 +128,13 @@ The editor can be started through:
 1. and a thumbnail to edit
 1. then click the crop button. BOOM! Cropped thumbnail. 
 1. Click the disk icon to save the crop and you're done.
+
+   *About the other icons:* Use the icon with the spinning arrows to compare the
+   new and old thumbnails.  Use the trash can icon to discard your most recent change.
+
+![Crop that image](crop-numbered.jpg)
+
+![Save that crop!](crop-save.jpg)
 
 ##### Advanced Cropping Options
 
@@ -140,6 +157,8 @@ settings.
 
    Toggle the thumbnail viewer to/from a horizontal/vertical position with this
    button. The editor should remember the last chosen position.
+
+![Advanced Cropping Techniques](crop-options.jpg)
 
 ### Support
 

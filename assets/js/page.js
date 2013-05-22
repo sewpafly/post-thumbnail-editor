@@ -1,14 +1,33 @@
 (function($){
     // Affix the menu to the side
+    var $style = $('<style/>').appendTo('body')
+      , lastDonationHeight = null;
     $nav = $('#pte-nav');
     position = $nav.position();
     position.top -= 60;
-    position.bottom = 710;
+    position.bottom = function(){
+       var donationHeight = $('#toc_donations').parents('.span12').outerHeight() + 15;
+       if (donationHeight == lastDonationHeight)
+          return donationHeight;
+       lastDonationHeight = donationHeight;
+       $style.text('#pte-nav.affix-bottom { bottom: ' + (donationHeight - 22) + 'px; }' );
+       return donationHeight;
+    };
     console.log( position.top );
     $nav.affix({
         offset: position
     });
 
+    /*
+     if (this.unpin != null && (scrollTop + this.unpin <= position.top) )
+        affix = false;
+     else if (offsetBottom != null && (position.top + this.$element.height() >= scrollHeight - offsetBottom))
+        affix = 'bottom';
+     else if (offsetTop != null && scrollTop <= offsetTop)
+        affix = 'top'
+     else
+        affix = false;
+*/
     // Update the links
     //function updateLinks(h2Txt, id){
     //    var $elem = $('h2').filter(function(i){
