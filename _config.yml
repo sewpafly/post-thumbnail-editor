@@ -1,4 +1,5 @@
 destination: /tmp/jekyll
+baseurl: /post-thumbnail-editor/
 markdown: redcarpet
 pygments: true
 permalink: "/:title"
