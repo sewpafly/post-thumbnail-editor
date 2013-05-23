@@ -60,5 +60,3 @@ function pte_image_get_preview_ratio($w, $h) {
 	$max = max($w, $h);
 	return $max > $img_max_size ? ($img_max_size / $max) : 1;
 }
-
-?>

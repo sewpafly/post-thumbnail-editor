@@ -282,5 +282,3 @@ function pte_edit_posts_cap( $capability ){ return 'edit_posts'; }
 function pte_site_options_html(){ 
 	_e( "These site-wide settings can only be changed by an administrator", PTE_DOMAIN ); 
 }
-
-?>

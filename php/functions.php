@@ -205,22 +205,6 @@ function pte_get_all_alternate_size_information( $id ){
 }
 
 /*
- * pte_test
- *
- * Outputs the test HTML (and loads normal interface in an iframe)
- *
- * Requires post id as $_GET['id']
- */
-function pte_test(){
-	$id = (int) $_GET['id'];
-	if ( pte_check_id( $id ) ){
-		$testurl = admin_url('admin-ajax.php') . "?action=pte_ajax&pte-action=launch&id=${id}";
-		require( PTE_PLUGINPATH . "html/test.php" );
-	}
-	return;
-}
-
-/*
  * pte_launch
  *
  * Outputs the base HTML needed to display and transform the inages
@@ -619,4 +603,3 @@ function pte_get_jpeg_quality($quality){
 	$logger->debug( "COMPRESSION: " . $options['pte_jpeg_compression'] );
 	return $options['pte_jpeg_compression'];
 }
-?>

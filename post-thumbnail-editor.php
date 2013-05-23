@@ -216,9 +216,6 @@ function pte_ajax(){
 
 	switch ($_GET['pte-action'])
 	{
-	case "test":
-		pte_test();
-		break;
 	case "resize-images":
 		pte_resize_images();
 		break;
@@ -374,9 +371,3 @@ load_plugin_textdomain( PTE_DOMAIN
 	, false
 	, basename( PTE_PLUGINPATH ) . DIRECTORY_SEPARATOR . "i18n" );
 
-
-/** Test Settings **/
-//add_image_size( 'pte test 1', 100, 0 );
-//add_image_size( 'pte test 2', 100, 150, true );
-
-?>
