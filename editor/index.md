@@ -116,11 +116,13 @@ The editor can be started through:
 
 * Post:
 
-  * Media Library  
-    ![Post: Media Library](launch-post-library.jpg)  
+    * Media Library  
 
-  * Featured Image meta-box  
-    ![Post: Feature Image](launch-post-featured.jpg)  
+      ![Post: Media Library](launch-post-library.jpg)  
+
+    * Featured Image meta-box  
+
+      ![Post: Feature Image](launch-post-featured.jpg)  
 
 #### Cropping
 

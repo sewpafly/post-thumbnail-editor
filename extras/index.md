@@ -11,7 +11,7 @@ title: Extras
   pictures in posts without wading through HTML.  This can be awesome in several
   ways: if your post-thumbnails change their width or height due to a theme
   change, or if you have cropped them with another tool (you know, maybe a
-  certain [editor](editor.html)) -- this will always pull
+  certain [editor](../editor)) -- this will always pull
   wordpress' latest image).
 * Includes a hook into the media library to create the above shortcode.
 * Add new post thumbnails via Wordpress Settings &rarr; Media.
@@ -45,13 +45,20 @@ Use the `link` attribute to wrap the image in a link.
 Use the media library to quickly add this shortcode for the selected image by
 pressing the "Insert shortcode" button.
 
+![Insert shortcode](shortcode.jpg "Insert Shortcode")
+
 #### Add/Delete Post Thumbnails
 
-1. In Settings &rarr; Media, click the plus sign to add a new post thumbnail. 
+1. In Settings &rarr; Media, click the plus sign to add a new post thumbnail.
+
+   ![Add post thumbnail](add-post-thumbnail.jpg)
+
 2. Update the width/height and whether or not the post-thumbnail should be
    cropped to an exact size. (If the width or height is set to 0, that boundary
    constraint is not enforced -- effectively, it's infinite). Make sure you
-   click the "save" button so that the changes are stored in the database.
+   click the "save" button so that the changes are stored in the database.  
+
+   ![Manage post thumbnail](manage-post-thumbnail.jpg)
 
 ### Support
 

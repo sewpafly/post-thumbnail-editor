@@ -3,7 +3,7 @@ body {
     position: relative;
 }
 
-pre {
+.highlight pre {
     background-color: #222222;
 }
 
