@@ -3,6 +3,10 @@ body {
     position: relative;
 }
 
+#top .brand {
+   padding: 8px 15px 7px 20px;
+}
+
 .highlight pre {
     background-color: #222222;
 }
