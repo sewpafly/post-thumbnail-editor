@@ -1,6 +1,6 @@
 === Post Thumbnail Editor ===
 Contributors: sewpafly
-Donate link: https://www.wepay.com/donate/34543
+Donate link: http://sewpafly.github.io/post-thumbnail-editor/#toc_donations
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, awesome, crop
 Requires at least: 3.5
 Tested up to: 3.6
@@ -75,6 +75,17 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Changelog ==
 
+= 2.2.0 =
+* View the thumbnails you are planning on modifying from the crop tab
+* New documentation at http://sewpafly.github.io/post-thumbnail-editor
+* Resolved issue where users without capability could load the editor
+* Added new custom `pte-edit` capability.
+* Now use almondjs for the normal AMD loader
+* Fixed some crop constraint bugs
+* Removed requireJS domReady plugin
+* Upgraded angularjs
+* Improved startup
+
 = 2.1.0 =
 * Crop Constraints are visually available: green is good and red means there will be upscaling
 * In the options panel change the size of the cropping image
@@ -138,5 +149,5 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Upgrade Notice ==
 
-= 2.1.0 =
-Several new features and bug fixes since 2.0.1
+= 2.2.0 =
+Several new features and bug fixes since 2.1.0
