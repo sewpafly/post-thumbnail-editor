@@ -75,6 +75,9 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Changelog ==
 
+= 2.2.1 =
+* fixed onLoad problem
+
 = 2.2.0 =
 * View the thumbnails you are planning on modifying from the crop tab
 * New documentation at http://sewpafly.github.io/post-thumbnail-editor
@@ -149,5 +152,5 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Upgrade Notice ==
 
-= 2.2.0 =
+= 2.2.1 =
 Several new features and bug fixes since 2.1.0

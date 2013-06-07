@@ -3,7 +3,19 @@ define [
    'cs!jquery'
    'angular'
 ], (require, $, angular) ->
-   $(window).load ->
+   # COFFEESCRIPT VERSION OF UNDERSCORE ONCE:
+   once = (func) ->
+      ran = false
+      memo = null
+      return ->
+         if ran
+            return memo
+         ran = true
+         memo = func.apply this, arguments
+         func = null
+         return memo
+
+   startupFunction = once ->
       require [
          'cs!apps/pteApp'
          'cs!controllers/PteCtrl'
@@ -14,4 +26,22 @@ define [
          angular.bootstrap $(".wrap"), [pteApp.name]
          return
       return
+
+
+   # If the page is already loaded then just run the startup
+   # otherwise, set the load callback
+   #
+   #console.log document.readyState
+   if document.readyState is 'complete' or document.readyState is 'loaded'
+      startupFunction()
+   else
+      $(window).load ->
+         startupFunction()
+
+   # Provide failsafe
+   timeout = 3000
+   window.setTimeout ->
+      startupFunction()
+   , timeout
+
    return
