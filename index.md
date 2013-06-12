@@ -1,7 +1,7 @@
 ---
 layout: main
-title: indexed!
+title: "Wordpress Plugins: Post Thumbnail Editor/Extras"
 ---
 
-## Post Thumbnail Editor
+# Post Thumbnail Editor
 

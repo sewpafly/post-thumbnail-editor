@@ -1,24 +1,28 @@
 ---
 layout: page
-title: Extras
+title: Post Thumbnail Extras
 ---
 
-## Post Thumbnail Extras
+# Post Thumbnail Extras
 
-### About
+See on [Wordpress.org][wordpress].
+
+[wordpress]: http://wordpress.org/plugins/post-thumbnail-extras/ "Wordpress Plugin Site"
+
+## About
 
 * Provides a shortcode for embedding post-thumbnails. Authors can quickly change
   pictures in posts without wading through HTML.  This can be awesome in several
   ways: if your post-thumbnails change their width or height due to a theme
   change, or if you have cropped them with another tool (you know, maybe a
-  certain [editor](../editor)) -- this will always pull
-  wordpress' latest image).
+  certain [editor](../editor)) -- this will always pull wordpress' latest
+  image).
 * Includes a hook into the media library to create the above shortcode.
 * Add new post thumbnails via Wordpress Settings &rarr; Media.
 
-### Installation
+## Installation
 
-#### Download
+### Download
 
 Download Post Thumbnail Extras and unzip it to your `wp-content/plugins`
 directory.  Alternately, use Wordpress' plugin updater to automatically install
@@ -26,10 +30,11 @@ the stable version.
 
 <a class="btn btn-large btn-success" href="http://downloads.wordpress.org/plugin/post-thumbnail-extras.zip">Download Stable</a>
 <a class="btn btn-large btn-warning" href="https://github.com/sewpafly/post-thumbnail-extras/archive/master.zip">Download Development</a>
+<a class="btn btn-large btn-primary" href="http://wordpress.org/plugins/post-thumbnail-extras/">View @ Wordpress Plugins</a>
 
-### Usage
+## Usage
 
-#### Shortcode
+### Shortcode
 
 Use the shortcode `[pt]` in your posts to quickly embed the featured image as a
 thumbnail. Use the attribute `'size'` to change to a different post-thumbnail
@@ -47,7 +52,7 @@ pressing the "Insert shortcode" button.
 
 ![Insert shortcode](shortcode.jpg "Insert Shortcode")
 
-#### Add/Delete Post Thumbnails
+### Add/Delete Post Thumbnails
 
 1. In Settings &rarr; Media, click the plus sign to add a new post thumbnail.
 
@@ -60,17 +65,17 @@ pressing the "Insert shortcode" button.
 
    ![Manage post thumbnail](manage-post-thumbnail.jpg)
 
-### Support
+## Support
 
 If you want to report an issue:
 
 1. Enable debugging in the options and try again.
-1. File a report on either the [github][gsx] or [wordpress][wsx] sites, making
+2. File a report on either the [github][gsx] or [wordpress][wsx] sites, making
    sure to include the following information:
    1. Browser version
-   1. Wordpress version
-   1. Post Thumbnail Extras version
-   1. Detailed description of the problem, including the steps to reproduce
+   2. Wordpress version
+   3. Post Thumbnail Extras version
+   4. Detailed description of the problem, including the steps to reproduce
 
 [gsx]: http://github.com/sewpafly/post-thumbnail-extras/issues/
 [wsx]: http://wordpress.org/support/plugin/post-thumbnail-extras
