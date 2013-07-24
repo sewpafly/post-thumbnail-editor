@@ -287,9 +287,9 @@ $options = pte_get_options();
                            <input type="checkbox" ng-model="tableSelector" ng-change="toggleAll()"/>
                         </th>
                         <th><?php _e( "Thumbnails" ); ?></th>
-                        <th class="align-right"><?php _e( "W" ); ?></th>
-                        <th class="align-right"><?php _e( "H" ); ?></th>
-                        <th><?php _e( "C" ); ?></th>
+						<th class="align-right" title="<?php _e("width"); ?>"><?php _e( "W" ); ?></th>
+						<th class="align-right" title="<?php _e("height"); ?>"><?php _e( "H" ); ?></th>
+						<th title="<?php _e("crop"); ?>"><?php _e( "C" ); ?></th>
                         <th class="center">
                            <span class="pte-thumbnails-menu">
                               <i ng-show="anyProposed()" 

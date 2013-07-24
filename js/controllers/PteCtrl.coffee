@@ -147,7 +147,7 @@ define [
                $scope.trash thumbnail
          if confirm_results.immediate
             # Change to the view
-            $scope.view viewFilter
+            #$scope.view viewFilter
          else
             checkFilter()
 
@@ -169,6 +169,7 @@ define [
          # if there aren't any other proposed, set the viewFilter to false
          checkFilter()
 
+	  # if there aren't any other proposed, set the viewFilter to false
       checkFilter = ->
          for thumbnail in $scope.thumbnails
             if thumbnail.proposed
