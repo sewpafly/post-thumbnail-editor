@@ -226,6 +226,15 @@ $options = pte_get_options();
                <i class="icon-info-sign"></i>
                {{ infoMessage }}
             </div>
+
+			<!-- LOADING SPINNER -->
+			<div class="pte-page-switcher" ng-show="page.loading">
+				<div class="pte-loading">
+					<img src="<?php echo( site_url( "wp-includes/images/wpspin-2x.gif" ) ); ?>"/>
+				</div>
+			</div>
+			<!-- END LOADING -->
+
             <div class="pte-page-switcher" ng-show="page.crop">
             <div id="pte-image" ng-controller="CropCtrl">
                <img id="pte-preview" src="<?php 

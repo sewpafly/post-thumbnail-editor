@@ -11,7 +11,8 @@ define [
       # Switch the enabled page to change the view
       ###
       $scope.page =
-         crop: on
+         loading: on
+         crop: off
          view: off
       $scope.changePage = (page) ->
          $scope.viewFilterValue = off
@@ -252,6 +253,10 @@ define [
             return
          , $scope
          $scope.updateSelected()
+
+         # Turn off loading page
+         $log.info "Disabling loading screen"
+         $scope.changePage('crop')
          return
 
       $scope.anyProposed = ->
