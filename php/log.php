@@ -1,10 +1,14 @@
 <?php
 
+require_once( PTE_PLUGINPATH . 'php/chromephp/ChromePhp.php' );
+ChromePhp::getInstance()->addSetting(ChromePhp::BACKTRACE_LEVEL, 5);
+
 class PteLogMessage
 {
 	public static $ERROR = 1;
 	public static $WARN  = 2;
-	public static $DEBUG = 4;
+	public static $INFO  = 4;
+	public static $DEBUG = 8;
 	protected $message;
 	protected $type;
 	protected $date;
@@ -16,6 +20,9 @@ class PteLogMessage
 			break;
 		case self::$WARN:
 			return __( "WARNING", PTE_DOMAIN );
+			break;
+		case self::$INFO:
+			return __( "INFO", PTE_DOMAIN );
 			break;
 		default:
 			return __( "DEBUG", PTE_DOMAIN );
@@ -42,7 +49,7 @@ class PteLogMessage
 		return $this->message;
 	}
 	public static function max_log_level(){
-		return self::$ERROR | self::$WARN | self::$DEBUG;
+		return self::$ERROR | self::$WARN | self::$INFO | self::$DEBUG;
 	}
 }
 
@@ -67,7 +74,29 @@ class PteLogger {
 		return self::$instance;
 	}
 
-	private function add_message( $message ){
+	/**
+	 * Using ChromePhp, log the message
+	 */
+	private function chrome_log( $message ) {
+		switch( $message->getType() ) {
+			case PteLogMessage::$ERROR:
+				ChromePhp::error( $message->getMessage() );
+				break;
+			case PteLogMessage::$WARN:
+				ChromePhp::warn( $message->getMessage() );
+				break;
+			case PteLogMessage::$INFO:
+				ChromePhp::info( $message->getMessage() );
+				break;
+			case PteLogMessage::$DEBUG:
+			default:
+				ChromePhp::log( $message->getMessage() );
+				break;
+		}
+	}
+
+	private function add_message( $message ) {
+		self::singleton()->chrome_log( $message );
 		$type = $message->getType();
 
 		if ( ! isset( $this->counts[ $type ] ) ){
@@ -119,14 +148,14 @@ class PteLogger {
 	/*
 	 * pte_log helper functions
 	 */
-	public function error( $message ){
-		$this->pte_log( $message, PteLogMessage::$ERROR );
+	public static function error( $message ){
+		self::singleton()->pte_log( $message, PteLogMessage::$ERROR );
 	}
-	public function warn( $message ){
-		$this->pte_log( $message, PteLogMessage::$WARN );
+	public static function warn( $message ){
+		self::singleton()->pte_log( $message, PteLogMessage::$WARN );
 	}
-	public function debug($message){
-		$this->pte_log( $message, PteLogMessage::$DEBUG );
+	public static function debug($message){
+		self::singleton()->pte_log( $message, PteLogMessage::$DEBUG );
 	}
 
 	public function get_logs( $levels=NULL ){

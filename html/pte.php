@@ -204,7 +204,7 @@ $options = pte_get_options();
    #pte-remember.vertical li img { width: 100px; }
 </style>
 <div class="wrap ng-cloak" ng-init="currentThumbnailBarPosition='<?php echo $options['pte_thumbnail_bar'];?>'" ng-controller="PteCtrl">
-   <?php screen_icon(); ?>
+   <?php screen_icon('upload'); ?>
    <h2><?php _e("Post Thumbnail Editor", PTE_DOMAIN);?> &ndash; 
       <span id="pte-subtitle"><?php _e("crop and resize", PTE_DOMAIN); ?></span>
    </h2>

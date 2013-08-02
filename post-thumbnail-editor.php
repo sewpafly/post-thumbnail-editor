@@ -36,6 +36,14 @@ define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
 define( 'PTE_DOMAIN', "post-thumbnail-editor");
 define( 'PTE_VERSION', "2.2.2-beta");
 
+// TODO:
+// * Find the best place for the require log (only when it's really needed, create an init function?)
+// * Change all the log calls?
+// * Rip out everything that's not a CONSTANT or a hook in here
+// * Make this an object
+// * Add a tour for new users
+require_once( PTE_PLUGINPATH . 'php/log.php' );
+
 /*
  * Option Functionality
  */
@@ -211,8 +219,7 @@ add_action('wp_ajax_pte_ajax', 'pte_ajax');
 function pte_ajax(){
 	// Move all adjuntant functions to a separate file and include that here
 	require_once(PTE_PLUGINPATH . 'php/functions.php');
-	$logger = PteLogger::singleton();
-	$logger->debug( "PARAMETERS: " . print_r( $_REQUEST, true ) );
+	PteLogger::debug( "PARAMETERS: " . print_r( $_REQUEST, true ) );
 
 	switch ($_GET['pte-action'])
 	{
@@ -321,11 +328,14 @@ function pte_launch_options_page(){
 	pte_options_page();
 }
 
+/**
+ * This runs after headers have been sent, see the pte_edit_setup for the
+ * function that runs before anything is sent to the browser
+ */
 function pte_edit_page(){
 	// This is set via the pte_edit_setup function
-	global $post;
-	include_once( PTE_PLUGINPATH . "php/functions.php" );
-	pte_launch( PTE_PLUGINPATH . "html/pte.php", $post->ID );
+	global $pte_body;
+	echo( $pte_body );
 }
 
 /* Admin Edit Page: setup*/
@@ -338,7 +348,7 @@ function pte_edit_page(){
  */
 add_action( 'load-media_page_pte-edit', 'pte_edit_setup' );
 function pte_edit_setup() {
-	global $post, $title;
+	global $post, $title, $pte_body;
 	$post_id = (int) $_GET['pte-id'];
 	if ( !isset( $post_id ) 
 			|| !is_int( $post_id )
@@ -350,6 +360,9 @@ function pte_edit_setup() {
 	}
 	$post = get_post( $post_id );
 	$title = __( "Post Thumbnail Editor", PTE_DOMAIN );
+
+	include_once( PTE_PLUGINPATH . "php/functions.php" );
+	$pte_body = pte_body( $post->ID );
 }
 
 /**

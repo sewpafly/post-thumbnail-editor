@@ -205,13 +205,15 @@ function pte_get_all_alternate_size_information( $id ){
 }
 
 /*
- * pte_launch
+ * pte_body
  *
- * Outputs the base HTML needed to display and transform the inages
+ * Returns the base HTML needed to display and transform the inages
  *
  * Requires post id as $_GET['id']
  */
-function pte_launch( $page, $id ){
+function pte_body( $id ){
+	ob_start();
+
 	$logger = PteLogger::singleton();
 	$options = pte_get_options();
 
@@ -235,9 +237,9 @@ function pte_launch( $page, $id ){
 
 	$sizer = $big > 400 ? 400 / $big : 1;
 	$sizer = sprintf( "%.8F", $sizer );
-	$logger->debug( "PTE-VERSION: " . PTE_VERSION );
-	$logger->debug( "USER-AGENT: " . $_SERVER['HTTP_USER_AGENT'] );
-	$logger->debug( "WORDPRESS: " . $GLOBALS['wp_version'] );
+	PteLogger::debug( "PTE-VERSION: " . PTE_VERSION .
+		"\nUSER-AGENT:  " . $_SERVER['HTTP_USER_AGENT'] .
+		"\nWORDPRESS:   " . $GLOBALS['wp_version'] );
 
 	$script_url = PTE_PLUGINURL . 'php/load-scripts.php?load=jquery,imgareaselect,jquery-json,pte';
 	$style_url = PTE_PLUGINURL . 'php/load-styles.php?load=imgareaselect,pte';
@@ -246,7 +248,8 @@ function pte_launch( $page, $id ){
 		$script_url .= "&d=1";
 	}
 
-	require( $page );
+	require( PTE_PLUGINPATH . "html/pte.php" );
+	return ob_get_clean();
 }
 
 function pte_check_int( $int ){
