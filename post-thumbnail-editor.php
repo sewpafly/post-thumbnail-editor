@@ -251,7 +251,7 @@ function pte_ajax(){
  * @returns boolean true if the current user has permission else false
  */
 function pte_check_id( $id ) {
-	if ( !$post =& get_post( $id ) ) {
+	if ( !$post = get_post( $id ) ) {
 		return false;
 	}
 	if ( current_user_can( 'edit_post', $id )
