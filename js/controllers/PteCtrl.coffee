@@ -244,13 +244,15 @@ define [
       $scope.setNonces = (nonceObj) ->
          nonces = nonceObj
 
+      ## LOAD THE THUMBNAIL INFORMATION ##
       $scope.thumbnails = []
       $scope.thumbnailObject = $scope.thumbnailResource.get {id: id}, ->
          angular.forEach $scope.thumbnailObject, (thumb, name) ->
-            thumb.name = name
-            @thumbnails.push thumb
-            addToAspectRatios thumb
-            return
+            if name not in ["$promise", "$resolved"]
+               thumb.name = name
+               @thumbnails.push thumb
+               addToAspectRatios thumb
+               return
          , $scope
          $scope.updateSelected()
 

@@ -138,7 +138,7 @@ define [
          crop_options =
             'pte-action': 'resize-images'
             'id': settings.id
-            'pte-sizes': selected_thumbs
+            'pte-sizes[]': selected_thumbs
             'w':w
             'h':h
             'x':x
