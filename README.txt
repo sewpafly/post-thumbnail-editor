@@ -75,6 +75,17 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Changelog ==
 
+= 2.2.3 =
+* Updated libraries
+
+= 2.2.2 =
+* Unreleased version
+* Updated libraries
+* Added spinner to show loading
+* Polish translation
+* fix #76: PHP Strict Standards Error
+* Save and crop stays in crop view
+
 = 2.2.1 =
 * fixed onLoad problem
 
