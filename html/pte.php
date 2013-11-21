@@ -1,5 +1,5 @@
 <?php
-global $post;
+global $post, $pte_iframe;
 function ep(){
    echo PTE_PLUGINURL;
 }
@@ -23,12 +23,18 @@ $options = pte_get_options();
 			  , 'crop' => __( 'Crop', PTE_DOMAIN )
 		  ));
 ?>;
-
+<?php if ( $pte_iframe ) {
+	echo 'var ajaxurl = "' . admin_url( 'admin-ajax.php' ) . '";';
+}?>
 </script>
  
 <link rel="stylesheet" href="<?php ep() ?>apps/font-awesome/css/font-awesome.min.css"/>
 <link rel="stylesheet" href="<?php ep() ?>apps/jcrop/css/jquery.Jcrop.css"/>
 <style type="text/css" media="all">
+   .pte-iframe {
+	  padding-left: 15px;
+   }
+
    #pte-subtitle {
       font-size: .7em;
       color: #444444;

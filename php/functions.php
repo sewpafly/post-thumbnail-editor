@@ -606,3 +606,30 @@ function pte_get_jpeg_quality($quality){
 	$logger->debug( "COMPRESSION: " . $options['pte_jpeg_compression'] );
 	return $options['pte_jpeg_compression'];
 }
+
+/**
+ * Sending output to an iframe
+ */
+function pte_init_iframe() {
+	global $title, $pte_iframe;
+	$pte_iframe = true;
+
+	// Check the input parameters and create the HTML
+	pte_edit_setup();
+
+	// Provide the base framework/HTML for the editor.
+	require_once( ABSPATH . WPINC . '/script-loader.php' );
+	wp_enqueue_script( 'jquery' );
+	//wp_enqueue_style( 'wp-admin' );
+	wp_enqueue_style( 'colors' );
+
+	print( "<!DOCTYPE html>\n<html><head><title>${title}</title>\n" );
+
+	print_head_scripts();
+	print_admin_styles();
+
+	print( '</head><body class="wp-core-ui pte-iframe">' );
+	// Simply echo the created HTML
+	pte_edit_page();
+	print( '</body></html>' );
+}

@@ -5,7 +5,7 @@ do (jQuery) ->
       id = override_id || image_id || jQuery("#attachment-id").val()
       _.template pteL10n.url, {'id': id}
    $getLink = (id) ->
-      jQuery """<a href="#{ pte_url id }">#{ pteL10n.PTE }</a>"""
+      jQuery """<a class="thickbox" href="#{ pte_url id }">#{ pteL10n.PTE }</a>"""
 
 
 
