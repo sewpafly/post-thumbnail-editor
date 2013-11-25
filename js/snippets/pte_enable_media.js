@@ -1,10 +1,10 @@
 (function($) {
    // for debug : trace every event
-   var originalTrigger = wp.media.view.MediaFrame.Post.prototype.trigger;
-   wp.media.view.MediaFrame.Post.prototype.trigger = function(){
-	   console.log('Event Triggered:', arguments);
-	   originalTrigger.apply(this, Array.prototype.slice.call(arguments));
-   }
+   //var originalTrigger = wp.media.view.MediaFrame.Post.prototype.trigger;
+   //wp.media.view.MediaFrame.Post.prototype.trigger = function(){
+	//   console.log('Event Triggered:', arguments);
+	//   originalTrigger.apply(this, Array.prototype.slice.call(arguments));
+   //}
 
    var pteIframeLink;
    pteIframeLink = _.template(pteL10n.url + "&title=false");
