@@ -182,6 +182,11 @@ function pte_admin_media_scripts($post_type){
 			, PTE_VERSION
 			, true
 		);
+		wp_enqueue_style( 'pte'
+			, PTE_PLUGINURL . 'css/pte-media.css'
+			, NULL
+			, PTE_VERSION
+		);
 	}
 	wp_localize_script('pte'
 		, 'pteL10n'
