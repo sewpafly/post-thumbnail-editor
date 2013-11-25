@@ -33,11 +33,13 @@ $options = pte_get_options();
 <link rel="stylesheet" href="<?php ep() ?>css/pte.css"/>
 
 <div class="wrap ng-cloak" ng-init="currentThumbnailBarPosition='<?php echo $options['pte_thumbnail_bar'];?>'" ng-controller="PteCtrl">
+   <?php if ( !isset( $_GET['title'] ) || $_GET['title'] != 'false' ) : ?>
    <?php screen_icon('upload'); ?>
    <h2><?php _e("Post Thumbnail Editor", PTE_DOMAIN);?> &ndash; 
       <span id="pte-subtitle"><?php _e("crop and resize", PTE_DOMAIN); ?></span>
    </h2>
    <div class="subtitle"><?php echo $post->post_title; ?></div>
+   <?php endif; ?>
    <h3 class="nav-tab-wrapper">
       <a ng-href="" ng-class="pageClass('crop')" ng-click="changePage('crop')" class="nav-tab"><?php _e("Crop", PTE_DOMAIN); ?></a>
       <a ng-href="" ng-class="pageClass('view')" ng-click="changePage('view')" class="nav-tab"><?php _e("View", PTE_DOMAIN); ?></a>

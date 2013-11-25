@@ -1,13 +1,13 @@
 (function($) {
    // for debug : trace every event
-   //var originalTrigger = wp.media.view.MediaFrame.Post.prototype.trigger;
-   //wp.media.view.MediaFrame.Post.prototype.trigger = function(){
-   //    console.log('Event Triggered:', arguments);
-   //    originalTrigger.apply(this, Array.prototype.slice.call(arguments));
-   //}
+   var originalTrigger = wp.media.view.MediaFrame.Post.prototype.trigger;
+   wp.media.view.MediaFrame.Post.prototype.trigger = function(){
+	   console.log('Event Triggered:', arguments);
+	   originalTrigger.apply(this, Array.prototype.slice.call(arguments));
+   }
 
    var pteIframeLink;
-   pteIframeLink = _.template(pteL10n.url);
+   pteIframeLink = _.template(pteL10n.url + "&title=false");
 
    $( function() {
       var injectTemplate, template;
@@ -38,60 +38,75 @@
       //
       loadPteEditor: function() {
          this.controller.state( 'pte' ).set({
-            src: pteIframeLink({id:this.model.id}),
-            //title: pteL10n.PTE + ": " + this.model.name,
-            content: 'iframe'
+            src: pteIframeLink({id:this.model.id})
+			, title: pteL10n.PTE + ": " + this.model.attributes.filename
+			, content: 'iframe'
          });
          this.controller.setState('pte');
       }
    });
 
-   /*
-      PteController = wp.media.controller.State.extend({
-initialize: function() {
-this.props = new Backbone.Model({url: "test"});
-this.props.on( 'change:data', this.refresh, this );
-},
-refresh: function() {
-console.log( 'REFRESHING' );
-this.frame.content.get().refresh();
-},
-customAction: function() {
-console.log( 'CUSTOM ACTION!' );
-}
-});
+   // Overwrite the MediaFrame.Post class
+   //var oldPost = wp.media.view.MediaFrame.Post;
+   //wp.media.view.MediaFrame.Post = oldPost.extend({
+   //    initialize: function() {
+   //        oldPost.prototype.initialize.apply(this, arguments);
+   //        this.on( 'content:create:pte', this.pteLoadIframe, this );
+   //    },
+   //    pteLoadIframe: function( content ) {
+   //        console.log( content );
+   //        //console.log( this );
+   //        this.iframeContent( content );
+   //    },
+   //    logger: function() {
+   //        console.log( arguments );
+   //    }
+   //});
 
-PteIframe = wp.media.view.Iframe.extend({
-initialize: function() {
-wp.media.view.Iframe.prototype.initialize.apply( this, arguments );
-}
-})
+   //PteController = wp.media.controller.State.extend({
+   //    initialize: function() {
+   //        this.props = new Backbone.Model({url: "test"});
+   //        this.props.on( 'change:data', this.refresh, this );
+   //    },
+   //    refresh: function() {
+   //        console.log( 'REFRESHING' );
+   //        this.frame.content.get().refresh();
+   //    },
+   //    customAction: function() {
+   //        console.log( 'CUSTOM ACTION!' );
+   //    }
+   //});
 
-var oldMediaFramePost = wp.media.view.MediaFrame.Post;
-wp.media.view.MediaFrame.Post = oldMediaFramePost.extend({
-initialize: function () {
-oldMediaFramePost.prototype.initialize.apply( this, arguments );
-this.states.add([ new PteController({
-id: 'pte',
-menu: 'default',
-content: 'PAJAMAS',
-title: 'PAJAMAS - title',
-priority: 200,
-type: 'link'
-})]);
+   //PteIframe = wp.media.view.Iframe.extend({
+   //    initialize: function() {
+   //        wp.media.view.Iframe.prototype.initialize.apply( this, arguments );
+   //    }
+   //})
 
-this.on( 'content:render:PAJAMAS', this.customContent, this );
-},
-customContent: function(content) {
-this.$el.addClass('hide-toolbar');
-this.$el.addClass('hide-sidebar');
-var view = new PteIframe({
-controller: this,
-model: this.state().props
-});
-this.content.set( view );
-}
-});
-*/
+   //var oldMediaFramePost = wp.media.view.MediaFrame.Post;
+   //wp.media.view.MediaFrame.Post = oldMediaFramePost.extend({
+   //    initialize: function () {
+   //        oldMediaFramePost.prototype.initialize.apply( this, arguments );
+   //        this.states.add([ new PteController({
+   //            id: 'pte',
+   //            menu: 'default',
+   //            content: 'PAJAMAS',
+   //            title: 'PAJAMAS - title',
+   //            priority: 200,
+   //            type: 'link'
+   //        })]);
+
+   //        this.on( 'content:render:PAJAMAS', this.customContent, this );
+   //    },
+   //    customContent: function(content) {
+   //        this.$el.addClass('hide-toolbar');
+   //        this.$el.addClass('hide-sidebar');
+   //        var view = new PteIframe({
+   //            controller: this,
+   //            model: this.state().props
+   //        });
+   //        this.content.set( view );
+   //    }
+   //});
 
 })(jQuery);
