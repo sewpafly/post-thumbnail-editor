@@ -131,7 +131,7 @@ function pte_url( $id, $iframe=false ){
 	if ($iframe) {
 		$pte_url = admin_url( 'admin-ajax.php' )
 			. "?action=pte_ajax&pte-action=iframe&pte-id=${id}"
-			. "&TB_iframe=true&width=1040&height=700";
+			. "&TB_iframe=true";
 	}
 	else {
 		$pte_url = admin_url('upload.php') 
@@ -181,6 +181,11 @@ function pte_admin_media_scripts($post_type){
 			, array('media-views')
 			, PTE_VERSION
 			, true
+		);
+		wp_enqueue_style( 'pte'
+			, PTE_PLUGINURL . 'css/pte-media.css'
+			, NULL
+			, PTE_VERSION
 		);
 	}
 	wp_localize_script('pte'
