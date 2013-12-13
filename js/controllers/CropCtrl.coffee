@@ -35,6 +35,7 @@ define [
          if !$scope.cropOptions
             $scope.aspectRatio = null
             $scope.userChanged = false
+            $scope.pteJpgCompression = null
             $scope.updateSelected()
          return
 
@@ -146,6 +147,9 @@ define [
 
          if $scope.pteCropSave
             crop_options['save'] = 'true'
+
+         if 0 <= +$scope.pteJpgCompression <= 100
+            crop_options['pte-jpeg-compression'] = $scope.pteJpgCompression
 
          crop_results = $scope.thumbnailResource.get crop_options, ->
             $scope.cropInProgress = false

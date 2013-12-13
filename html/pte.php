@@ -5,6 +5,7 @@ function ep(){
 }
 
 $options = pte_get_options();
+
 ?>
 
 <!--
@@ -92,6 +93,7 @@ $options = pte_get_options();
 					<div style="position: relative">
 						<div id="pte-crop-settings" ng-show="cropOptions">
 							<i class="fa-times" ng-click="toggleOptions()"></i>
+							<form name="test">
 							<ul>
 								<li>
 									<!--ui-event="{blur : 'aspectRatioBlur()'}"-->
@@ -99,7 +101,7 @@ $options = pte_get_options();
 									<input id="pte-aspect-ratio" 
 											type="number"
 											placeholder="<?php _e( "width/height", PTE_DOMAIN ); ?>"
-											ng-model="aspectRatio" ng-change="changeAR()"/>
+											ng-model="aspectRatio" ng-change="changeAR()" name="pte-aspect-ratio"/>
 									<!--ng-pattern="aspectRatioPattern"/>-->
 									<i class="fa-undo" ng-click="aspectRatio = null"></i>
 								</li>
@@ -115,7 +117,19 @@ $options = pte_get_options();
 								<li>
                                     <?php _e( "Change the current thumbnails position:" ); ?>&nbsp;<button ng-click="toggleCurrentThumbnailBarPosition()">{{ currentThumbnailBarPosition }}</button>
 								</li>
+								<?php if ( $post->post_mime_type == "image/jpeg" ): # is JPEG file ?>
+								<li><label for="pte-jpg-compression"><?php _e( "JPEG Compression" ); ?></label>&nbsp;
+									<input id="pte-jpg-compression"
+										type="number"
+										ng-model="pteJpgCompression"
+										placeholder="<?php printf( __( "0 to 100 (Default: %d)" ), $options['pte_jpeg_compression'] ); ?>"
+										min="0"
+										max="100"
+										name="pte-jpg-compression"/>
+								</li>
+								<?php endif; ?>
 							</ul>
+							</form>
 						</div>
 					</div>
 				</div>

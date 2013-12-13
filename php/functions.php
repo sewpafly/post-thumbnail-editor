@@ -603,8 +603,15 @@ function pte_delete_images()
 function pte_get_jpeg_quality($quality){
 	$logger = PteLogger::singleton();
 	$options = pte_get_options();
-	$logger->debug( "COMPRESSION: " . $options['pte_jpeg_compression'] );
-	return $options['pte_jpeg_compression'];
+	$jpeg_compression = $options['pte_jpeg_compression'];
+	if ( isset( $_GET['pte-jpeg-compression'] ) ) {
+		$tmp_jpeg = intval( $_GET['pte-jpeg-compression'] );
+		if ( 0 <= $tmp_jpeg && $tmp_jpeg <= 100 ){
+			$jpeg_compression = $tmp_jpeg;
+		}
+	}
+	$logger->debug( "COMPRESSION: " . $jpeg_compression );
+	return $jpeg_compression;
 }
 
 /**
