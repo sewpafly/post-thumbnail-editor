@@ -77,8 +77,8 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 = 2.3.0 =
 * Updated libraries
-* Added Thickbox/Media Library Integration (#65)
-* Set jpeg compression dynamically
+* (re-)Added Thickbox/Media Library Integration (#65)
+* Set jpeg compression dynamically (#63)
 
 = 2.2.2 =
 * Unreleased version
