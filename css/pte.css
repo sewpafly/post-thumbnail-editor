@@ -109,6 +109,7 @@ td.center {
 #pte-crop-settings {
 	background-color: #f9f9f9;
 	border: 1px solid #888888;
+	margin-bottom: 20px;
 	padding: 7px 10px;
 }
 
@@ -185,4 +186,8 @@ td.center {
 #pte-remember.horizontal #pte-remember-list li:first-child { margin-left: 0; }
 #pte-remember.horizontal li img { height: 100px; }
 #pte-remember.vertical li img { width: 100px; }
-</style>
+
+#pte-iris-dialog {
+	margin: 10px;
+	display: none;
+}

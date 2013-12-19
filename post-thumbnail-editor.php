@@ -396,6 +396,13 @@ function pte_edit_setup() {
 
 	include_once( PTE_PLUGINPATH . "php/functions.php" );
 	$pte_body = pte_body( $post->ID );
+
+	// Add the scripts and styles
+	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'jquery-ui-dialog' );
+	wp_enqueue_script( 'iris' );
+	wp_enqueue_style( 'colors' );
+	wp_enqueue_style( 'wp-jquery-ui-dialog' );
 }
 
 /**
