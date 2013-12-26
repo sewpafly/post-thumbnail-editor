@@ -16,6 +16,8 @@ define [
 
       $scope.$watch 'aspectRatio', ->
          ar = $scope.aspectRatio || null
+         if ar is null
+            $scope.setInfoMessage $scope.i18n.crop_problems
          jcrop.setOptions
             aspectRatio: ar
          return
@@ -37,6 +39,28 @@ define [
             $scope.userChanged = false
             $scope.pteJpgCompression = null
             $scope.updateSelected()
+         return
+
+      $scope.fitToCrop = (e) ->
+         if !$( "#pteFitCrop" ).prop('checked')
+            return
+
+         color = $scope.pteFitCropColor || ""
+         $("#pte-iris-dialog").find("input").val(color).iris
+            hide: false
+         .end().dialog
+            dialogClass: "wp-dialog"
+            buttons: [
+               text: settings.i18n.fitCrop_transparent
+               click: ->
+                  $scope.$apply "pteFitCropColor = '"+ settings.i18n.transparent + "'"
+                  $( this ).dialog( 'close' )
+            ,
+               text: settings.i18n.fitCrop_save
+               click: ->
+                  $scope.$apply "pteFitCropColor = '" + $( "input", this ).val() + "'"
+                  $( this ).dialog( 'close' )
+            ]
          return
 
       ###
@@ -98,7 +122,6 @@ define [
             if ar is null and selected is false
                ar = settings.width/settings.height
          catch error
-            $scope.setInfoMessage $scope.i18n.crop_problems
             ar = null
 
          $scope.aspectRatio = ar
@@ -150,6 +173,12 @@ define [
 
          if 0 <= +$scope.pteJpgCompression <= 100
             crop_options['pte-jpeg-compression'] = $scope.pteJpgCompression
+
+         # If the user wants to fit the crop to the thumbnail size, set the background color here
+         if $scope.pteFitCrop
+            color = $scope.pteFitCropColor || ""
+            color = "" if color is settings.i18n.transparent
+            crop_options[ 'pte-fit-crop-color' ] = color
 
          crop_results = $scope.thumbnailResource.get crop_options, ->
             $scope.cropInProgress = false

@@ -22,6 +22,9 @@ $options = pte_get_options();
 			  , 'save_crop_problem' => __( 'There was a problem saving the crop...', PTE_DOMAIN )
 			  , 'cropSave' => __( 'Crop and Save', PTE_DOMAIN )
 			  , 'crop' => __( 'Crop', PTE_DOMAIN )
+			  , 'fitCrop_save' => __( 'Save', PTE_DOMAIN )
+			  , 'fitCrop_transparent' => __( 'Set transparent', PTE_DOMAIN )
+			  , 'transparent' => __( 'transparent/white', PTE_DOMAIN )
 		  ));
 ?>;
 <?php if ( $pte_iframe ) {
@@ -128,6 +131,19 @@ $options = pte_get_options();
 										name="pte-jpg-compression"/>
 								</li>
 								<?php endif; ?>
+								<li>
+								<span ng-hide="aspectRatio">
+									<label for="pteFitCrop">
+										<?php _e( "Fit crop to thumbnail by adding border" ); ?>
+									</label>
+									<input id="pteFitCrop" 
+												name="pte-fit-crop" 
+												type="checkbox" 
+												ng-model="pteFitCrop"
+												ng-click="fitToCrop()"/>
+									<span ng-click="fitToCrop()">{{ pteFitCropColor }}</span>
+								</span>
+								</li>
 							</ul>
 							</form>
 						</div>
@@ -263,6 +279,9 @@ $options = pte_get_options();
          </div>
       </div>
    </div>
+</div>
+<div id="pte-iris-dialog">
+	<input type="text" name="pteIris" id="pteIris" value="" />
 </div>
 <?php
 
