@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Post Thumbnail Editor package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Post Thumbnail Editor 2.2.0\n"
+"Project-Id-Version: Post Thumbnail Editor 2.3.0-beta\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
-"POT-Creation-Date: 2013-06-07 04:32:20+00:00\n"
+"POT-Creation-Date: 2013-12-26 19:29:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,148 +12,184 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: html/pte.php:18
+#: html/pte.php:19
 msgid "No thumbnails selected"
 msgstr ""
 
-#: html/pte.php:19
+#: html/pte.php:20
 msgid "No crop selected"
 msgstr ""
 
-#: html/pte.php:20
+#: html/pte.php:21
 msgid "Cropping will likely result in skewed imagery"
 msgstr ""
 
-#: html/pte.php:21
+#: html/pte.php:22
 msgid "There was a problem saving the crop..."
 msgstr ""
 
-#: html/pte.php:22 php/options.php:22
+#: html/pte.php:23 php/options.php:22
 msgid "Crop and Save"
 msgstr ""
 
-#: html/pte.php:23 html/pte.php:213
+#: html/pte.php:24 html/pte.php:48
 msgid "Crop"
 msgstr ""
 
-#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.2.0)  #-#-#-#-#
-#. Plugin Name of the plugin/theme
-#: html/pte.php:208 php/options.php:72 post-thumbnail-editor.php:160
-#: post-thumbnail-editor.php:204 post-thumbnail-editor.php:304
-#: post-thumbnail-editor.php:305 post-thumbnail-editor.php:311
-#: post-thumbnail-editor.php:312 post-thumbnail-editor.php:352
-msgid "Post Thumbnail Editor"
-msgstr ""
-
-#: html/pte.php:209
-msgid "crop and resize"
-msgstr ""
-
-#: html/pte.php:214
-msgid "View"
-msgstr ""
-
-#: html/pte.php:243
-msgid "Options"
-msgstr ""
-
-#: html/pte.php:258
-msgid "Aspect Ratio"
-msgstr ""
-
-#: html/pte.php:261
-msgid "width/height"
-msgstr ""
-
-#: html/pte.php:267
-msgid "Crop and save"
-msgstr ""
-
-#: html/pte.php:276
-msgid "Change the current thumbnails position:"
-msgstr ""
-
-#: html/pte.php:289 php/options.php:49 post-thumbnail-editor.php:272
-msgid "Thumbnails"
-msgstr ""
-
-#: html/pte.php:290
-msgid "W"
-msgstr ""
-
-#: html/pte.php:291
-msgid "H"
-msgstr ""
-
-#: html/pte.php:292
-msgid "C"
-msgstr ""
-
-#: html/pte.php:298
-msgid "Save all"
-msgstr ""
-
-#: html/pte.php:303
-msgid "Reset all"
-msgstr ""
-
-#: html/pte.php:307
-msgid "View all/modified"
-msgstr ""
-
-#: html/pte.php:333
+#: html/pte.php:25 html/pte.php:203
 msgid "Save"
 msgstr ""
 
-#: html/pte.php:336
+#: html/pte.php:26
+msgid "Set transparent"
+msgstr ""
+
+#: html/pte.php:27
+msgid "transparent/white"
+msgstr ""
+
+#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.3.0-beta)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: html/pte.php:42 php/options.php:72 post-thumbnail-editor.php:193
+#: post-thumbnail-editor.php:232 post-thumbnail-editor.php:344
+#: post-thumbnail-editor.php:345 post-thumbnail-editor.php:351
+#: post-thumbnail-editor.php:352 post-thumbnail-editor.php:395
+msgid "Post Thumbnail Editor"
+msgstr ""
+
+#: html/pte.php:43
+msgid "crop and resize"
+msgstr ""
+
+#: html/pte.php:49
+msgid "View"
+msgstr ""
+
+#: html/pte.php:87
+msgid "Options"
+msgstr ""
+
+#: html/pte.php:103
+msgid "Aspect Ratio"
+msgstr ""
+
+#: html/pte.php:106
+msgid "width/height"
+msgstr ""
+
+#: html/pte.php:112
+msgid "Crop and save"
+msgstr ""
+
+#: html/pte.php:121
+msgid "Change the current thumbnails position:"
+msgstr ""
+
+#: html/pte.php:124 php/options.php:54
+msgid "JPEG Compression"
+msgstr ""
+
+#: html/pte.php:128
+msgid "0 to 100 (Default: %d)"
+msgstr ""
+
+#: html/pte.php:137
+msgid "Fit crop to thumbnail by adding border"
+msgstr ""
+
+#: html/pte.php:159 php/options.php:49 post-thumbnail-editor.php:312
+msgid "Thumbnails"
+msgstr ""
+
+#: html/pte.php:160
+msgid "width"
+msgstr ""
+
+#: html/pte.php:160
+msgid "W"
+msgstr ""
+
+#: html/pte.php:161
+msgid "height"
+msgstr ""
+
+#: html/pte.php:161
+msgid "H"
+msgstr ""
+
+#: html/pte.php:162
+msgid "crop"
+msgstr ""
+
+#: html/pte.php:162
+msgid "C"
+msgstr ""
+
+#: html/pte.php:168
+msgid "Save all"
+msgstr ""
+
+#: html/pte.php:173
+msgid "Reset all"
+msgstr ""
+
+#: html/pte.php:177
+msgid "View all/modified"
+msgstr ""
+
+#: html/pte.php:206
 msgid "Reset"
 msgstr ""
 
-#: html/pte.php:339
+#: html/pte.php:209
 msgid "Compare/View"
 msgstr ""
 
-#: html/pte.php:346
+#: html/pte.php:216
 msgid "These thumbnails have an aspect ratio set:"
 msgstr ""
 
-#: html/pte.php:355
+#: html/pte.php:225
 msgid "Current Thumbnails"
 msgstr ""
 
-#: html/pte.php:385
+#: html/pte.php:255
 msgid "Original"
 msgstr ""
 
-#: html/pte.php:392
+#: html/pte.php:262
 msgid "No image has been generated yet for image: "
 msgstr ""
 
-#: html/pte.php:399
+#: html/pte.php:269
 msgid "Proposed"
 msgstr ""
 
-#: php/functions.php:228
+#: php/functions.php:230
 msgid "Invalid meta data for POST #%d: %s"
 msgstr ""
 
-#: php/functions.php:233
+#: php/functions.php:235
 msgid "Please contact support"
 msgstr ""
 
-#: php/log.php:15
+#: php/log.php:19
 msgid "ERROR"
 msgstr ""
 
-#: php/log.php:18
+#: php/log.php:22
 msgid "WARNING"
 msgstr ""
 
-#: php/log.php:21
+#: php/log.php:25
+msgid "INFO"
+msgstr ""
+
+#: php/log.php:28
 msgid "DEBUG"
 msgstr ""
 
-#: php/log.php:101
+#: php/log.php:130
 msgid "ERROR Logging Message: %s"
 msgstr ""
 
@@ -175,10 +211,6 @@ msgstr ""
 
 #: php/options.php:45
 msgid "Site Options"
-msgstr ""
-
-#: php/options.php:54
-msgid "JPEG Compression"
 msgstr ""
 
 #: php/options.php:59
@@ -251,13 +283,13 @@ msgstr ""
 msgid "These site-wide settings can only be changed by an administrator"
 msgstr ""
 
-#: post-thumbnail-editor.php:271
+#: post-thumbnail-editor.php:311
 msgid "Edit Thumbnails"
 msgstr ""
 
-#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.2.0)  #-#-#-#-#
+#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.3.0-beta)  #-#-#-#-#
 #. Plugin URI of the plugin/theme
-#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.2.0)  #-#-#-#-#
+#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.3.0-beta)  #-#-#-#-#
 #. Author URI of the plugin/theme
 msgid "http://sewpafly.github.io/post-thumbnail-editor/"
 msgstr ""
