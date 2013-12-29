@@ -377,8 +377,6 @@ function pte_resize_images(){
 
 	// The following information is common to all sizes
 	// *** common-info
-	$dst_x          = 0;
-	$dst_y          = 0;
 	$original_file  = _load_image_to_edit_path( $id );
 	$original_size  = @getimagesize( $original_file );
 	$uploads 	    = wp_upload_dir();
@@ -412,6 +410,8 @@ function pte_resize_images(){
 
 		// === CREATE IMAGE ===================
 		// This function is in wp-includes/media.php
+		// We've added a filter to return our own editor which extends the wordpress one.
+		add_filter( 'wp_image_editors', 'pte_image_editors' );
 		$editor = wp_get_image_editor( $original_file );
 		if ( is_a( $editor, "WP_Image_Editor_Imagick" ) ) $logger->debug( "EDITOR: ImageMagick" );
 		if ( is_a( $editor, "WP_Image_Editor_GD" ) ) $logger->debug( "EDITOR: GD" );
@@ -465,6 +465,12 @@ function pte_resize_images(){
 		'pte-nonce'         => $ptenonce,
 		'pte-delete-nonce'  => wp_create_nonce( "pte-delete-{$id}" )
 	) );
+}
+
+function pte_image_editors( $editor_array ){
+	require_once( PTE_PLUGINPATH . 'php/class-pte-image-editor-gd.php' );
+	array_unshift( $editor_array, 'PTE_Image_Editor_GD' );
+	return $editor_array;
 }
 
 /*
