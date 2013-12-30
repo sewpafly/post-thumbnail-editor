@@ -469,7 +469,8 @@ function pte_resize_images(){
 
 function pte_image_editors( $editor_array ){
 	require_once( PTE_PLUGINPATH . 'php/class-pte-image-editor-gd.php' );
-	array_unshift( $editor_array, 'PTE_Image_Editor_GD' );
+	require_once( PTE_PLUGINPATH . 'php/class-pte-image-editor-imagick.php' );
+	array_unshift( $editor_array, 'PTE_Image_Editor_Imagick', 'PTE_Image_Editor_GD' );
 	return $editor_array;
 }
 

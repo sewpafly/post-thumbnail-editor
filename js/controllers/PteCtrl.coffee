@@ -181,6 +181,8 @@ define [
          deleteTemp()
          angular.forEach $scope.thumbnails, (thumb) ->
             $scope.trash thumb
+         $filter('randomizeUrl') {reset: true}
+         return
 
       deleteTemp = ->
          if not nonces?['pte-delete-nonce']?
