@@ -22,7 +22,7 @@ class PTE_Image_Editor_Imagick extends WP_Image_Editor_Imagick {
 		$ar = $src_w / $src_h;
 		$dst_ar = $dst_w / $dst_h;
 		if ( isset( $_GET['pte-fit-crop-color'] ) && abs( $ar - $dst_ar ) > 0.01 ){
-			PteLogger::debug( sprintf( "AR: '%f'\tOAR: '%f'", $ar, $dst_ar ) );
+			PteLogger::debug( sprintf( "IMAGICK - AR: '%f'\tOAR: '%f'", $ar, $dst_ar ) );
 			// Crop the image to the correct aspect ratio...
 			if ( $dst_ar > $ar ) { // constrain to the dst_h
 				$tmp_dst_h = $dst_h;
@@ -37,14 +37,16 @@ class PTE_Image_Editor_Imagick extends WP_Image_Editor_Imagick {
 				$tmp_dst_y = ($dst_h / 2) - ($tmp_dst_h / 2);
 			}
 
+			//$color = this::getImagickPixel( $_GET['pte-fit-crop-color'] );
+
 			if ( preg_match( "/^#[a-fA-F0-9]{6}$/", $_GET['pte-fit-crop-color'] ) ) {
 				$color = new ImagickPixel( $_GET['pte-fit-crop-color'] );
 			}
-			else {
-				PteLogger::debug( "setting transparent/white" );
-				$color = new ImagickPixel( '#ffffff' );
-				$color->setColorValue( Imagick::COLOR_ALPHA, 0 );
-			}
+			//else {
+			//    PteLogger::debug( "setting transparent/white" );
+			//    $color = new ImagickPixel( 'white' );
+			//    //$color->setColorValue( Imagick::COLOR_ALPHA, 0 );
+			//}
 
 			try {
 				// crop the original image
@@ -53,10 +55,13 @@ class PTE_Image_Editor_Imagick extends WP_Image_Editor_Imagick {
 
 				// Create a new image and then compose the old one onto it.
 				$img = new Imagick();
-				$img->newImage( $dst_w, $dst_h, $color );
+				$img->newImage( $dst_w, $dst_h, isset( $color ) ? $color : 'white' );
 				$img->setImageFormat( $this->image->getImageFormat() );
+				if ( ! isset( $color ) ) {
+					$img->setImageOpacity( 0.0 );
+				}
 				$img->compositeImage( $this->image, Imagick::COMPOSITE_DEFAULT, $tmp_dst_x, $tmp_dst_y );
-				$img->flattenImage();
+				$img->flattenImages();
 
 				$this->image = $img;
 			}
