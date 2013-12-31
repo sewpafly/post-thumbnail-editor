@@ -38,6 +38,8 @@ browser.
   user interface
 * Set the JPEG compression
 * Avoids caching/CDN problems by changing the thumbnail filename
+* Will fit a crop to a given post-thumbnail size by adding a border to the
+  image.
 
 [rc]: http://codex.wordpress.org/Roles_and_Capabilities
 
@@ -97,7 +99,9 @@ Site Admininstrators have access to change the following options:
 2. **JPEG Compression**
 
    Set the compression value. *Only applies to modifying `.jpg` images*. 
+
    * `0` = lowest quality, smallest filesize
+
    * `100` = highest quality, largest filesize
 
    *Defaults to 90*
@@ -112,7 +116,7 @@ Site Admininstrators have access to change the following options:
 
 The editor can be started through:
 
-* The media library **(most stable method)**
+* The media library
 
   ![Media Library](launch-library.jpg)
 
@@ -150,6 +154,8 @@ In the editor you might notice the Options button. Don't touch it. Just kidding,
 do whatever you want with it. But if you do click it, it should expose some
 settings.
 
+![Advanced Cropping Techniques](crop-options.jpg)
+
 1. **Aspect Ratio**
 
    Setting this value to a value of `width/height` fixes the crop ratio, which
@@ -159,14 +165,26 @@ settings.
 
 2. **Crop and Save**
 
-   This is a shortcut for the [same user option](#toc_5) (described above).
+   This is a shortcut for the [same user option](#user-options) (described above).
 
 3. **Thumbnail Viewer Position**
 
    Toggle the thumbnail viewer to/from a horizontal/vertical position with this
    button. The editor should remember the last chosen position.
 
-![Advanced Cropping Techniques](crop-options.jpg)
+4. **JPEG Compression**
+   
+   *Only displayed when cropping a JPEG image.* Set the JPEG compression to use.
+
+5. **Fit Crop to Thumbnail**
+
+   *Available when cropping a fixed crop thumbnail (C == `true`) and the default
+   aspect ratio is overridden (see "Aspect Ratio" above)*. This will add a
+   border to your crop to fit it to the correct post-thumbnail size.
+
+   Enabling this option will launch a selector to choose the color of the
+   border.
+
 
 ## Support
 
