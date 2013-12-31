@@ -11,11 +11,10 @@ See on [Wordpress.org][wordpress].
 
 ## About
 
-Wordpress created a really neat concept called [post
-thumbnails][wp_post_thumbs]. Post thumbnails allow themes and plugins to define
-an image size, which size would then be available for every image controlled by
-wordpress. Themes could then depend on a predefined size being available for any
-image.
+Wordpress created a really neat concept called [post thumbnails][wp_post_thumbs].
+Post thumbnails allow themes and plugins to define an image size, which size
+would then be available for every image controlled by wordpress. Themes could
+then depend on a predefined size being available for any image.
 
 However, if wordpress ever crops an image, it does so exactly from the middle of
 the image. This often results in details from the original image being cropped
