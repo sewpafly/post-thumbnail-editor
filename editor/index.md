@@ -52,7 +52,7 @@ A user with permission to modify any post-thumbnails will have the ability to:
 
 1. **Enable/disable debug mode**
 
-   Changes the user interface from using one concatenated javascript files to several javascript files that are loaded asynchronously using requirejs. _If the `WP_DEBUG` define is set by the site admin, this is set automatically and can't be disabled._
+   Changes the user interface from using one concatenated javascript files to several javascript files that are loaded asynchronously using requirejs. *If the `WP_DEBUG` define is set by the site admin, this is set automatically and can't be disabled.*
 
 2. **Crop and Save**
 
@@ -77,8 +77,11 @@ Site Admininstrators have access to change the following options:
 2. **JPEG Compression**
 
    Set the compression value. *Only applies to modifying `.jpg` images*.
+
    * `0` = lowest quality, smallest filesize
+
    * `100` = highest quality, largest filesize
+
    *Defaults to 90*
 
 3. **Cache Buster**
