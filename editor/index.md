@@ -76,11 +76,11 @@ Site Admininstrators have access to change the following options:
 
 2. **JPEG Compression**
 
-   Set the compression value. *Only applies to modifying `.jpg` images*. 
+   Set the compression value. *Only applies to modifying `.jpg` images*.
 
-   * `0` = lowest quality, smallest filesize
+    * `0` = lowest quality, smallest filesize
 
-   * `100` = highest quality, largest filesize
+    * `100` = highest quality, largest filesize
 
    *Defaults to 90*
 
