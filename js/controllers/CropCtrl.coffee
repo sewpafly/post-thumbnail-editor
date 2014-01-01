@@ -14,10 +14,16 @@ define [
 
          return
 
+      $scope.userDisabledFitCrop = false
       $scope.$watch 'aspectRatio', ->
          ar = $scope.aspectRatio || null
          if ar is null
-            $scope.setInfoMessage $scope.i18n.crop_problems
+            if $scope.userDisabledFitCrop
+               $scope.setInfoMessage $scope.i18n.crop_problems
+            # Set the fit to crop automatically
+            else
+               $scope.pteFitCrop = true
+               $scope.pteFitCropColor = settings.i18n.transparent
          jcrop.setOptions
             aspectRatio: ar
          return
@@ -43,6 +49,8 @@ define [
 
       $scope.fitToCrop = (e) ->
          if !$( "#pteFitCrop" ).prop('checked')
+            $scope.userDisabledFitCrop = true
+            $scope.setInfoMessage $scope.i18n.crop_problems
             return
 
          color = $scope.pteFitCropColor || ""
