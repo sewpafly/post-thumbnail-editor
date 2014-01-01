@@ -79,6 +79,8 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 * Updated libraries
 * (re-)Added Thickbox/Media Library Integration (#65)
 * Set jpeg compression dynamically (#63)
+* Add fit crop to thumbnail option (enabled by default), can be overridden in the "Options" menu #78
+* Various bug fixes
 
 = 2.2.2 =
 * Unreleased version
