@@ -1,7 +1,11 @@
 <?php
 global $post, $pte_iframe;
-function ep(){
-   echo PTE_PLUGINURL;
+function u( $path ){
+   printf( "%s%s?%s",
+	   PTE_PLUGINURL,
+	   $path,
+	   PTE_VERSION
+   );
 }
 
 $options = pte_get_options();
@@ -32,9 +36,9 @@ $options = pte_get_options();
 }?>
 </script>
  
-<link rel="stylesheet" href="<?php ep() ?>apps/font-awesome/css/font-awesome.min.css"/>
-<link rel="stylesheet" href="<?php ep() ?>apps/jcrop/css/jquery.Jcrop.css"/>
-<link rel="stylesheet" href="<?php ep() ?>css/pte.css"/>
+<link rel="stylesheet" href="<?php u( 'apps/font-awesome/css/font-awesome.min.css' ) ?>"/>
+<link rel="stylesheet" href="<?php u( 'apps/jcrop/css/jquery.Jcrop.css' ) ?>"/>
+<link rel="stylesheet" href="<?php u( 'css/pte.css' ) ?>"/>
 
 <div class="wrap ng-cloak" ng-init="currentThumbnailBarPosition='<?php echo $options['pte_thumbnail_bar'];?>'" ng-controller="PteCtrl">
    <?php if ( !isset( $_GET['title'] ) || $_GET['title'] != 'false' ) : ?>
