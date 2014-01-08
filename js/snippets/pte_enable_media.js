@@ -19,7 +19,9 @@
    });
 
    // Hook into the media.views.attachment to create our link
+   var featuredImageOpen = false;
    var oldDetails = wp.media.view.Attachment.Details;
+
    wp.media.view.Attachment.Details = oldDetails.extend({
       initialize: function() {
          oldDetails.prototype.initialize.apply( this, arguments );
@@ -37,14 +39,27 @@
       // See media-views.js:1077:iframeContent()
       //
       loadPteEditor: function() {
+         if ( this.controller.state().id == "featured-image" && !featuredImageOpen ) {
+            featuredImageOpen = true;
+            this.controller.createIframeStates();
+         }
+
          this.controller.state( 'pte' ).set({
-            src: pteIframeLink({id:this.model.id})
-			, title: pteL10n.PTE + ": " + this.model.attributes.filename
-			, content: 'iframe'
+            src: pteIframeLink({id:this.model.id}),
+            title: pteL10n.PTE + ": " + this.model.attributes.filename,
+            content: 'iframe'
          });
          this.controller.setState('pte');
       }
    });
+
+   // Set the featuredImage object as `this` for the frame function...
+   oldFeaturedImageFrame = $.proxy( wp.media.featuredImage.frame, wp.media.featuredImage );
+   wp.media.featuredImage.frame = function() {
+      var frame = oldFeaturedImageFrame()
+      frame.setState('featured-image')
+      return frame;
+   }
 
    // Overwrite the MediaFrame.Post class
    //var oldPost = wp.media.view.MediaFrame.Post;
