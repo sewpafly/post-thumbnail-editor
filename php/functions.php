@@ -603,12 +603,12 @@ function pte_delete_images()
 	$uploads = wp_upload_dir();
 	$PTE_TMP_DIR = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR . $id;
 	// Delete tmpdir
+	PteLogger::debug( "Deleting [{$PTE_TMP_DIR}]" );
 	pte_rmdir( $PTE_TMP_DIR );
 	return pte_json_encode( array( "success" => "Yay!" ) );
 }
 
 function pte_get_jpeg_quality($quality){
-	$logger = PteLogger::singleton();
 	$options = pte_get_options();
 	$jpeg_compression = $options['pte_jpeg_compression'];
 	if ( isset( $_GET['pte-jpeg-compression'] ) ) {
@@ -617,7 +617,7 @@ function pte_get_jpeg_quality($quality){
 			$jpeg_compression = $tmp_jpeg;
 		}
 	}
-	$logger->debug( "COMPRESSION: " . $jpeg_compression );
+	PteLogger::debug( "COMPRESSION: " . $jpeg_compression );
 	return $jpeg_compression;
 }
 

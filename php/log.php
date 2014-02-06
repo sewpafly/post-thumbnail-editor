@@ -1,11 +1,5 @@
 <?php
 
-if ( !class_exists( 'ChromePhp' ) ) {
-	require_once( PTE_PLUGINPATH . 'php/chromephp/ChromePhp.php' );
-}
-
-ChromePhp::getInstance()->addSetting(ChromePhp::BACKTRACE_LEVEL, 5);
-
 class PteLogMessage
 {
 	public static $ERROR = 1;
@@ -56,31 +50,25 @@ class PteLogMessage
 	}
 }
 
-class PteLogger {
-	private static $instance;
-	private $messages    = array();
-	private $counts      = array();
-	//private $defaulttype = 4;
-	//private $defaulttype = PteLogMessage::$DEBUG;
-	private $defaulttype = NULL;
+interface PteLogHandler {
+	public function handle( PteLogMessage $message );
+}
 
-	private function __construct() {
-		$this->defaulttype = PteLogMessage::$DEBUG;
-	}
+class PteChromeLogHandler implements PteLogHandler {
+	protected $chrome = null;
 
-	public static function singleton()
-	{
-		if (!isset(self::$instance)) {
-			$className = __CLASS__;
-			self::$instance = new $className;
+	public function __construct() {
+		if ( !class_exists( 'ChromePhp' ) ) {
+			require_once( PTE_PLUGINPATH . 'php/chromephp/ChromePhp.php' );
 		}
-		return self::$instance;
+		ChromePhp::getInstance()->addSetting(ChromePhp::BACKTRACE_LEVEL, 5);
 	}
 
 	/**
 	 * Using ChromePhp, log the message
 	 */
-	private function chrome_log( $message ) {
+	public function handle( PteLogMessage $message ) {
+
 		switch( $message->getType() ) {
 			case PteLogMessage::$ERROR:
 				ChromePhp::error( $message->getMessage() );
@@ -97,9 +85,38 @@ class PteLogger {
 				break;
 		}
 	}
+}
 
-	private function add_message( $message ) {
-		self::singleton()->chrome_log( $message );
+class PteLogger implements PteLogHandler {
+	private static $instance;
+	private $messages    = array();
+	private $counts      = array();
+	//private $defaulttype = 4;
+	//private $defaulttype = PteLogMessage::$DEBUG;
+	private $defaulttype = NULL;
+	private $handlers = array();
+
+	private function __construct( $handlers = array() ) {
+		$this->defaulttype = PteLogMessage::$DEBUG;
+		foreach ($handlers as $handler){
+			if ($handler instanceof PteLogHandler && !$handler instanceof PteLogger )
+				$this->handlers[] = $handler;
+		}
+		$this->handlers[] = $this;
+	}
+
+	public static function singleton()
+	{
+		if (!isset(self::$instance)) {
+			$className = __CLASS__;
+			self::$instance = new $className( array( new PteChromeLogHandler ) );
+		}
+		return self::$instance;
+	}
+
+
+	public function handle( PteLogMessage $message ) {
+		//self::singleton()->chrome_log( $message );
 		$type = $message->getType();
 
 		if ( ! isset( $this->counts[ $type ] ) ){
@@ -109,6 +126,12 @@ class PteLogger {
 			$this->counts[ $message->getType() ]++;
 		}
 		$this->messages[] = $message;
+	}
+
+	private function add_message( $message ) {
+		foreach ( $this->handlers as $handler ){
+			$handler->handle( $message );
+		}
 	}
 
 	public function get_log_count( $type ){
@@ -124,7 +147,7 @@ class PteLogger {
 		if ( ! $message instanceof PteLogMessage ){
 			if ( is_string( $message ) ){
 				if ( is_null( $type ) ){
-					$type = $defaulttype;
+					$type = $this->defaulttype;
 				}
 				try {
 					$message = new PteLogMessage( $type, $message );
