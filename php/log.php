@@ -1,6 +1,9 @@
 <?php
 
-require_once( PTE_PLUGINPATH . 'php/chromephp/ChromePhp.php' );
+if ( !class_exists( 'ChromePhp' ) ) {
+	require_once( PTE_PLUGINPATH . 'php/chromephp/ChromePhp.php' );
+}
+
 ChromePhp::getInstance()->addSetting(ChromePhp::BACKTRACE_LEVEL, 5);
 
 class PteLogMessage
