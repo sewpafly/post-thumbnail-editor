@@ -64,6 +64,8 @@ function pte_get_user_options(){
 		, 'pte_crop_save' => false
 		, 'pte_thumbnail_bar' => 'horizontal'
 		, 'pte_imgedit_max_size' => 600
+		, 'pte_debug_out_chrome' => false
+		, 'pte_debug_out_file' => true
 	);
 
 	// WORDPRESS DEBUG overrides user setting...
@@ -142,6 +144,16 @@ function pte_url( $id, $iframe=false ){
 }
 
 
+/**
+ * Used in functions.php, log.php & options.php to get pseudo-TMP file paths
+ */
+function pte_tmp_dir()
+{
+	$uploads 	    = wp_upload_dir();
+	$PTE_TMP_DIR    = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR;
+	$PTE_TMP_URL    = $uploads['baseurl'] . "/ptetmp/";
+	return compact( 'PTE_TMP_DIR', 'PTE_TMP_URL' );
+}
 
 
 /*

@@ -68,6 +68,13 @@ function pte_options_init(){
 function pte_options_page(){
 	/*<code><pre><?php print_r( pte_get_options() ); ?></pre></code>*/
 ?>
+	<style type="text/css" media="screen">
+	.sub-option {
+		margin-left: 30px;
+		margin-top: 10px;
+		font-size: smaller;
+	}
+	</style>
 	<div class="wrap">
 		<h2><?php _e('Post Thumbnail Editor', PTE_DOMAIN); ?></h2>
 		<form action="options.php" method="post">
@@ -135,6 +142,8 @@ function pte_options_validate( $input ){
 		return array();
 	}
 	$options['pte_debug'] = isset( $input['pte_debug'] );
+	$options['pte_debug_out_chrome'] = isset( $input['pte_debug_out_chrome'] );
+	$options['pte_debug_out_file'] = isset( $input['pte_debug_out_file'] );
 	$options['pte_crop_save'] = isset( $input['pte_crop_save'] );
 	// Check the imgedit_max_size value
 	if ( $input['pte_imgedit_max_size'] != "" ){
@@ -163,10 +172,25 @@ function pte_debug_display(){
 	?> id="pte_debug"/>&nbsp;<label for="pte_debug"><?php _e( 'Enable debugging', PTE_DOMAIN ); ?></label>
 <?php if ( WP_DEBUG ) {
 	print( "<br/><em>" );
-	_e( "WP_DEBUG is currently set to true and will override this setting." ); 
+	_e( "WP_DEBUG is currently set to true and will override this setting. (debug is enabled)" ); 
 	print( "</em>" );
 }?>
 	</span>
+	<div class="sub-option"><input type="checkbox" name="<?php echo $option_label; ?>[pte_debug_out_chrome]" <?php
+		if ( $options['pte_debug_out_chrome'] ): print "checked"; endif; ?> id="pte_debug_out_chrome"/>
+		&nbsp;
+		<label for="pte_debug_out_chrome"><?php printf( __('Use <a href="%s">ChromePhp</a> for log output'),
+			'https://github.com/ccampbell/chromephp'
+		); ?></label>
+	</div>
+	<div class="sub-option"><input type="checkbox" name="<?php echo $option_label; ?>[pte_debug_out_file]" <?php
+		if ( $options['pte_debug_out_file'] ): print "checked"; endif; ?> id="pte_debug_out_file"/>
+		&nbsp;
+		<label for="pte_debug_out_file"><?php printf(
+			__('Write log output to a <a href="%s">file</a>'),
+			PteLogFileHandler::getLogFileUrl()
+		); ?></label>
+	</div>
 <?php
 }
 

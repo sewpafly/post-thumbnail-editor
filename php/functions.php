@@ -379,9 +379,9 @@ function pte_resize_images(){
 	// *** common-info
 	$original_file  = _load_image_to_edit_path( $id );
 	$original_size  = @getimagesize( $original_file );
-	$uploads 	    = wp_upload_dir();
-	$PTE_TMP_DIR    = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR;
-	$PTE_TMP_URL    = $uploads['baseurl'] . "/ptetmp/";
+
+	// SETS PTE_TMP_DIR and PTE_TMP_URL
+	extract( pte_tmp_dir() );
 	$thumbnails     = array();
 
 	if ( !$original_size ){
@@ -516,12 +516,14 @@ function pte_confirm_images($immediate = false){
 	//    Update metadata
 	//    Delete old image
 	// Remove PTE/$id directory
-	$uploads = wp_upload_dir();
-	$PTE_TMP_DIR = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR . $id;
+
+	// SETS PTE_TMP_DIR and PTE_TMP_URL
+	extract( pte_tmp_dir() );
+
 	foreach ( $sizes as $size => $data ){
 		// Make sure we're only moving our files
 		$good_file = $PTE_TMP_DIR
-			. DIRECTORY_SEPARATOR
+			. $id . DIRECTORY_SEPARATOR
 			. basename( $_GET['pte-confirm'][$size] );
 
 		if ( ! ( isset( $good_file ) && file_exists( $good_file ) ) ){
@@ -600,8 +602,11 @@ function pte_delete_images()
 	if ( !check_ajax_referer( "pte-delete-{$id}", 'pte-nonce', false ) ){
 		return pte_json_error( "CSRF Check failed" );
 	}
-	$uploads = wp_upload_dir();
-	$PTE_TMP_DIR = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR . $id;
+
+	// SETS PTE_TMP_DIR and PTE_TMP_URL
+	extract( pte_tmp_dir() );
+	$PTE_TMP_DIR = $PTE_TMP_DIR . $id . DIRECTORY_SEPARATOR;
+
 	// Delete tmpdir
 	PteLogger::debug( "Deleting [{$PTE_TMP_DIR}]" );
 	pte_rmdir( $PTE_TMP_DIR );

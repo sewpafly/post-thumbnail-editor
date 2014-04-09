@@ -31,13 +31,17 @@ class PteLogMessage
 			throw new Exception( "Invalid Log Type: '{$type}'" );
 		}
 		$this->type = $type;
-		$this->message = $message;
-		$this->date = getdate();
+		$this->message = trim( $message );
+		$this->date = time();
 	}
 
 	public function __toString(){
 		$type = $this->getTypeString();
-		return sprintf( "[%s] - %s", $type, $this->message );
+		return sprintf('[%-7s][%s][%s]',
+			$type,
+		   	gmdate('c', $this->date),
+			$this->message
+		);
 	}
 	public function getType(){
 		return $this->type;
@@ -54,7 +58,7 @@ interface PteLogHandler {
 	public function handle( PteLogMessage $message );
 }
 
-class PteChromeLogHandler implements PteLogHandler {
+class PteLogChromeHandler implements PteLogHandler {
 	protected $chrome = null;
 
 	public function __construct() {
@@ -87,6 +91,61 @@ class PteChromeLogHandler implements PteLogHandler {
 	}
 }
 
+class PteLogFileHandler implements PteLogHandler
+{
+	protected $filename;
+
+	protected $lines = 0;
+
+	public function __construct()
+	{
+		$this->filename = self::getLogFileName();
+	}
+
+	public static function getLogFileUrl()
+	{
+		// SETS PTE_TMP_DIR and PTE_TMP_URL
+		extract( pte_tmp_dir() );
+		return $PTE_TMP_URL . 'log.txt';
+	}
+
+	public static function getLogFileName()
+	{
+		// SETS PTE_TMP_DIR and PTE_TMP_URL
+		extract( pte_tmp_dir() );
+		return $PTE_TMP_DIR . DIRECTORY_SEPARATOR . 'log.txt';
+	}
+
+	private function logAndTruncate( $message )
+	{
+		$content = file( $this->filename, FILE_IGNORE_NEW_LINES );
+		if ( $content === false ) {
+			$content = array();
+		}
+
+		$content = array_merge( $content, explode( "\n", (string) $message ) );
+
+		if ( count( $content ) > $this->lines ) {
+			$content = array_slice( $content, $this->lines * -1);
+		}
+
+		file_put_contents( $this->filename,
+			implode( "\n", $content )
+		);
+	}
+
+	public function handle( PteLogMessage $message )
+	{
+		if ( isset( $this->lines ) && $this->lines )
+			logAndTruncate( $message );
+		// append to file
+		$fp = fopen( $this->filename, 'a+' );
+		fwrite( $fp, $message . "\n" );
+		fclose($fp);
+	}
+
+}
+
 class PteLogger implements PteLogHandler {
 	private static $instance;
 	private $messages    = array();
@@ -96,12 +155,17 @@ class PteLogger implements PteLogHandler {
 	private $defaulttype = NULL;
 	private $handlers = array();
 
-	private function __construct( $handlers = array() ) {
+	private function __construct() {
 		$this->defaulttype = PteLogMessage::$DEBUG;
-		foreach ($handlers as $handler){
-			if ($handler instanceof PteLogHandler && !$handler instanceof PteLogger )
-				$this->handlers[] = $handler;
-		}
+		$options = pte_get_options();
+
+		# Add chrome log handler
+		if ( $options['pte_debug_out_chrome'] )
+			$this->handlers[] = new PteLogChromeHandler;
+		# Add file log handler
+		if ( $options['pte_debug_out_file'] )
+			$this->handlers[] = new PteLogFileHandler;
+
 		$this->handlers[] = $this;
 	}
 
@@ -109,7 +173,7 @@ class PteLogger implements PteLogHandler {
 	{
 		if (!isset(self::$instance)) {
 			$className = __CLASS__;
-			self::$instance = new $className( array( new PteChromeLogHandler ) );
+			self::$instance = new $className();
 		}
 		return self::$instance;
 	}
