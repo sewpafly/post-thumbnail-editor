@@ -145,6 +145,8 @@ function pte_options_validate( $input ){
 	$options['pte_debug_out_chrome'] = isset( $input['pte_debug_out_chrome'] );
 	$options['pte_debug_out_file'] = isset( $input['pte_debug_out_file'] );
 	$options['pte_crop_save'] = isset( $input['pte_crop_save'] );
+	$options['pte_imgedit_disk'] = isset( $input['pte_imgedit_disk'] );
+
 	// Check the imgedit_max_size value
 	if ( $input['pte_imgedit_max_size'] != "" ){
 		$tmp_size = (int) preg_replace( "/[\D]/", "", $input['pte_imgedit_max_size'] );
@@ -218,6 +220,15 @@ function pte_imgedit_size_display(){
 	<?php _e("Set the max size for the crop image.", PTE_DOMAIN); ?>
 	<br/><em><?php _e("No entry defaults to 600", PTE_DOMAIN); ?></em>
 	</span>
+	<div class="sub-option">
+	<span><input type="checkbox" 
+			name="<?php print $option_label; ?>[pte_imgedit_disk]" 
+			<?php if ($options['pte_imgedit_disk'] ): print "checked"; endif; ?>
+			id="pte_imgedit_disk">&nbsp;<label for="pte_imgedit_disk"> 
+		<?php _e("Check this to save the generated working image to disk instead of creating on the fly (experimental)", PTE_DOMAIN); ?>
+	</label>
+	</span>
+	</div>
 <?php
 }
 

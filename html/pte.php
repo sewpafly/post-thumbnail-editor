@@ -8,8 +8,6 @@ function u( $path ){
    );
 }
 
-$options = pte_get_options();
-
 ?>
 
 <!--
@@ -77,13 +75,7 @@ $options = pte_get_options();
             <div class="pte-page-switcher" ng-show="page.crop">
             <div id="pte-image" ng-controller="CropCtrl">
                <img id="pte-preview" src="<?php 
-               echo admin_url('admin-ajax.php'); 
-               ?>?action=pte_imgedit_preview&amp;_ajax_nonce=<?php
-               echo $nonce; 
-               ?>&amp;postid=<?php
-               echo $post->ID;
-               ?>&amp;rand=<?php
-               echo rand(1, 99999); // Verify that the image is up to date
+					echo $editor_image;
                ?>"/>
       
                <div id="pte-crop-controls">

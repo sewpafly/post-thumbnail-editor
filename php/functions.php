@@ -235,8 +235,6 @@ function pte_body( $id ){
 		$logger->error( __( "Please contact support", PTE_DOMAIN ) );
 	}
 
-	$sizer = $big > 400 ? 400 / $big : 1;
-	$sizer = sprintf( "%.8F", $sizer );
 	PteLogger::debug( "PTE-VERSION: " . PTE_VERSION .
 		"\nUSER-AGENT:  " . $_SERVER['HTTP_USER_AGENT'] .
 		"\nWORDPRESS:   " . $GLOBALS['wp_version'] );
@@ -248,8 +246,56 @@ function pte_body( $id ){
 		$script_url .= "&d=1";
 	}
 
+	// Generate an image and put into the ptetmp directory
+	if (false === $editor_image = pte_generate_working_image($id)) {
+		$editor_image = sprintf("%s?action=pte_imgedit_preview&amp;_ajax_nonce=%s&amp;postid=%d&amp;rand=%d",
+			admin_url('admin-ajax.php'),
+			$nonce,
+			$id,
+			rand(1,99999)
+		);
+	}
+
 	require( PTE_PLUGINPATH . "html/pte.php" );
 	return ob_get_clean();
+}
+
+function pte_generate_working_image($id)
+{
+	$options = pte_get_options();
+	if (false == $options['pte_imgedit_disk'])
+		return false;
+
+	// SETS PTE_TMP_DIR and PTE_TMP_URL
+	extract( pte_tmp_dir() );
+
+	$original_file = _load_image_to_edit_path( $id );
+	$size = $options['pte_imgedit_max_size'];
+
+	$editor = wp_get_image_editor( $original_file );
+	$finfo    = pathinfo( $original_file );
+	$basename = sprintf("%s-%s.%s", $id, $size, $finfo['extension']);
+	$file     = sprintf("%s%s", $PTE_TMP_DIR, $basename );
+	$url      = sprintf("%s%s", $PTE_TMP_URL, $basename );
+
+	if ( file_exists( $file ) )
+		return $url;
+
+	PteLogger::debug("\nGENERATING WORKING IMAGE:\n  [{$file}]\n  [{$url}]");
+
+	// Resize the image and check the results
+	$results = $editor->resize($size,$size);
+	if ( is_wp_error( $results ) ) {
+		PteLogger::error( $results );
+		return false;
+	}
+
+	// Save the image
+	if ( is_wp_error( $editor->save( $file ) ) ) {
+		PteLogger::error( "Unable to save the generated image falling back to ajax-ed image" );
+		return false;
+	}
+	return $url;
 }
 
 function pte_check_int( $int ){

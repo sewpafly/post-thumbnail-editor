@@ -63,6 +63,7 @@ function pte_get_user_options(){
 	$defaults = array( 'pte_debug' => false
 		, 'pte_crop_save' => false
 		, 'pte_thumbnail_bar' => 'horizontal'
+		, 'pte_imgedit_disk' => false
 		, 'pte_imgedit_max_size' => 600
 		, 'pte_debug_out_chrome' => false
 		, 'pte_debug_out_file' => false

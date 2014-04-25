@@ -37,7 +37,7 @@ class PteLogMessage
 
 	public function __toString(){
 		$type = $this->getTypeString();
-		return sprintf('[%-7s][%s][%s]',
+		return sprintf('[%-7s][%s][ %s ]',
 			$type,
 		   	gmdate('c', $this->date),
 			$this->message
