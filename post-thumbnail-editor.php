@@ -65,7 +65,7 @@ function pte_get_user_options(){
 		, 'pte_thumbnail_bar' => 'horizontal'
 		, 'pte_imgedit_max_size' => 600
 		, 'pte_debug_out_chrome' => false
-		, 'pte_debug_out_file' => true
+		, 'pte_debug_out_file' => false
 	);
 
 	// WORDPRESS DEBUG overrides user setting...
