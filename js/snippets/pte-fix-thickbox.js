@@ -17,7 +17,7 @@
 			if ( typeof document.body.style.maxWidth != 'undefined' )
 				tbWindow.css({'top': 20 + adminbar_height + 'px','margin-top':'0'});
 		}
-		else if (tbIframe.size() != 0) {
+		else {
 			old_tb_position();
 		}
 	}
