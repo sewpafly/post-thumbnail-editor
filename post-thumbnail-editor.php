@@ -132,12 +132,12 @@ function pte_update_user_options(){
 function pte_url( $id, $iframe=false ){
 	if ($iframe) {
 		$pte_url = admin_url( 'admin-ajax.php' )
-			. "?action=pte_ajax&pte-action=iframe&pte-id=${id}"
+			. "?action=pte_ajax&pte-action=iframe&pte-id={$id}"
 			. "&TB_iframe=true";
 	}
 	else {
 		$pte_url = admin_url('upload.php') 
-			. "?page=pte-edit&pte-id=${id}";
+			. "?page=pte-edit&pte-id={$id}";
 	}
 
 	return $pte_url;
