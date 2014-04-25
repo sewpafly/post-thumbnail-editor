@@ -100,6 +100,8 @@ class PteLogFileHandler implements PteLogHandler
 	public function __construct()
 	{
 		$this->filename = self::getLogFileName();
+		wp_mkdir_p( dirname( $this->filename ) );
+		touch( $this->filename );
 	}
 
 	public static function getLogFileUrl()
@@ -113,7 +115,7 @@ class PteLogFileHandler implements PteLogHandler
 	{
 		// SETS PTE_TMP_DIR and PTE_TMP_URL
 		extract( pte_tmp_dir() );
-		return $PTE_TMP_DIR . DIRECTORY_SEPARATOR . 'log.txt';
+		return $PTE_TMP_DIR . 'log.txt';
 	}
 
 	private function logAndTruncate( $message )
