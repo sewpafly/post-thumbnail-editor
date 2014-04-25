@@ -39,7 +39,7 @@ define [
          startupFunction()
 
    # Provide failsafe
-   timeout = 3000
+   timeout = 10000
    window.setTimeout ->
       startupFunction()
    , timeout
