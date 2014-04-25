@@ -122,10 +122,10 @@ $options = pte_get_options();
 											id="pte-crop-and-save"/>
 								</li>
 								<li>
-                                    <?php _e( "Change the current thumbnails position:" ); ?>&nbsp;<button ng-click="toggleCurrentThumbnailBarPosition()">{{ currentThumbnailBarPosition }}</button>
+                                    <?php _e( "Change the current thumbnails position:", PTE_DOMAIN ); ?>&nbsp;<button ng-click="toggleCurrentThumbnailBarPosition()">{{ currentThumbnailBarPosition }}</button>
 								</li>
 								<?php if ( $post->post_mime_type == "image/jpeg" ): # is JPEG file ?>
-								<li><label for="pte-jpg-compression"><?php _e( "JPEG Compression" ); ?></label>&nbsp;
+								<li><label for="pte-jpg-compression"><?php _e( "JPEG Compression", PTE_DOMAIN ); ?></label>&nbsp;
 									<input id="pte-jpg-compression"
 										type="number"
 										ng-model="pteJpgCompression"
