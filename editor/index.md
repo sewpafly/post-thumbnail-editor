@@ -44,7 +44,7 @@ Download Post Thumbnail Editor and unzip it to your `wp-content/plugins` directo
 
 Once the editor is installed there will be a new Settings Menu at Settings &rarr; Post Thumbnail Editor. The options available depend on the permissions given the current user.
 
-![Post Thumbnail Editor Options](options.jpg)
+![Post Thumbnail Editor Options](options.png)
 
 #### User Options
 
@@ -54,6 +54,10 @@ A user with permission to modify any post-thumbnails will have the ability to:
 
    Changes the user interface from using one concatenated javascript files to several javascript files that are loaded asynchronously using requirejs. *If the `WP_DEBUG` define is set by the site admin, this is set automatically and can't be disabled.*
 
+   **ChromePhp** - Uses [ChromePhp](https://github.com/ccampbell/chromephp) for logging
+
+   **File** - Logs to a local file that you can find at the link
+
 2. **Crop and Save**
 
    Skips the confirmation step of the cropping process.
@@ -61,6 +65,8 @@ A user with permission to modify any post-thumbnails will have the ability to:
 3. **Crop Picture Size**
 
    Defines the maximum dimension of the crop image. _No entry defaults to 600._
+
+   *Save to disk (Experimental)* - If you're having problems loading the initial editor image try checking this box. PTE will save the edit image to disk instead of creating it on the fly.
 
 4. **Reset to Defaults**
 

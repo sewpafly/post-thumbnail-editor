@@ -28,9 +28,7 @@ Download Post Thumbnail Extras and unzip it to your `wp-content/plugins`
 directory.  Alternately, use Wordpress' plugin updater to automatically install
 the stable version.
 
-<a class="btn btn-large btn-success" href="http://downloads.wordpress.org/plugin/post-thumbnail-extras.zip">Download Stable</a>
-<a class="btn btn-large btn-warning" href="https://github.com/sewpafly/post-thumbnail-extras/archive/master.zip">Download Development</a>
-<a class="btn btn-large btn-primary" href="http://wordpress.org/plugins/post-thumbnail-extras/">View @ Wordpress Plugins</a>
+<a class="btn btn-large btn-success" href="http://downloads.wordpress.org/plugin/post-thumbnail-extras.zip">Download Stable</a> <a class="btn btn-large btn-warning" href="https://github.com/sewpafly/post-thumbnail-extras/archive/master.zip">Download Development</a> <a class="btn btn-large btn-primary" href="http://wordpress.org/plugins/post-thumbnail-extras/">View @ Wordpress Plugins</a>
 
 ## Usage
 
