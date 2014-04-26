@@ -75,6 +75,11 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Changelog ==
 
+= 2.4.0 =
+* Bug fixes
+* Use temporary file for editor image _(experimental)_
+* Logging to file/chromephp
+
 = 2.3.0 =
 * Updated libraries
 * (re-)Added Thickbox/Media Library Integration (#65)
@@ -167,5 +172,5 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Upgrade Notice ==
 
-= 2.3.0 =
-Several new features and bug fixes since 2.2.1
+= 2.4.0 =
+Several new features and bug fixes since 2.3.0, wordpress 3.9 compatible
