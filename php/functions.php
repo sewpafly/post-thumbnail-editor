@@ -222,10 +222,7 @@ function pte_body( $id ){
 	$nonce = wp_create_nonce("image_editor-$id");
 	$meta = wp_get_attachment_metadata($id, true);
 
-	if ( is_array($meta) && isset( $meta['width'] ) ){
-		$big = max( $meta['width'], $meta['height'] );
-	}
-	else {
+	if ( !is_array($meta) || empty( $meta['width'] ) || empty( $meta['height'] ) ){
 		$logger->error( 
 			sprintf( __( "Invalid meta data for POST #%d: %s" )
 				, $id
