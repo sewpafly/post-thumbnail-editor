@@ -216,7 +216,7 @@ define [
             return
 
          for aspectRatio in $scope.aspectRatios
-            if aspectRatio.size is ar
+            if ar - 0.01 < aspectRatio.size < ar + 0.01
                aspectRatio.thumbnails.push thumb.name
                return
          $scope.aspectRatios.push

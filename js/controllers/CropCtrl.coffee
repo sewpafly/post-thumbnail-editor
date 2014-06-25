@@ -122,7 +122,7 @@ define [
                # Check Wordpress Crop setting (#2)
                if thumbnail.selected and crop > 0
                   # Every AR should be the same (#3)
-                  if ar isnt null and ar != tmp_ar
+                  if ar isnt null and (tmp_ar + 0.01 < ar or ar < tmp_ar - 0.01)
                      throw "PTE_EXCEPTION"
                   ar = tmp_ar
 
