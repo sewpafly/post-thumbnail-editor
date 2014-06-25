@@ -188,7 +188,7 @@ function u( $path ){
                               ng-change="updateSelected()"/>
 
                         </td>
-                        <td>{{ thumbnail.name }}</td>
+                        <td>{{ thumbnail.display_name || thumbnail.name }}</td>
                         <td class="align-right">{{ thumbnail.width }}</td>
                         <td class="align-right">{{ thumbnail.height }}</td>
                         <td>{{ thumbnail.crop }}</td>

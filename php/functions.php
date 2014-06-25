@@ -98,12 +98,21 @@ function pte_filter_sizes( $element ){
  *   * height
  *   * width
  *   * crop boolean
+ *   * display name
  *
  * Thanks to the ajax_thumbnail_rebuild plugin
  */
 function pte_get_alternate_sizes($filter=true){
 	//Put in some code to check if it's already been called...
 	global $_wp_additional_image_sizes, $pte_gas;
+
+	$size_names = apply_filters( 'image_size_names_choose', array(
+		'thumbnail' => __( 'Thumbnail' ),
+		'medium'    => __( 'Medium' ),
+		'large'     => __( 'Large' ),
+		'full'      => __( 'Full Size' )
+	) );
+
 	if ( !isset($pte_gas) ){
 		$pte_gas = array();
 		$sizes = array();
@@ -137,6 +146,11 @@ function pte_get_alternate_sizes($filter=true){
 				'height' => $height,
 				'crop'   => $crop
 			);
+
+			// If the display name is set for this size, add this information
+			if (isset($size_names[$s])) {
+				$pte_gas[$s]['display_name'] = $size_names[$s];
+			}
 		}
 	}
 	return $pte_gas;
