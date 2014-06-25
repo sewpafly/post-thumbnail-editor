@@ -19,11 +19,10 @@ class PTE_Image_Editor_GD extends WP_Image_Editor_GD {
 	 * @return boolean|WP_Error
 	 */
 	public function crop( $src_x, $src_y, $src_w, $src_h, $dst_w = null, $dst_h = null, $src_abs = false ) {
-		$ar = $src_w / $src_h;
-		$dst_ar = $dst_w / $dst_h;
-		if ( isset( $_GET['pte-fit-crop-color'] ) && abs( $ar - $dst_ar ) > 0.01 ){
-			PteLogger::debug( sprintf( "AR: '%f'\tOAR: '%f'", $ar, $dst_ar ) );
+		if ( pte_is_crop_border_enabled( $src_w, $src_h, $dst_w, $dst_h ) ){
 			// Crop the image to the correct aspect ratio...
+			$ar = $src_w / $src_h;
+			$dst_ar = $dst_w / $dst_h;
 			if ( $dst_ar > $ar ) { // constrain to the dst_h
 				$tmp_dst_h = $dst_h;
 				$tmp_dst_w = $dst_h * $ar;
@@ -42,7 +41,7 @@ class PTE_Image_Editor_GD extends WP_Image_Editor_GD {
 			if ( function_exists( 'imageantialias' ) )
 				imageantialias( $img, true );
 
-			if ( preg_match( "/^#[a-fA-F0-9]{6}$/", $_GET['pte-fit-crop-color'] ) ) {
+			if ( pte_is_crop_border_opaque() ) {
 				$c = self::getRgbFromHex( $_GET['pte-fit-crop-color'] );
 				$color = imagecolorallocate( $img, $c[0], $c[1], $c[2] );
 			}

@@ -19,11 +19,10 @@ class PTE_Image_Editor_Imagick extends WP_Image_Editor_Imagick {
 	 * @return boolean|WP_Error
 	 */
 	public function crop( $src_x, $src_y, $src_w, $src_h, $dst_w = null, $dst_h = null, $src_abs = false ) {
-		$ar = $src_w / $src_h;
-		$dst_ar = $dst_w / $dst_h;
-		if ( isset( $_GET['pte-fit-crop-color'] ) && abs( $ar - $dst_ar ) > 0.01 ){
-			PteLogger::debug( sprintf( "IMAGICK - AR: '%f'\tOAR: '%f'", $ar, $dst_ar ) );
+		if ( pte_is_crop_border_enabled( $src_w, $src_h, $dst_w, $dst_h ) ){
 			// Crop the image to the correct aspect ratio...
+			$ar = $src_w / $src_h;
+			$dst_ar = $dst_w / $dst_h;
 			if ( $dst_ar > $ar ) { // constrain to the dst_h
 				$tmp_dst_h = $dst_h;
 				$tmp_dst_w = $dst_h * $ar;
@@ -37,16 +36,9 @@ class PTE_Image_Editor_Imagick extends WP_Image_Editor_Imagick {
 				$tmp_dst_y = ($dst_h / 2) - ($tmp_dst_h / 2);
 			}
 
-			//$color = this::getImagickPixel( $_GET['pte-fit-crop-color'] );
-
-			if ( preg_match( "/^#[a-fA-F0-9]{6}$/", $_GET['pte-fit-crop-color'] ) ) {
+			if ( pte_is_crop_border_opaque() ) {
 				$color = new ImagickPixel( $_GET['pte-fit-crop-color'] );
 			}
-			//else {
-			//    PteLogger::debug( "setting transparent/white" );
-			//    $color = new ImagickPixel( 'white' );
-			//    //$color->setColorValue( Imagick::COLOR_ALPHA, 0 );
-			//}
 
 			try {
 				// crop the original image

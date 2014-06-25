@@ -372,11 +372,16 @@ function pte_get_width_height( $size_information, $w, $h ){
  *  * we shouldn't overwrite old images that have been placed into posts
  *  * keeps problems from occuring when I try to debug and people think picture
  *    didn't save, when it's just a caching issue
+ *
+ * @param $file the original file
+ * @param $w width of cropped image
+ * @param $h height of the cropped image
+ * @param $transparent if the cropped image is transparent
  */
-function pte_generate_filename( $file, $w, $h ){
+function pte_generate_filename( $file, $w, $h, $transparent=false){
 	$options      = pte_get_options();
 	$info         = pathinfo( $file );
-	$ext          = $info['extension'];
+	$ext          = (false !== $transparent) ? 'png' : $info['extension'];
 	$name         = wp_basename( $file, ".$ext" );
 	$suffix       = "{$w}x{$h}";
 
@@ -437,7 +442,7 @@ function pte_resize_images(){
 	$original_file  = _load_image_to_edit_path( $id );
 	$original_size  = @getimagesize( $original_file );
 
-	// SETS PTE_TMP_DIR and PTE_TMP_URL
+	// SETS $PTE_TMP_DIR and $PTE_TMP_URL
 	extract( pte_tmp_dir() );
 	$thumbnails     = array();
 
@@ -460,9 +465,10 @@ function pte_resize_images(){
 		extract( pte_get_width_height( $data, $w, $h ) );
 		$logger->debug( "WIDTHxHEIGHT: $dst_w x $dst_h" );
 
-		// Set the directory
-		$basename = pte_generate_filename( $original_file, $dst_w, $dst_h );
-		// Set the file and URL's - defines set in pte_ajax
+		// Set the cropped filename
+		$transparent = pte_is_crop_border_enabled($w, $h, $dst_w, $dst_h)
+			&& !pte_is_crop_border_opaque();
+		$basename = pte_generate_filename( $original_file, $dst_w, $dst_h, $transparent );
 		$tmpfile  = "{$PTE_TMP_DIR}{$id}" . DIRECTORY_SEPARATOR . "{$basename}";
 
 		// === CREATE IMAGE ===================
@@ -705,4 +711,25 @@ function pte_init_iframe() {
 	pte_edit_page();
 	print_footer_scripts();
 	print( '</body></html>' );
+}
+
+/**
+ * Are we adding borders
+ *
+ * @param $src_w The width of the src image
+ * @param $src_h The height of the src image
+ * @param $dst_w The width of the dst image
+ * @param $dst_h The height of the dst image
+ */
+function pte_is_crop_border_enabled( $src_w, $src_h, $dst_w, $dst_h ) {
+	$src_ar = $src_w / $src_h;
+	$dst_ar = $dst_w / $dst_h;
+	return ( isset( $_REQUEST['pte-fit-crop-color'] ) && abs( $src_ar - $dst_ar ) > 0.01 );
+}
+
+/**
+ * Is the border transparent
+ */
+function pte_is_crop_border_opaque() {
+	return ( preg_match( "/^#[a-fA-F0-9]{6}$/", $_REQUEST['pte-fit-crop-color'] ) );
 }
