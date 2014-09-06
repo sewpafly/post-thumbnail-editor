@@ -2,20 +2,30 @@
    // for debug : trace every event
    //var originalTrigger = wp.media.view.MediaFrame.Post.prototype.trigger;
    //wp.media.view.MediaFrame.Post.prototype.trigger = function(){
-	//   console.log('Event Triggered:', arguments);
-	//   originalTrigger.apply(this, Array.prototype.slice.call(arguments));
+   //  console.log('Event Triggered:', arguments);
+   //  originalTrigger.apply(this, Array.prototype.slice.call(arguments));
    //}
 
    var pteIframeLink;
    pteIframeLink = _.template(pteL10n.url + "&title=false");
 
    $( function() {
-      var injectTemplate, template;
-      // Change the attachment-details html
-      injectTemplate = _.template("<a class=\"pte\" href=\"#\">\n   " + pteL10n.PTE + "\n</a>", {});
-      template = $("#tmpl-attachment-details").text();
-      template = template.replace(/(<div class="compat-meta">)/, "" + injectTemplate + "\n$1");
-      $("#tmpl-attachment-details").text(template);
+     var injectTemplate, template;
+     // Change the attachment-details html
+     injectTemplate = _.template("<a class=\"pte\" href=\"" +
+                                 pteL10n.url.replace(/&TB_iframe=true/,'') + 
+                                 "\">\n   " +
+                                 pteL10n.PTE +
+                                 "\n</a>", {id:"{{ data.id }}"});
+     template = $("#tmpl-attachment-details").text();
+     template = template.replace(/(<div class="compat-meta">)/, "" + injectTemplate + "\n$1");
+     $("#tmpl-attachment-details").text(template);
+
+     // Change the *other* attachment details
+     template = $("#tmpl-attachment-details-two-column").text();
+     template = template.replace(/(<div class="actions">)([\s\S]*?)(<\/div>)/m,
+                                 "$1$2" + injectTemplate + "$3");
+     $("#tmpl-attachment-details-two-column").text(template);
    });
 
    // Hook into the media.views.attachment to create our link
@@ -38,10 +48,17 @@
       //
       // See media-views.js:1077:iframeContent()
       //
-      loadPteEditor: function() {
-         if ( this.controller.state().id == "featured-image" && !featuredImageOpen ) {
+      loadPteEditor: function(evt) {
+         evt.preventDefault();
+         var state = this.controller.state().id;
+         var me = this;
+         if ( !featuredImageOpen && state !== "pte" ) {
             featuredImageOpen = true;
             this.controller.createIframeStates();
+            me.controller.once('close', function() {
+              featuredImageOpen = false;
+              me.controller.setState(state);
+            });
          }
 
          this.controller.state( 'pte' ).set({
@@ -49,7 +66,12 @@
             title: pteL10n.PTE + ": " + this.model.attributes.filename,
             content: 'iframe'
          });
-         this.controller.setState('pte');
+
+         if (this.controller.state().id == "pte") this.controller.state().trigger("activate");
+         else this.controller.setState('pte');
+
+         // wordpress 4.0 media library doesn't set the media-frame state
+         jQuery('.media-modal-content > div').addClass('media-frame');
       }
    });
 

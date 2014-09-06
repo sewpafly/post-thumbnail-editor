@@ -308,6 +308,35 @@ function pte_check_id( $id ) {
 	return apply_filters( 'pte-capability-check', false, $id );
 }
 
+/** 
+ * Upload.php (the media library page) fires:
+ * - 'load-upload.php' (wp-admin/admin.php)
+ * - GRID VIEW:
+ *   + 'wp_enqueue_media' (upload.php:wp-includes/media.php:wp_enqueue_media) 
+ * - LIST VIEW:
+ *   + 'media_row_actions' (filter)(class-wp-media-list-table.php)
+ */
+add_action('load-upload.php', 'pte_media_library_boot');
+function pte_media_library_boot() { 
+    add_action('wp_enqueue_media', 'pte_load_media_library');
+}
+function pte_load_media_library() {
+    global $mode; 
+    if ('grid' !== $mode) return;
+	wp_enqueue_script( 'pte'
+		, PTE_PLUGINURL . 'js/snippets/pte_enable_media.js'
+		, null
+		, PTE_VERSION
+		, true
+	);
+	wp_localize_script('pte'
+		, 'pteL10n'
+		, array('PTE' => __('Post Thumbnail Editor', PTE_DOMAIN)
+			, 'url' => pte_url( "<%= id %>", true )
+		)
+	);
+}
+
 /* Adds the Thumbnail option to the media library list */
 add_filter('media_row_actions', 'pte_media_row_actions', 10, 3); // priority: 10, args: 3
 
