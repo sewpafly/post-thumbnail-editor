@@ -17,6 +17,8 @@ function u( $path ){
    var post_id     = <?php echo $post->ID; ?> 
      , post_width  = <?php echo $meta['width']; ?> 
      , post_height = <?php echo $meta['height']; ?> 
+     , pte_nonce   = "<?php echo wp_create_nonce("pte-resize-{$post->ID}"); ?>"
+     , pte_options_nonce = "<?php echo wp_create_nonce("pte-options"); ?>"
      , pteI18n     = <?php echo json_encode( 
 			  array( 'no_t_selected' => __( 'No thumbnails selected', PTE_DOMAIN )
 			  , 'no_c_selected' => __( 'No crop selected', PTE_DOMAIN )

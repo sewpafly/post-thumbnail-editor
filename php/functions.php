@@ -429,6 +429,11 @@ function pte_resize_images(){
 		return pte_json_error( "ResizeImages initialization failed: '{$id}-{$w}-{$h}-{$x}-{$y}'" );
 	}
 
+	// Check nonce
+	if ( !check_ajax_referer( "pte-resize-{$id}", 'pte-nonce', false ) ){
+		return pte_json_error( "CSRF Check failed" );
+	}
+
 	// Get the sizes to process
 	$pte_sizes      = $_GET['pte-sizes'];
 	if ( !is_array( $pte_sizes ) ){

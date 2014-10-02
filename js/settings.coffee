@@ -9,3 +9,6 @@ define [], ->
       id:      getWindowVar 'post_id'
       ajaxurl: getWindowVar 'ajaxurl'
       i18n:    getWindowVar 'pteI18n'
+      nonce:   getWindowVar 'pte_nonce'
+      options_nonce: getWindowVar 'pte_options_nonce'
+

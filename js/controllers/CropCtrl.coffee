@@ -175,6 +175,7 @@ define [
             'h':h
             'x':x
             'y':y
+            'pte-nonce': settings.nonce
 
          if $scope.pteCropSave
             crop_options['save'] = 'true'

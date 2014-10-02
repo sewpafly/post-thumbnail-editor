@@ -4,7 +4,7 @@ Plugin name: Post Thumbnail Editor
 Plugin URI: http://sewpafly.github.io/post-thumbnail-editor/
 Author: sewpafly
 Author URI: http://sewpafly.github.io/post-thumbnail-editor/
-Version: 2.4.1
+Version: 2.4.2
 Description: Individually manage your post thumbnails
 
 LICENSE
@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
 define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
 define( 'PTE_DOMAIN', "post-thumbnail-editor");
-define( 'PTE_VERSION', "2.4.1");
+define( 'PTE_VERSION', "2.4.2");
 
 // TODO:
 // * Find the best place for the require log (only when it's really needed, create an init function?)
@@ -105,6 +105,11 @@ function pte_get_options(){
 function pte_update_user_options(){
 	require_once( PTE_PLUGINPATH . 'php/options.php' );
 	$options = pte_get_user_options();
+
+	// Check nonce
+	if ( !check_ajax_referer( "pte-options", 'pte-nonce', false ) ){
+		return pte_json_error( "CSRF Check failed" );
+	}
 
 	if ( isset( $_REQUEST['pte_crop_save'] ) ) {
 		if ( strtolower( $_REQUEST['pte_crop_save'] ) === "true" )

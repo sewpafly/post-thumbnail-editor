@@ -59,6 +59,7 @@ define [
       ###
       $scope.updateOptions = (update_options) ->
          update_options['pte-action'] = 'change-options'
+         update_options['pte-nonce'] = settings.options_nonce
          $log.log "Updating Options", update_options
 
          updated = $scope.thumbnailResource.get update_options, ->
