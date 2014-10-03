@@ -76,7 +76,7 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 == Changelog ==
 
 = 2.4.2 =
-* Fix CSRF vulnerabilities.  Thanks to J.D. Grimes for reporting them.
+* Fix CSRF vulnerabilities.  Thanks to [J.D. Grimes](http://codesymphony.co/) for reporting them.
 
 = 2.4.1 =
 * Bug fixes: see issues #100, #101, #102 on github
