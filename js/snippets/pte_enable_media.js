@@ -13,7 +13,7 @@
      var injectTemplate, template;
      // Change the attachment-details html
      injectTemplate = _.template("<a class=\"pte\" href=\"" +
-                                 pteL10n.url.replace(/&TB_iframe=true/,'') + 
+                                 pteL10n.fallbackUrl.replace(/&TB_iframe=true/,'') + 
                                  "\">\n   " +
                                  pteL10n.PTE +
                                  "\n</a>", {id:"{{ data.id }}"});
@@ -24,7 +24,7 @@
      // Change the *other* attachment details
      template = $("#tmpl-attachment-details-two-column").text();
      template = template.replace(/(<div class="actions">)([\s\S]*?)(<\/div>)/m,
-                                 "$1$2" + injectTemplate + "$3");
+                                 "$1$2| " + injectTemplate + "$3");
      $("#tmpl-attachment-details-two-column").text(template);
    });
 
@@ -50,6 +50,8 @@
       //
       loadPteEditor: function(evt) {
          evt.preventDefault();
+         evt.stopImmediatePropagation();
+
          var state = this.controller.state().id;
          var me = this;
          if ( !featuredImageOpen && state !== "pte" ) {
