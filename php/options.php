@@ -107,8 +107,8 @@ function pte_site_options_validate( $input ){
 
 	foreach ( $sizes as $size ){
 		// Hidden
-		if ( is_array( $input['pte_hidden_sizes'] ) 
-			and in_array( $size, $input['pte_hidden_sizes'] ) ){
+		if ( isset($input['pte_hidden_sizes']) && is_array( $input['pte_hidden_sizes'] ) 
+			&& in_array( $size, $input['pte_hidden_sizes'] ) ){
 				$pte_hidden_sizes[] = $size;
 			}
 	}
@@ -116,7 +116,7 @@ function pte_site_options_validate( $input ){
 	$output = array( 'pte_hidden_sizes' => $pte_hidden_sizes );
 
 	// Check the JPEG Compression value
-	if ( array_key_exists($input, 'pte_jpeg_compression') && $input['pte_jpeg_compression'] != "" ){
+	if ( isset($input['pte_jpeg_compression']) && $input['pte_jpeg_compression'] != "" ){
 		$tmp_jpeg_compression = (int) preg_replace( "/[\D]/", "", $input['pte_jpeg_compression'] );
 		if ( ! is_int( $tmp_jpeg_compression )
 			|| $tmp_jpeg_compression < 0 
