@@ -444,7 +444,6 @@ function pte_edit_setup() {
 	$title = __( "Post Thumbnail Editor", PTE_DOMAIN );
 
 	include_once( PTE_PLUGINPATH . "php/functions.php" );
-	$pte_body = pte_body( $post->ID );
 
 	// Add the scripts and styles
 	wp_enqueue_script( 'jquery' );
@@ -452,6 +451,8 @@ function pte_edit_setup() {
 	wp_enqueue_script( 'iris' );
 	wp_enqueue_style( 'colors' );
 	wp_enqueue_style( 'wp-jquery-ui-dialog' );
+
+	$pte_body = pte_body( $post->ID );
 }
 
 /**

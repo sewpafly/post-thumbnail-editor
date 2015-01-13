@@ -250,13 +250,6 @@ function pte_body( $id ){
 		"\nUSER-AGENT:  " . $_SERVER['HTTP_USER_AGENT'] .
 		"\nWORDPRESS:   " . $GLOBALS['wp_version'] );
 
-	$script_url = PTE_PLUGINURL . 'php/load-scripts.php?load=jquery,imgareaselect,jquery-json,pte';
-	$style_url = PTE_PLUGINURL . 'php/load-styles.php?load=imgareaselect,pte';
-	if ( $options['pte_debug'] ){
-		$style_url .= "&d=1";
-		$script_url .= "&d=1";
-	}
-
 	// Generate an image and put into the ptetmp directory
 	if (false === $editor_image = pte_generate_working_image($id)) {
 		$editor_image = sprintf("%s?action=pte_imgedit_preview&amp;_ajax_nonce=%s&amp;postid=%d&amp;rand=%d",
