@@ -75,6 +75,10 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Changelog ==
 
+= 2.4.4 =
+* Fixed bug with debug mode and certain plugins
+* Updated French translation
+
 = 2.4.3 =
 * Debug mode was broken
 * Update the generated .gz javascript file
@@ -185,5 +189,6 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Upgrade Notice ==
 
-= 2.4.2 =
-Patched CSRF vulnerabilities
+= 2.4.4 =
+* Updated french translation
+* Fixed debug mode bug
