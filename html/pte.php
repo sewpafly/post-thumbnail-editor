@@ -289,9 +289,7 @@ function enqueue_script_filter($tag, $handle) {
 	return str_replace(' src', ' data-main="' . PTE_PLUGINURL . 'js/main" src', $tag);
 }
 
-$options = pte_get_options();
-
-if ( $options['pte_debug'] ) {
+function enqueue_last() {
 	wp_enqueue_script(
 		'pte-require', 
 		PTE_PLUGINURL . "apps/requirejs/require.js",
@@ -299,6 +297,13 @@ if ( $options['pte_debug'] ) {
 		PTE_VERSION, 
 		true
 	);
+}
+
+$options = pte_get_options();
+
+if ( $options['pte_debug'] ) {
+	add_action('wp_print_footer_scripts', 'enqueue_last', 1, 0);
+	add_action('admin_print_footer_scripts', 'enqueue_last', 1, 0);
 	add_filter('script_loader_tag', 'enqueue_script_filter', 10, 2);
 }
 else {

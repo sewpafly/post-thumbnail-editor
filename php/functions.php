@@ -707,7 +707,7 @@ function pte_init_iframe() {
 	print( '</head><body class="wp-core-ui pte-iframe">' );
 	// Simply echo the created HTML
 	pte_edit_page();
-	print_footer_scripts();
+	wp_print_footer_scripts();
 	print( '</body></html>' );
 }
 
