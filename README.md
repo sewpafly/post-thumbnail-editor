@@ -6,16 +6,17 @@ A wordpress plugin for managing and editing [post thumbnails][pt].
 
 ## Contents
 
-As of version 3.0, PTE now follows conventions established by 
-<https://github.com/DevinVinson/WordPress-Plugin-Boilerplate> for purposes of
-code clarity and a general cleanup of existing features. A broad overview of the
-changes include moving the main code into the `trunk` subdirectory, where you'll
-find the regular wordpress files (plugin.php, README.txt, etc.), and the assets
-directory where the images used for the wordpress plugin site are stored.
+As of version 3.0, PTE now follows conventions established by
+<https://github.com/DevinVinson/WordPress-Plugin-Boilerplate> (@3d3f181) for
+purposes of code clarity and a general cleanup of existing features. A broad
+overview of the changes include moving the main code into the `trunk`
+subdirectory, where you'll find the regular wordpress files (plugin.php,
+README.txt, etc.), and the assets directory where the images used for the
+wordpress plugin site are stored.
 
 ## Installation
 
-PTE can be installed in one of two ways, both of which are documented below. Note that because of its directory structure, the PTE cannot be installed “as-is.”
+PTE can be installed in one of two ways, both of which are documented below. Note that because of its directory structure, PTE cannot be installed “as-is.”
 
 Instead, the options are:
 
@@ -24,7 +25,7 @@ Instead, the options are:
 1. Copy the `trunk` directory into your `wp-content/plugins` directory. You may wish to rename this to something else.
 2. In the WordPress dashboard, navigation to the *Plugins* page
 Locate the menu item that reads “Post Thumbnail Editor”.
-3. Click on *Activate.*
+3. Click on *Activate*.
 
 ### Creating a Symbolic Link
 
@@ -33,14 +34,14 @@ Locate the menu item that reads “Post Thumbnail Editor”.
 1. Create a symbolic link between the `trunk` directory and the plugin. For example: `ln -s post-thumbnail-editor/trunk /path/to/wordpress/wp-content/plugins/post-thumbnail-editor`
 2. In the WordPress dashboard, navigation to the *Plugins* page
 Locate the menu item that reads “Post Thumbnail Editor”.
-3. Click on *Activate.*
+3. Click on *Activate*.
 
 #### On Windows
 
 1. Create a symbolic link between the `trunk` directory and the plugin. For example: `mklink /J path\to\wp-content\plugins \path\to\post-thumbnail-editor\trunk`
 2. In the WordPress dashboard, navigation to the *Plugins* page
 Locate the menu item that reads “Post Thumbnail Editor”.
-3. Click on *Activate.*
+3. Click on *Activate*.
 
 ## Build Instructions
 

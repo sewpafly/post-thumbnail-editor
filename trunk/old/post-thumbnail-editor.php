@@ -264,7 +264,7 @@ function pte_add_thickbox() {
 
 
 /* For all purpose needs */
-add_action('wp_ajax_pte_ajax', 'pte_ajax');
+/*add_action('wp_ajax_pte_ajax', 'pte_ajax');
 function pte_ajax(){
 	// Move all adjuntant functions to a separate file and include that here
 	require_once(PTE_PLUGINPATH . 'php/functions.php');
@@ -294,7 +294,7 @@ function pte_ajax(){
 		break;
 	}
 	die();
-}
+}*/
 
 /**
  * Perform the capability check
@@ -302,6 +302,7 @@ function pte_ajax(){
  * @param $id References the post that the user needs to have permission to edit
  * @returns boolean true if the current user has permission else false
  */
+/*
 function pte_check_id( $id ) {
 	if ( !$post = get_post( $id ) ) {
 		return false;
@@ -312,7 +313,7 @@ function pte_check_id( $id ) {
 		return apply_filters( 'pte-capability-check', true, $id );
 	}
 	return apply_filters( 'pte-capability-check', false, $id );
-}
+}*/
 
 /** 
  * Upload.php (the media library page) fires:
@@ -322,7 +323,7 @@ function pte_check_id( $id ) {
  * - LIST VIEW:
  *   + 'media_row_actions' (filter)(class-wp-media-list-table.php)
  */
-add_action('load-upload.php', 'pte_media_library_boot');
+/*add_action('load-upload.php', 'pte_media_library_boot');
 function pte_media_library_boot() { 
     add_action('wp_enqueue_media', 'pte_load_media_library');
 }
@@ -343,9 +344,9 @@ function pte_load_media_library() {
 		)
 	);
 }
-
+*/
 /* Adds the Thumbnail option to the media library list */
-add_filter('media_row_actions', 'pte_media_row_actions', 10, 3); // priority: 10, args: 3
+/*add_filter('media_row_actions', 'pte_media_row_actions', 10, 3); // priority: 10, args: 3
 
 function pte_media_row_actions($actions, $post, $detached){
 	// Add capability check
@@ -361,7 +362,7 @@ function pte_media_row_actions($actions, $post, $detached){
 		. "'>" . __( 'Thumbnails', PTE_DOMAIN ) . "</a>";
 	return $actions;
 }
-
+*/
 
 /* Add Settings Page */
 add_action( 'load-settings_page_pte', 'pte_options' );
