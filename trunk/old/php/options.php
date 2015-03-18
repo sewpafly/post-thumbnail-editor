@@ -1,6 +1,6 @@
 <?php
 
-//http://ottopress.com/2009/wordpress-settings-api-tutorial/
+/*//http://ottopress.com/2009/wordpress-settings-api-tutorial/
 function pte_options_init(){
 	add_filter( 'option_page_capability_pte_options', 'pte_edit_posts_cap' );
 	register_setting( 'pte_options'
@@ -66,7 +66,7 @@ function pte_options_init(){
 }
 
 function pte_options_page(){
-	/*<code><pre><?php print_r( pte_get_options() ); ?></pre></code>*/
+	[><code><pre><?php print_r( pte_get_options() ); ?></pre></code><]
 ?>
 	<style type="text/css" media="screen">
 	.sub-option {
@@ -89,7 +89,7 @@ function pte_options_page(){
 		</form>
 	</div>
 <?php
-}
+}*/
 
 /*********** Internal to options **************************************/
 
@@ -173,7 +173,7 @@ function pte_options_validate( $input ){
 	return $options;
 }
 
-function pte_debug_display(){
+/*function pte_debug_display(){
 	$options = pte_get_user_options();
 	$option_label = pte_get_option_name();
 ?>
@@ -204,9 +204,9 @@ function pte_debug_display(){
 		); ?></label>
 	</div>
 <?php
-}
+}*/
 
-function pte_crop_save_display(){
+/*function pte_crop_save_display(){
 	$options = pte_get_user_options();
 	$option_label = pte_get_option_name();
 ?>
@@ -218,7 +218,6 @@ function pte_crop_save_display(){
 		</span>
 <?php
 }
-
 function pte_imgedit_size_display(){
 	$options = pte_get_user_options();
 	$option_label = pte_get_option_name();
@@ -249,6 +248,7 @@ function pte_reset_display(){
 	?>[reset]" type="submit" value="<?php esc_attr_e('Reset User Options', PTE_DOMAIN); ?>" />
 <?php
 }
+*/
 
 function pte_gcd($a, $b){
 	if ( $a == 0 ) return b;
@@ -309,7 +309,7 @@ function pte_jpeg_compression_display(){
 <?php
 }
 
-function pte_cache_buster_display(){
+/*function pte_cache_buster_display(){
 	$options = pte_get_site_options();
 ?>
 	<span><input type="checkbox" name="pte-site-options[pte_cache_buster]" <?php 
@@ -320,11 +320,11 @@ function pte_cache_buster_display(){
 ?></label>
 	</span>
 <?php
-}
+}*/
 
 // Anonymous Functions that can't be anonymous thanks to
 // some versions of PHP
-function pte_noop(){}
+//function pte_noop(){}
 function pte_edit_posts_cap( $capability ){ return 'edit_posts'; }
 function pte_site_options_html(){ 
 	_e( "These site-wide settings can only be changed by an administrator", PTE_DOMAIN ); 

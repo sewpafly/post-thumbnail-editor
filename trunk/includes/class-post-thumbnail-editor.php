@@ -155,16 +155,22 @@ class Post_Thumbnail_Editor {
 
 		$plugin_admin = new PTE_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_filter( 'media_row_actions', $plugin_admin, 'media_row_actions', 10, 3 );
-
         // Upload.php (the media library page) fires:
         // - 'load-upload.php' (wp-admin/admin.php)
         // - GRID VIEW:
         //   + 'wp_enqueue_media' (upload.php:wp-includes/media.php:wp_enqueue_media) 
         // - LIST VIEW:
         //   + 'media_row_actions' (filter)(class-wp-media-list-table.php)
-
+		$this->loader->add_filter( 'media_row_actions', $plugin_admin, 'media_row_actions', 10, 3 );
 		$this->loader->add_action( 'load-upload.php', $plugin_admin, 'add_media_library_load_action' );
+		// Add the PTE link to the featured image in the post screen
+		// Called in wp-admin/includes/post.php
+		$this->loader->add_filter( 'admin_post_thumbnail_html', $plugin_admin, 'link_featured_image', 10, 2 );
+		// Options
+		$this->loader->add_action( 'load-settings_page_pte', $plugin_admin, 'options' );
+		$this->loader->add_action( 'load-options', $plugin_admin, 'options' );
+		// Admin Menus
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'admin_menu' );
 
 	}
 

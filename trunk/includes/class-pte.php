@@ -91,7 +91,7 @@ class PTE {
 	{
 
 		if ( ! isset( $this->options ) ) {
-			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-options.php';
+			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-pte-options.php';
 			$this->options = new PTE_Options();
 		}
 
@@ -146,4 +146,10 @@ class PTE {
 
 	}
 
+	/**
+	 * Static noop
+	 *
+	 * @since 3.0.0
+	 */
+	public static function noop () {}
 }

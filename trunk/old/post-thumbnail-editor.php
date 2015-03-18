@@ -47,14 +47,14 @@ require_once( PTE_PLUGINPATH . 'php/log.php' );
 /*
  * Option Functionality
  */
-function pte_get_option_name(){
+/*function pte_get_option_name(){
 	global $current_user;
 	if ( ! isset( $current_user ) ){
 		get_currentuserinfo();
 	}
 	return "pte-option-{$current_user->ID}";
-}
-
+}*/
+/*
 function pte_get_user_options(){
 	$pte_options = get_option( pte_get_option_name() );
 	if ( !is_array( $pte_options ) ){
@@ -82,7 +82,7 @@ function pte_get_site_options(){
 		, 'cache_buster' => true
 	);
 	return array_merge( $defaults, $pte_site_options );
-}
+}*/
 
 function pte_get_options(){
 	global $pte_options, $current_user;
@@ -235,7 +235,7 @@ EOT;
 
 
 
-// Add the PTE link to the featured image in the post screen
+/*// Add the PTE link to the featured image in the post screen
 // Called in wp-admin/includes/post.php
 add_filter( 'admin_post_thumbnail_html', 'pte_admin_post_thumbnail_html', 10, 2 );
 
@@ -252,7 +252,7 @@ function pte_admin_post_thumbnail_html( $content, $post_id ){
 		. '</a></p>';
 }
 
-/* Fix wordpress ridiculousness about making a thickbox max width=720 */
+[> Fix wordpress ridiculousness about making a thickbox max width=720 <]
 function pte_add_thickbox() {
 	add_thickbox();
 	wp_enqueue_script('pte-fix-thickbox',
@@ -260,7 +260,7 @@ function pte_add_thickbox() {
 		array( 'media-upload' ),
 		PTE_VERSION
 	);
-}
+}*/
 
 
 /* For all purpose needs */
@@ -364,17 +364,17 @@ function pte_media_row_actions($actions, $post, $detached){
 }
 */
 
-/* Add Settings Page */
+/*[> Add Settings Page <]
 add_action( 'load-settings_page_pte', 'pte_options' );
-/* Add Settings Page -> Submit/Update options */
+[> Add Settings Page -> Submit/Update options <]
 add_action( 'load-options.php', 'pte_options' );
 function pte_options(){
 	require_once( PTE_PLUGINPATH . 'php/options.php' );
 	pte_options_init();
-}
+}*/
 
 /* Add SubMenus/Pages */
-add_action( 'admin_menu', 'pte_admin_menu' );
+//add_action( 'admin_menu', 'pte_admin_menu' );
 
 /**
  * These pages are linked into the hook system of wordpress, this means
