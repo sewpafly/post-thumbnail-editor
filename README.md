@@ -38,9 +38,12 @@ Locate the menu item that reads “Post Thumbnail Editor”.
 
 #### On Windows
 
-1. Create a symbolic link between the `trunk` directory and the plugin. For example: `mklink /J path\to\wp-content\plugins \path\to\post-thumbnail-editor\trunk`
+1. Create a symbolic link between the `trunk` directory and the plugin. For
+   example: `mklink /J path\to\wp-content\plugins \path\to\post-thumbnail-editor\trunk`
+
 2. In the WordPress dashboard, navigation to the *Plugins* page
-Locate the menu item that reads “Post Thumbnail Editor”.
+   Locate the menu item that reads “Post Thumbnail Editor”.
+
 3. Click on *Activate*.
 
 ## Build Instructions
@@ -54,6 +57,25 @@ to run outside of `DEBUG` mode, should be compiled and minified using gulp.
 * [Poedit](http://www.poedit.net/)
 * [makepot](http://i18n.svn.wordpress.org/tools/trunk/)
 * [i18n](https://github.com/grappler/i18n)
+
+## Basic Structure
+
+Starts in `wp-includes/class-post-thumbnail-editor.php`, which sets up the most
+basic hooks to load the pages in the admin and media library.
+
+`admin/class-pte-admin.php` has the code that runs when the hooks are called.
+
+`admin/class-pte-options.php` has the code that runs when the options hooks
+are called.  Additionally this class is added to the static `PTE` object so that
+all the options can be found easily across the different code points.
+
+`includes/class-pte-api.php` contains the foundational code for the plugin, with
+the methods that need to be run externally (get thumbnail information, resize,
+delete, etc.)
+
+`client` is an almost standalone javascript client for PTE. `class-pte-client`
+has some code for generating the HTML to start the client and for accessing the
+URLs.
 
 ## License
 

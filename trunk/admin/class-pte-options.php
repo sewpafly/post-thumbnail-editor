@@ -129,7 +129,8 @@ class PTE_Options {
 	 */
 	public function init () {
 		
-		add_filter( 'option_page_capability_pte_options', array( $this, 'pte_edit_posts_cap' ) );
+		add_filter( 'option_page_capability_pte_options', array( $this, 'edit_options_cap' ) );
+
 		register_setting( 'pte_options',
 			$this->name(),   // Settings are per user
 			'pte_options_validate' );
@@ -199,6 +200,16 @@ class PTE_Options {
 			$options = $this->get_site_options();
 		}
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . "admin/partials/options-${name}.php";
+	}
+	
+	/**
+	 * Filter function to return the required capabilities for editing PTE
+	 * options.
+	 *
+	 * @return required capability to modify PTE options (e.g. 'edit_posts')
+	 */
+	public function edit_options_cap ( $capability ) {
+		return 'edit_posts';
 	}
 	
 	/**

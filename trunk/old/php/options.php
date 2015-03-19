@@ -266,7 +266,7 @@ function pte_gcd($a, $b){
 	return $a;
 }
 
-function pte_sizes_display(){
+/*function pte_sizes_display(){
 	require_once( 'functions.php' );
 	$options = pte_get_options();
 
@@ -307,7 +307,7 @@ function pte_jpeg_compression_display(){
 	<br/><em><?php _e("No entry defaults to using the 'jpeg_quality' filter or 90", PTE_DOMAIN); ?></em>
 	</span>
 <?php
-}
+}*/
 
 /*function pte_cache_buster_display(){
 	$options = pte_get_site_options();
@@ -325,7 +325,7 @@ function pte_jpeg_compression_display(){
 // Anonymous Functions that can't be anonymous thanks to
 // some versions of PHP
 //function pte_noop(){}
-function pte_edit_posts_cap( $capability ){ return 'edit_posts'; }
-function pte_site_options_html(){ 
-	_e( "These site-wide settings can only be changed by an administrator", PTE_DOMAIN ); 
-}
+//function pte_edit_posts_cap( $capability ){ return 'edit_posts'; }
+//function pte_site_options_html(){ 
+//    _e( "These site-wide settings can only be changed by an administrator", PTE_DOMAIN ); 
+//}
