@@ -50,29 +50,63 @@ class PTE_Service {
 	 * @since 3.0.0
 	 */
 	public function api_handler(){
+		header( 'Content-Type: application/json' );
 
 		switch ($_REQUEST['pte-action'])
 		{
 		case "client":
-			PTE::client()->displayIframe();
+			$this->display_client();
 			break;
 		case "resize-images":
-			PTE::api()->resize_images();
+			$this->resize_images();
 			break;
 		case "confirm-images":
-			PTE::api()->confirm_images();
+			$this->confirm_images();
 			break;
 		case "delete-images":
-			PTE::api()->delete_images();
+			$this->delete_images();
 			break;
 		case "get-thumbnail-info":
-			PTE::api()->get_thumbnail_info();
+			$this->get_thumbnail_info();
 			break;
 		case "change-options":
-			PTE::options()->update_user_options();
+			$this->change_options();
 			break;
 		}
 		wp_die();
 	}
 
+	/**
+	 * Print thumbnail information
+	 *
+	 * @return void
+	 */
+	public function get_thumbnail_info () {
+
+		/**
+		 * Get the size information
+		 *
+		 * Return an array of thumbnail objects describing the size information
+		 *
+		 * @since 3.0.0
+		 * @param  callback   $filter   filter results with this filter callback
+		 */
+		$thumbnails = apply_filters( 'pte_api_get_sizes', array() );
+		print ( json_encode( $thumbnails ) );
+
+	}
+	
+	/**
+	 * Check for undeclared functions
+	 *
+	 * @return void
+	 */
+	public function __call ( $name, $arguments ) {
+
+		print( json_encode( array(
+			'error' => 'undefined function call'
+		)));
+
+	}
+	
 }

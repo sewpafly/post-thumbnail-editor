@@ -76,6 +76,7 @@ class Post_Thumbnail_Editor {
 		$this->define_option_hooks();
 		$this->define_api_hooks();
 		$this->define_service_hooks();
+		$this->define_client_hooks();
 
 	}
 
@@ -139,6 +140,11 @@ class Post_Thumbnail_Editor {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-thumbnail.php';
 
+		/**
+		 * The class responsible for defining and organizing wordpress thumbnail information
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'client/class-pte-client.php';
+
 		$this->loader = new PTE_Loader();
 
 	}
@@ -201,7 +207,7 @@ class Post_Thumbnail_Editor {
 
 		$this->loader->add_action( 'load-settings_page_pte', $plugin_options, 'init' );
 		$this->loader->add_action( 'load-options.php', $plugin_options, 'init' );
-		$this->loader->add_action( 'launch-pte-options', $plugin_options, 'launch' );
+		$this->loader->add_action( 'pte_options_launch', $plugin_options, 'launch' );
 		$this->loader->add_filter( 'pte_options_get', $plugin_options, 'get_option', 10, 2 );
 
 	}
@@ -222,6 +228,22 @@ class Post_Thumbnail_Editor {
 	}
 
 	/**
+	 * Register all of the hooks related to the client area functionality of the
+	 * plugin.
+	 *
+	 * @since    3.0.0
+	 * @access   private
+	 */
+	private function define_client_hooks() {
+
+		$client = new PTE_Client();
+
+		$this->loader->add_action( 'pte_client_launch', $client, 'launch' );
+		$this->loader->add_filter( 'pte_client_url', $client, 'url', 10, 3);
+
+	}
+
+	/**
 	 * Register all of the hooks related to the api area functionality of the
 	 * plugin.
 	 *
@@ -232,8 +254,8 @@ class Post_Thumbnail_Editor {
 
 		$api = new PTE_Api();
 
-		$this->loader->add_filter( 'pte_api_assert_valid_id', $api, 'assert_valid_id', 10, 2 );
-		$this->loader->add_filter( 'pte_api_get_sizes', $api, 'get_sizes', 10, 2 );
+		$this->loader->add_filter( 'pte_api_assert_valid_id', $api, 'assert_valid_id_hook', 10, 2 );
+		$this->loader->add_filter( 'pte_api_get_sizes', $api, 'get_sizes_hook', 10, 2 );
 
 	}
 

@@ -22,13 +22,28 @@ class PTE_Api {
 	private $thumbnails;
 
 	/**
+	 * Hook wrapping for `assert_valid_id`
+	 *
+	 * @since 3.0.0
+	 * @param boolean $default true if id is valid
+	 * @param int     $id      The Post ID of the image you want to check
+	 *
+	 * @return true if valid
+	 */
+	public function assert_valid_id_hook ( $default, $id ) {
+
+		return $this->assert_valid_id( $id );
+
+	}
+
+	/**
 	 * Assert that the current user has access to the given image/post
 	 *
 	 * @since 3.0.0
 	 * @param int    $id    The Post ID of the image you want to check
 	 * @return true if valid
 	 */
-	public function assert_valid_id ( $default, $id ) {
+	public function assert_valid_id ( $id ) {
 
 		if ( !$post = get_post( $id ) ) {
 			return false;
@@ -53,6 +68,20 @@ class PTE_Api {
 	}
 
 	/**
+	 * Hook wrapper for `get_sizes`
+	 *
+	 * @since 3.0.0
+	 * @param mixed    $sizes   The default list of Thumbnail objects
+	 * @param string   $filter  if present, (not 'none') apply the filter above
+	 * @return mixed   $sizes   The list of Thumbnail objects
+	 */
+	public function get_sizes_hook ($sizes, $filter = null ) {
+
+		return $this->get_sizes( $filter );
+
+	}
+
+	/**
 	 * Hook to retrieve the size information from wordpress
 	 *
 	 * @since 3.0.0
@@ -60,7 +89,7 @@ class PTE_Api {
 	 * @param string   $filter  if present, (not 'none') apply the filter above
 	 * @return mixed   $sizes   The list of Thumbnail objects
 	 */
-	public function get_sizes ($sizes, $filter = null ) {
+	public function get_sizes ( $filter = null ) {
 
 		if ( ! isset( $this->thumbnails ) ) {
 			$this->thumbnails = PTE_Thumbnail::get_all();

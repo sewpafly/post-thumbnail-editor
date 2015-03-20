@@ -15,20 +15,22 @@ class PTE_Client {
 	 * Return a URL to the PTE client
 	 *
 	 * @since 3.0.0
-	 * @param int  $id   The ID of the image you want to modify
-	 * @throws Exception if the post doesn't exist or the current user doesn't
-	 *                   have access
+	 * @param string $url     default url
+	 * @param string $id      The ID of the image you want to modify
+	 * @param string $iframe  'true' if URL should be to self-contained iframe
+	 *
+	 * @return url to client
 	 */
-	public function url ( $id, $iframe = 'none' ) {
+	public function url ( $default, $id, $iframe = 'false' ) {
 
-		if ( $iframe !== 'none') {
+		if ( empty( $iframe ) || $iframe != 'true') {
+			$url = admin_url('upload.php') 
+				. "?page=pte-edit&pte-id={$id}";
+		}
+		else {
 			$url = admin_url( 'admin-ajax.php' )
 				. "?action=pte_ajax&pte-action=iframe&pte-id={$id}"
 				. "&TB_iframe=true";
-		}
-		else {
-			$url = admin_url('upload.php') 
-				. "?page=pte-edit&pte-id={$id}";
 		}
 		return $url;
 

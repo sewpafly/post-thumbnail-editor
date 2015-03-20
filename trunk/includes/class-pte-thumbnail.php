@@ -114,7 +114,7 @@ class PTE_Thumbnail {
 	 *
 	 * @return void
 	 */
-	public static function get_image_param ( $param, $name ) {
+	private static function get_image_param ( $param, $name ) {
 
 		global $_wp_additional_image_sizes;
 
@@ -129,7 +129,7 @@ class PTE_Thumbnail {
 			'crop' => "{$name}_crop"
 		);
 
-		return get_option( $option_mapping[$param] );
+		return intval( get_option( $option_mapping[$param] ) );
 	}
 	
 }

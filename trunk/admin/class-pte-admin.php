@@ -67,7 +67,15 @@ class PTE_Admin {
 			return $actions;
 		}
 
-		$url = PTE::client()->url( $post->ID );
+		/**
+		 * Return the url to the client
+		 *
+		 * @since 3.0.0
+		 * @param string $url      The URL to send
+		 * @param string $id       The post id to modify
+		 * @param string $iframe   if the url should be to the iframe ('true')
+		 */
+		$url = apply_filters( 'pte_client_url', '', $post->ID );
 		$actions['pte'] = sprintf("<a href='%s' title='%s'>%s</a>",
 			$url,
 			__( 'Edit Thumbnails', 'post-thumbnail-editor'),
@@ -108,12 +116,20 @@ class PTE_Admin {
 			$this->version,
 			true
 		);
+		/**
+		 * Return the url to the client
+		 *
+		 * @since 3.0.0
+		 * @param string $url      The URL to send
+		 * @param string $id       The post id to modify
+		 * @param string $iframe   if the url should be to the iframe ('true')
+		 */
 		wp_localize_script( 'pte',
 			'pteL10n',
 			array(
 				'PTE' => __( 'Post Thumbnail Editor', 'post-thumbnail-editor' ),
-				'url' => PTE::client()->url( "<%= id %>", 'iframe' ),
-				'fallbackUrl' => PTE::client()->url( "<%= id %>" )
+				'url' => apply_filters( 'pte_client_url', '', "<%= id %>", 'true' ),
+				'fallbackUrl' => apply_filters( 'pte_client_url', '', "<%= id %>" )
 			)
 		);
 
@@ -199,7 +215,18 @@ class PTE_Admin {
 	 */
 	public function launch_options () {
 
-		do_action('launch-pte-options');
+		do_action('pte_options_launch');
+
+	}
+	
+	/**
+	 * Launch the client page
+	 *
+	 * @since 3.0.0
+	 */
+	public function launch_client () {
+
+		do_action('pte_client_launch');
 
 	}
 	

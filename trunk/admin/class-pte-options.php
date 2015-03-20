@@ -225,7 +225,7 @@ class PTE_Options {
 		 *
 		 * Return an array of thumbnail objects describing the size information
 		 *
-		 * @since
+		 * @since 3.0.0
 		 * @param  callback   $filter   filter results with this filter callback
 		 */
 		$sizes = apply_filters( 'pte_api_get_sizes', array() );
