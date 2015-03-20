@@ -73,6 +73,8 @@ class Post_Thumbnail_Editor {
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
+		$this->define_option_hooks();
+		$this->define_api_hooks();
 		$this->define_service_hooks();
 
 	}
@@ -118,9 +120,24 @@ class Post_Thumbnail_Editor {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-pte-admin.php';
 
 		/**
+		 * The class responsible for defining all actions that occur in the admin area.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-pte-options.php';
+
+		/**
+		 * The class responsible for defining all actions that occur in the api.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-api.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the service.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'service/class-pte-service.php';
+
+		/**
+		 * The class responsible for defining and organizing wordpress thumbnail information
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-thumbnail.php';
 
 		$this->loader = new PTE_Loader();
 
@@ -154,6 +171,7 @@ class Post_Thumbnail_Editor {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new PTE_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_options = new PTE_Options();
 
         // Upload.php (the media library page) fires:
         // - 'load-upload.php' (wp-admin/admin.php)
@@ -166,11 +184,25 @@ class Post_Thumbnail_Editor {
 		// Add the PTE link to the featured image in the post screen
 		// Called in wp-admin/includes/post.php
 		$this->loader->add_filter( 'admin_post_thumbnail_html', $plugin_admin, 'link_featured_image', 10, 2 );
-		// Options
-		$this->loader->add_action( 'load-settings_page_pte', $plugin_admin, 'options' );
-		$this->loader->add_action( 'load-options', $plugin_admin, 'options' );
 		// Admin Menus
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'admin_menu' );
+
+	}
+
+	/**
+	 * Register all of the hooks related to the options of the plugin.
+	 *
+	 * @since    3.0.0
+	 * @access   private
+	 */
+	private function define_option_hooks() {
+
+		$plugin_options = new PTE_Options();
+
+		$this->loader->add_action( 'load-settings_page_pte', $plugin_options, 'init' );
+		$this->loader->add_action( 'load-options.php', $plugin_options, 'init' );
+		$this->loader->add_action( 'launch-pte-options', $plugin_options, 'launch' );
+		$this->loader->add_filter( 'pte_options_get', $plugin_options, 'get_option', 10, 2 );
 
 	}
 
@@ -186,6 +218,22 @@ class Post_Thumbnail_Editor {
 		$services = new PTE_Service( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_ajax_pte_api', $services, 'api_handler' );
+
+	}
+
+	/**
+	 * Register all of the hooks related to the api area functionality of the
+	 * plugin.
+	 *
+	 * @since    3.0.0
+	 * @access   private
+	 */
+	private function define_api_hooks() {
+
+		$api = new PTE_Api();
+
+		$this->loader->add_filter( 'pte_api_assert_valid_id', $api, 'assert_valid_id', 10, 2 );
+		$this->loader->add_filter( 'pte_api_get_sizes', $api, 'get_sizes', 10, 2 );
 
 	}
 

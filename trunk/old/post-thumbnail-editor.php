@@ -84,7 +84,7 @@ function pte_get_site_options(){
 	return array_merge( $defaults, $pte_site_options );
 }*/
 
-function pte_get_options(){
+/*function pte_get_options(){
 	global $pte_options, $current_user;
 	if ( isset( $pte_options ) ){
 		return $pte_options;
@@ -101,7 +101,7 @@ function pte_get_options(){
 
 	return $pte_options;
 }
-
+*/
 function pte_update_user_options(){
 	require_once( PTE_PLUGINPATH . 'php/options.php' );
 	$options = pte_get_user_options();
@@ -135,7 +135,7 @@ function pte_update_user_options(){
  *
  * @param $id the post id of the attachment to modify
  */
-function pte_url( $id, $iframe=false ){
+/*function pte_url( $id, $iframe=false ){
 	if ($iframe) {
 		$pte_url = admin_url( 'admin-ajax.php' )
 			. "?action=pte_ajax&pte-action=iframe&pte-id={$id}"
@@ -147,7 +147,7 @@ function pte_url( $id, $iframe=false ){
 	}
 
 	return $pte_url;
-}
+}*/
 
 
 /**
@@ -390,7 +390,7 @@ function pte_options(){
  * I don't remember in which order it is launched, but I believe the pertinent
  * code is in admin-header.php.
  */
-function pte_admin_menu(){
+/*function pte_admin_menu(){
 	add_options_page( __('Post Thumbnail Editor', PTE_DOMAIN),
 		__('Post Thumbnail Editor', PTE_DOMAIN),
 		'edit_posts',
@@ -409,7 +409,7 @@ function pte_admin_menu(){
 function pte_launch_options_page(){
 	require_once( PTE_PLUGINPATH . 'php/options.php' );
 	pte_options_page();
-}
+}*/
 
 /**
  * This runs after headers have been sent, see the pte_edit_setup for the
@@ -471,7 +471,7 @@ function pte_wp_ajax_imgedit_preview_wrapper(){
 
 /** End Settings Hooks **/
 
-load_plugin_textdomain( PTE_DOMAIN
+/*load_plugin_textdomain( PTE_DOMAIN
 	, false
 	, basename( PTE_PLUGINPATH ) . DIRECTORY_SEPARATOR . "i18n" );
-
+*/

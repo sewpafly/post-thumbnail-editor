@@ -31,6 +31,15 @@ class PTE_Options {
 	private $site_options;
 
 	/**
+	 * The combined options
+	 *
+	 * @since    3.0.0
+	 * @access   private
+	 * @var      mixed    $user_options    The cached site_options
+	 */
+	private $options;
+
+	/**
 	 * Get the current users option label/name.
 	 *
 	 * @since 3.0.0
@@ -50,7 +59,7 @@ class PTE_Options {
 	 *
 	 * @since 3.0.0
 	 */
-	public function get_user_options () {
+	private function get_user_options () {
 		if ( isset( $this->user_options ) ) {
 			return $this->user_options;
 		}
@@ -79,7 +88,7 @@ class PTE_Options {
 	 * @since 3.0.0
 	 * @return array of site-level options and current configuration
 	 */
-	public function get_site_options () {
+	private function get_site_options () {
 		if ( isset( $this->site_options ) ) {
 			return $this->site_options;
 		}
@@ -98,21 +107,176 @@ class PTE_Options {
 		return $this->site_options;
 
 	}
+
+	/**
+	 * Get all the options
+	 *
+	 * @return void
+	 */
+	private function get_options () {
+
+		if ( ! isset( $this->options ) ){
+
+			$options = array_merge( $this->get_user_options(), $this->get_site_options() );
+
+			if ( WP_DEBUG )
+				$pte_options['pte_debug'] = true;
+
+			if ( !isset( $options['pte_jpeg_compression'] ) ){
+				/**
+				 * wordpress filter
+				 */
+				$options['pte_jpeg_compression'] = apply_filters( 'jpeg_quality', 90, 'pte_options' );
+			}
+
+			$this->options = $options;
+
+		}
+
+		return $this->options;
+
+	}
+	
+	/**
+	 * Get the option current value
+	 *
+	 * @since 3.0.0
+	 * @return option value
+	 */
+	public function get_option ($default, $option_label ) {
+
+		$options = $this->get_options();
+		if ( isset( $options[$option_label] ) ) {
+			return $options[$option_label];
+		}
+		return $default;
+	}
+
+	/**
+	 * Validate user options
+	 *
+	 * This is called from a hook that's set in `init`. Wordpress handles the
+	 * capability checking for this section for us.
+	 *
+	 * @since   3.0.0
+	 * @return  array  options that are saved to database
+	 */
+	public function validate_user_options ( $input ) {
+
+		$options = $this->get_user_options();
+
+		if ( isset( $input['reset'] ) ){
+			return array();
+		}
+		$checkboxes = array(
+			'pte_debug',
+			'pte_debug_out_chrome',
+			'pte_debug_out_file',
+			'pte_crop_save',
+			'pte_imgedit_disk',
+		);
+
+		foreach ($checkboxes as $opt) {
+			if (isset( $input[$opt] ) )
+				$options[$opt] = true;
+			else if (isset($options[$opt]))
+				unset($options[$opt]);
+		}
+
+		// Check the imgedit_max_size value
+		if ( $input['pte_imgedit_max_size'] != "" ){
+			$tmp_size = (int) preg_replace( "/[\D]/", "", $input['pte_imgedit_max_size'] );
+			if ( $tmp_size < 0 || $tmp_size > 10000 ) {
+				add_settings_error( pte_get_option_name()
+					, 'pte_options_error'
+					, __( "Crop Size must be between 0 and 10000.", PTE_DOMAIN ) );
+			}
+			$options['pte_imgedit_max_size'] = $tmp_size;
+		}
+		else{
+			unset( $options['pte_imgedit_max_size'] );
+		}
+
+		return $options;
+
+	}
+
+	/**
+	 * Validate site options
+	 *
+	 * This is called from a hook that's set in `init`.  Wordpress won't enforce
+	 * dual permissions, so we need to check that this user can set site level
+	 * options.
+	 *
+	 * @since   3.0.0
+	 * @return  array  options that are saved to database
+	 */
+	public function validate_site_options ( $input ) {
+
+		if ( !current_user_can( 'manage_options' ) ){
+			add_settings_error('pte_options_site'
+				, 'pte_options_error'
+				, __( "Only users with the 'manage_options' capability may make changes to these settings.", 'post-thumbnail-editor' ) );
+			return $this->get_site_options();
+		}
+
+		/**
+		 * Get the size information
+		 *
+		 * Return an array of thumbnail objects describing the size information
+		 *
+		 * @since
+		 * @param  callback   $filter   filter results with this filter callback
+		 */
+		$sizes = apply_filters( 'pte_api_get_sizes', array() );
+
+		$pte_hidden_sizes = array();
+
+		foreach ( $sizes as $size ){
+			// Hidden
+			if ( isset($input['pte_hidden_sizes']) && is_array( $input['pte_hidden_sizes'] ) 
+				&& in_array( $size->name, $input['pte_hidden_sizes'] ) ){
+				$pte_hidden_sizes[] = $size->name;
+			}
+		}
+
+		$output = array( 'pte_hidden_sizes' => $pte_hidden_sizes );
+
+		// Check the JPEG Compression value
+		if ( isset($input['pte_jpeg_compression']) && $input['pte_jpeg_compression'] != "" ){
+			$tmp_jpeg_compression = (int) preg_replace( "/[\D]/", "", $input['pte_jpeg_compression'] );
+			if ( ! is_int( $tmp_jpeg_compression )
+				|| $tmp_jpeg_compression < 0 
+				|| $tmp_jpeg_compression > 100 )
+			{
+				add_settings_error('pte_options_site'
+					, 'pte_options_error'
+					, sprintf(
+						__( "JPEG Compression needs to be set from 0 to 100. (%s %s)", 'post-thumbnail-editor' ),
+						$tmp_jpeg_compression,
+						$input['pte_jpeg_compression']
+					)
+				);
+			}
+			$output['pte_jpeg_compression'] = $tmp_jpeg_compression;
+		}
+
+		// Cache Buster
+		$output['cache_buster'] = isset( $input['pte_cache_buster'] );
+
+		return $output;
+
+	}
+
 	
 	/**
 	 * Shortcut for adding settings
 	 *
 	 * @since 3.0.0
 	 */
-	/**
-	 * undocumented function
-	 *
-	 * @return void
-	 */
 	public function add_setting ( $name, $title, $callback, $section) {
 		add_settings_field( $name, $title, array( $this, $callback ), 'pte', $section );
 	}
-	
 	
 	/**
 	 * Init the option parameters
@@ -125,6 +289,8 @@ class PTE_Options {
 	 * Similarly `site_options_html`, a one-line function, is thrown into the
 	 * `__call` method because I'm lazy.
 	 *
+	 * http://ottopress.com/2009/wordpress-settings-api-tutorial/
+	 *
 	 * @since 3.0.0
 	 */
 	public function init () {
@@ -133,11 +299,12 @@ class PTE_Options {
 
 		register_setting( 'pte_options',
 			$this->name(),   // Settings are per user
-			'pte_options_validate' );
+			array( $this, 'validate_user_options' )
+		);
 
 		add_settings_section( 'pte_main'
 			, __('User Options', 'post-thumbnail-editor')
-			, 'PTE::noop'
+			, 'PTE_Options::noop'
 			, 'pte' );
 
 		// When you add a setting you create it with the callback in the form of
@@ -157,7 +324,8 @@ class PTE_Options {
 
 			register_setting( 'pte_options'
 				, 'pte-site-options'     // Settings are site-wide
-				, 'pte_site_options_validate' );
+				, array( $this, 'validate_site_options' )
+		   	);
 
 			add_settings_section( 'pte_site'
 				, __('Site Options', 'post-thumbnail-editor')
@@ -175,6 +343,16 @@ class PTE_Options {
 
 	}
 
+	/**
+	 * Filter function to return the required capabilities for editing PTE
+	 * options.
+	 *
+	 * @return required capability to modify PTE options (e.g. 'edit_posts')
+	 */
+	public function edit_options_cap ( $capability ) {
+		return 'edit_posts';
+	}
+	
 	/**
 	 * Launch the options page
 	 *
@@ -201,17 +379,7 @@ class PTE_Options {
 		}
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . "admin/partials/options-${name}.php";
 	}
-	
-	/**
-	 * Filter function to return the required capabilities for editing PTE
-	 * options.
-	 *
-	 * @return required capability to modify PTE options (e.g. 'edit_posts')
-	 */
-	public function edit_options_cap ( $capability ) {
-		return 'edit_posts';
-	}
-	
+
 	/**
 	 * Overload methods
 	 *
@@ -233,5 +401,12 @@ class PTE_Options {
 		throw new BadMethodCallException( $name );
 
 	}
+
+	/**
+	 * Static noop
+	 *
+	 * @since 3.0.0
+	 */
+	public static function noop () {}
 	
 }

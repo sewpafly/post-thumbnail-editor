@@ -57,10 +57,13 @@ class PTE_Admin {
 	 */
 	public function media_row_actions($actions, $post, $detached) {
 		
-		try {
-			PTE::api()->assert_valid_id( $post->ID );
-		}
-		catch (Exception $e) {
+		/**
+		 * Return if id is valid.
+		 *
+		 * @since 3.0.0
+		 * @param int     $id     The post id
+		 */
+		if ( ! apply_filters( 'pte_api_assert_valid_id', false, $post->ID ) ) {
 			return $actions;
 		}
 
@@ -155,17 +158,6 @@ class PTE_Admin {
 	}
 	
 	/**
-	 * Add the options pages
-	 *
-	 * @since 3.0.0
-	 */
-	public function options () {
-		
-		PTE::options()->init();
-
-	}
-	
-	/**
 	 * These pages are linked into the hook system of wordpress, this means
 	 * that almost any wp_admin page will work as long as you append "?page=pte"
 	 * or "?page=pte-edit".  Try the function `'admin_url("index.php") . '?page=pte';`
@@ -207,7 +199,7 @@ class PTE_Admin {
 	 */
 	public function launch_options () {
 
-		PTE::options()->launch();
+		do_action('launch-pte-options');
 
 	}
 	

@@ -22,24 +22,6 @@ class PTE {
 	private static $instance;
 
 	/**
-	 * The plugin API
-	 *
-	 * @since    3.0.0
-	 * @access   private
-	 * @var      object    $api        The plugin api.
-	 */
-	private $api;
-
-	/**
-	 * The plugin options
-	 *
-	 * @since    3.0.0
-	 * @access   private
-	 * @var      object    $options    The plugin options.
-	 */
-	private $options;
-
-	/**
 	 * The plugin client
 	 *
 	 * @since    3.0.0
@@ -62,40 +44,6 @@ class PTE {
 		}
 
 		return $this->client;
-
-	}
-
-	/**
-	 * Return a handle to the PTE API
-	 * 
-	 * @since 3.0.0
-	 */
-	private	function _api()
-	{
-
-		if ( ! isset( $this->api ) ) {
-			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-api.php';
-			$this->api = new PTE_Api();
-		}
-
-		return $this->api;
-
-	}
-
-	/**
-	 * Return a handle to the PTE Options
-	 * 
-	 * @since 3.0.0
-	 */
-	private	function _options()
-	{
-
-		if ( ! isset( $this->options ) ) {
-			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-pte-options.php';
-			$this->options = new PTE_Options();
-		}
-
-		return $this->options;
 
 	}
 
@@ -123,33 +71,4 @@ class PTE {
 		return self::singleton()->_client();
 
 	}
-
-	/**
-	 * Static api accessor
-	 * 
-	 * @since 3.0.0
-	 */
-	public static function api() {
-
-		return self::singleton()->_api();
-
-	}
-
-	/**
-	 * Static options accessor
-	 * 
-	 * @since 3.0.0
-	 */
-	public static function options() {
-
-		return self::singleton()->_options();
-
-	}
-
-	/**
-	 * Static noop
-	 *
-	 * @since 3.0.0
-	 */
-	public static function noop () {}
 }

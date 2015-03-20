@@ -4,17 +4,23 @@
 <?php
 // End table header
 
-$sizes = PTE::api()->get_sizes(false);
+/**
+ * Get the size information
+ *
+ * Return an array of thumbnail objects describing the size information
+ *
+ * @since
+ * @param  callback   $filter   filter results with this filter callback
+ */
+$sizes = apply_filters( 'pte_api_get_sizes', array(), null );
 
-foreach ( $sizes as $size => $size_data ){
-	$hidden = ( in_array( $size, $options['pte_hidden_sizes'] ) ) ?
+foreach ( $sizes as $thumbnail ){
+	$hidden = ( in_array( $thumbnail->name, $options['pte_hidden_sizes'] ) ) ?
 		"checked":"";
 
-	$name = isset( $size_data['display_name'] )? $size_data['display_name'] : $size;
-
-	print( "<tr><td><label for='{$size}'>{$name}</label></td>"
-		. "<td><input type='checkbox' id='{$size}' name='pte-site-options[pte_hidden_sizes][]'"
-		. " value='{$size}' {$hidden}></td>"
+	print( "<tr><td><label for='{$thumbnail->name}'>{$thumbnail->label}</label></td>"
+		. "<td><input type='checkbox' id='{$thumbnail->name}' name='pte-site-options[pte_hidden_sizes][]'"
+		. " value='{$thumbnail->name}' {$hidden}></td>"
 		. "</tr>"
 	);
 }
