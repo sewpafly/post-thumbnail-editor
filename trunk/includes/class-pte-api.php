@@ -10,7 +10,7 @@
  * @subpackage Post_Thumbnail_Editor/includes
  */
 
-class PTE_Api {
+class PTE_Api extends PTE_Hooker{
 
 	/**
 	 * The cached thumbnails
@@ -20,21 +20,6 @@ class PTE_Api {
 	 * @var      array    $thumbnails    The wordpress thumbnail information
 	 */
 	private $thumbnails;
-
-	/**
-	 * Hook wrapping for `assert_valid_id`
-	 *
-	 * @since 3.0.0
-	 * @param boolean $default true if id is valid
-	 * @param int     $id      The Post ID of the image you want to check
-	 *
-	 * @return true if valid
-	 */
-	public function assert_valid_id_hook ( $default, $id ) {
-
-		return $this->assert_valid_id( $id );
-
-	}
 
 	/**
 	 * Assert that the current user has access to the given image/post
@@ -64,20 +49,6 @@ class PTE_Api {
 		if ( $user_can ) return true;
 
 		return false;
-
-	}
-
-	/**
-	 * Hook wrapper for `get_sizes`
-	 *
-	 * @since 3.0.0
-	 * @param mixed    $sizes   The default list of Thumbnail objects
-	 * @param string   $filter  if present, (not 'none') apply the filter above
-	 * @return mixed   $sizes   The list of Thumbnail objects
-	 */
-	public function get_sizes_hook ($sizes, $filter = null ) {
-
-		return $this->get_sizes( $filter );
 
 	}
 

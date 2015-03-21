@@ -9,7 +9,7 @@
  * @package    Post_Thumbnail_Editor
  * @subpackage Post_Thumbnail_Editor/client
  */
-class PTE_Client {
+class PTE_Client extends PTE_Hooker {
 
 	/**
 	 * Return a URL to the PTE client
@@ -21,7 +21,7 @@ class PTE_Client {
 	 *
 	 * @return url to client
 	 */
-	public function url ( $default, $id, $iframe = 'false' ) {
+	public function url ( $id, $iframe = 'false' ) {
 
 		if ( empty( $iframe ) || $iframe != 'true') {
 			$url = admin_url('upload.php') 

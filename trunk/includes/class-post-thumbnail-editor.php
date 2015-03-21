@@ -116,6 +116,12 @@ class Post_Thumbnail_Editor {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte.php';
 
 		/**
+		 * This class is a parent class for the admin, service, api, options,
+		 * client... Basically anything that uses hooks
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-hooker.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-pte-admin.php';
@@ -239,7 +245,7 @@ class Post_Thumbnail_Editor {
 		$client = new PTE_Client();
 
 		$this->loader->add_action( 'pte_client_launch', $client, 'launch' );
-		$this->loader->add_filter( 'pte_client_url', $client, 'url', 10, 3);
+		$this->loader->add_filter( 'pte_client_url', $client, 'url_hook', 10, 3);
 
 	}
 
