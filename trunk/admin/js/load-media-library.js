@@ -30,52 +30,56 @@
 
    // Hook into the media.views.attachment to create our link
    var featuredImageOpen = false;
-   var oldDetails = wp.media.view.Attachment.Details;
+   function patch ( funcToPatch ) {
+	   var pteDetails = {
+		  initialize: function() {
+			 funcToPatch.prototype.initialize.apply( this, arguments );
+		  },
 
-   wp.media.view.Attachment.Details = oldDetails.extend({
-      initialize: function() {
-         oldDetails.prototype.initialize.apply( this, arguments );
-      },
+		  // PTE link listener...
+		  events: _.extend(funcToPatch.prototype.events, {
+			 'click .pte': 'loadPteEditor'
+		  }),
 
-      // PTE link listener...
-      events: _.extend(oldDetails.prototype.events, {
-         'click .pte': 'loadPteEditor'
-      }),
+		  // this.controller == wp.media.view.MediaFrame.Post instance
+		  // This sets/gets a state 'pte', that we can then modify to a state
+		  // which will load an iframe:
+		  //
+		  // See media-views.js:1077:iframeContent()
+		  //
+		  loadPteEditor: function(evt) {
+			 evt.preventDefault();
+			 evt.stopImmediatePropagation();
 
-      // this.controller == wp.media.view.MediaFrame.Post instance
-      // This sets/gets a state 'pte', that we can then modify to a state
-      // which will load an iframe:
-      //
-      // See media-views.js:1077:iframeContent()
-      //
-      loadPteEditor: function(evt) {
-         evt.preventDefault();
-         evt.stopImmediatePropagation();
+			 var state = this.controller.state().id;
+			 var me = this;
+			 if ( !featuredImageOpen && state !== "pte" ) {
+				featuredImageOpen = true;
+				this.controller.createIframeStates();
+				me.controller.once('close', function() {
+				  featuredImageOpen = false;
+				  me.controller.setState(state);
+				});
+			 }
 
-         var state = this.controller.state().id;
-         var me = this;
-         if ( !featuredImageOpen && state !== "pte" ) {
-            featuredImageOpen = true;
-            this.controller.createIframeStates();
-            me.controller.once('close', function() {
-              featuredImageOpen = false;
-              me.controller.setState(state);
-            });
-         }
+			 this.controller.state( 'pte' ).set({
+				src: pteIframeLink({id:this.model.id}),
+				title: pteL10n.PTE + ": " + this.model.attributes.filename,
+				content: 'iframe'
+			 });
 
-         this.controller.state( 'pte' ).set({
-            src: pteIframeLink({id:this.model.id}),
-            title: pteL10n.PTE + ": " + this.model.attributes.filename,
-            content: 'iframe'
-         });
+			 if (this.controller.state().id == "pte") this.controller.state().trigger("activate");
+			 else this.controller.setState('pte');
 
-         if (this.controller.state().id == "pte") this.controller.state().trigger("activate");
-         else this.controller.setState('pte');
+			 // wordpress 4.0 media library doesn't set the media-frame state
+			 jQuery('.media-modal-content > div').addClass('media-frame');
+		  }
+	   };
+	   return funcToPatch.extend(pteDetails);
+   }
 
-         // wordpress 4.0 media library doesn't set the media-frame state
-         jQuery('.media-modal-content > div').addClass('media-frame');
-      }
-   });
+   wp.media.view.Attachment.Details = patch( wp.media.view.Attachment.Details );
+   wp.media.view.Attachment.Details.TwoColumn = patch( wp.media.view.Attachment.Details.TwoColumn );
 
    // Set the featuredImage object as `this` for the frame function...
    oldFeaturedImageFrame = $.proxy( wp.media.featuredImage.frame, wp.media.featuredImage );

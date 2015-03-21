@@ -29,7 +29,7 @@ class PTE_Client extends PTE_Hooker {
 		}
 		else {
 			$url = admin_url( 'admin-ajax.php' )
-				. "?action=pte_ajax&pte-action=iframe&pte-id={$id}"
+				. "?action=pte_api&pte-action=client&pte-id={$id}"
 				. "&TB_iframe=true";
 		}
 		return $url;
