@@ -79,7 +79,7 @@ function pte_json_error( $error ){
  * This is used by the get_sizes functions to determine which sizes to
  * reduce to
  */
-function pte_filter_sizes( $element ){
+/*function pte_filter_sizes( $element ){
 	global $pte_sizes;
 	$options = pte_get_options();
 	// Check if the element is in the pte_sizes array
@@ -90,7 +90,7 @@ function pte_filter_sizes( $element ){
 	}
 	return true;
 }
-
+*/
 /*
  * pte_get_alternate_sizes
  *
@@ -102,7 +102,7 @@ function pte_filter_sizes( $element ){
  *
  * Thanks to the ajax_thumbnail_rebuild plugin
  */
-function pte_get_alternate_sizes($filter=true){
+/*function pte_get_alternate_sizes($filter=true){
 	//Put in some code to check if it's already been called...
 	global $_wp_additional_image_sizes, $pte_gas;
 
@@ -155,14 +155,14 @@ function pte_get_alternate_sizes($filter=true){
 	}
 	return $pte_gas;
 }
-
+*/
 /*
  * pte_get_image_data
  *
  * Gets specific data for a given image (id) at a given size (size)
  * Optionally can return the JSON value or PHP array
  */
-function pte_get_image_data( $id, $size, $size_data ){
+/*function pte_get_image_data( $id, $size, $size_data ){
 	$logger = PteLogger::singleton();
 
 	$fullsizepath = get_attached_file( $id );
@@ -200,13 +200,13 @@ function pte_get_image_data( $id, $size, $size_data ){
 	}
 	return false;
 }
-
+*/
 /*
  * pte_get_all_alternate_size_information
  *
  * Gets all pertinent data describing the alternate sizes
  */
-function pte_get_all_alternate_size_information( $id ){
+/*function pte_get_all_alternate_size_information( $id ){
 	$sizes = pte_get_alternate_sizes();
 	foreach ( $sizes as $size => &$info ){
 		if ( $info['crop'] )
@@ -216,7 +216,7 @@ function pte_get_all_alternate_size_information( $id ){
 		$info['current'] = pte_get_image_data( $id, $size, $info );
 	}
 	return $sizes;
-}
+}*/
 
 /*
  * pte_body
@@ -674,7 +674,7 @@ function pte_delete_images()
 	return pte_json_encode( array( "success" => "Yay!" ) );
 }
 
-function pte_get_jpeg_quality($quality){
+/*function pte_get_jpeg_quality($quality){
 	$options = pte_get_options();
 	$jpeg_compression = $options['pte_jpeg_compression'];
 	if ( isset( $_GET['pte-jpeg-compression'] ) ) {
@@ -685,7 +685,7 @@ function pte_get_jpeg_quality($quality){
 	}
 	PteLogger::debug( "COMPRESSION: " . $jpeg_compression );
 	return $jpeg_compression;
-}
+}*/
 
 /**
  * Sending output to an iframe

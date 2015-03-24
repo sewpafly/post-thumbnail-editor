@@ -13,7 +13,7 @@
  * @subpackage Post_Thumbnail_Editor/includes
  */
 
-class PTE_ThumbnailSize {
+class PTE_Thumbnail_Size {
 
 	/**
 	 * The thumbnail name
@@ -74,7 +74,7 @@ class PTE_ThumbnailSize {
 	/**
 	 * Create a list of thumbnails
 	 *
-	 * @return array of PTE_ThumbnailSize
+	 * @return array of PTE_Thumbnail_Size
 	 */
 	public static function get_all () {
 
@@ -157,7 +157,7 @@ class PTE_Thumbnail {
 		$fullsizepath = get_attached_file( $id );
 		$path_information = image_get_intermediate_size($id, $size->name);
 		$file = sprintf( '%s' . DIRECTORY_SEPARATOR . '%s',
-			dirname( $fullsizepath )
+			dirname( $fullsizepath ),
 			isset( $path_information['file'] ) ? $path_information['file'] : ''
 		);
 
@@ -203,7 +203,7 @@ class PTE_Thumbnail {
 	 */
 	public static function get_all ( $id ) {
 
-		$sizes = parent::get_all();
+		$sizes = PTE_Thumbnail_Size::get_all();
 
 		foreach ( $sizes as $size ) {
 			$thumbnails[] = new self( $id, $size );

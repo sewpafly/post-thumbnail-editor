@@ -56,47 +56,36 @@ class PTE_Api extends PTE_Hooker{
 	 * Hook to retrieve the size information from wordpress
 	 *
 	 * @since 3.0.0
-	 * @param mixed    $sizes   The list of Thumbnail objects
-	 * @param string   $filter  if present, (not 'none') apply the filter above
+	 *
+	 * @param mixed    $filter  if present, (not 'none') apply the filter above.
+	 *                          A 'truthy' value will check the options for
+	 *                          filtered values.  An array will only return
+	 *                          sizes with names in the array, and a single name
+	 *                          will return just that size. 
+	 *
 	 * @return mixed   $sizes   The list of Thumbnail objects
 	 */
 	public function get_sizes ( $filter = null ) {
 
 		if ( ! isset( $this->thumbnails ) ) {
-			$this->thumbnails = PTE_Thumbnail::get_all();
+			$this->thumbnails = PTE_Thumbnail_Size::get_all();
 		}
 
-		if ( is_null( $filter ) ) {
+		if ( empty( $filter ) ) {
 			return $this->thumbnails;
 		}
 
-		return array_filter( $this->thumbnails, array( $this, 'filter_sizes' ) );
-
-	}
-	
-	/**
-	 * Filter callback for get_sizes
-	 *
-	 * @param PTE_Thumbnail    $element   The thumbnail to check
-	 * @return true   if the $element should be filtered
-	 */
-	private function filter_sizes ( $element ) {
-
-		/**
-		 * Check for the hidden sizes option
-		 *
-		 * Return the thumbnail information that the user should be able to
-		 * modify.
-		 *
-		 * @since 2.0.0
-		 * @param array    $sizes   The sizes the user can see
-		 * @param string   $label   The option to get
-		 */
 		$filtered_sizes = apply_filters( 'pte_options_get', array(), 'pte_hidden_sizes');
-		if ( is_array( $filtered_sizes ) && in_array( $element->label, $filtered_sizes ) ) {
-			return true;
+
+		foreach ( $this->thumbnails as $size ) {
+			if ( in_array( $size->name, $filtered_sizes ) ) {
+				continue;
+			}
+			if ( is_array( $filter ) && in_array( $size->name, $filter ) || $filter == $size->name ) {
+				$thumbnails[] = $size;
+			}
 		}
-		return false;
+		return $thumbnails;
 
 	}
 	
@@ -118,8 +107,67 @@ class PTE_Api extends PTE_Hooker{
 	 *
 	 * @return array of PTE_ActualThumbnail
 	 */
-	public function resize_thumbnails ( $id, $w, $h, $x, $y, $sizes, $save ) {
-		var_dump( compact( 'id', 'w', 'h', 'x', 'y', 'sizes', 'save' ) );
+	public function resize_thumbnails ( $id, $w, $h, $x, $y, $sizes, $save=false ) {
+
+		$data = compact( 'id', 'w', 'h', 'x', 'y', 'save' );
+		$data['original_file'] = _load_image_to_edit_path( $id );
+		$data['original_size'] = @getimagesize( $data['original_file'] );
+		$data['tmp_dir'] = apply_filters( 'pte_options_get', null, 'tmp_dir' );
+		$data['tmp_url'] = apply_filters( 'pte_options_get', null, 'tmp_url' );
+
+		if ( ! isset( $data['original_size'] ) ) {
+			throw new Exception( 'Could not read image size' );
+		}
+
+		/**
+		 * Action `pte_api_resize_thumbnails' is triggered when the
+		 * resize_thumbnails is ready to roll (after the parameters and
+		 * correctly compiled and just before the resize_thumbnail function is
+		 * called
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array $data {
+		 *	   @type int                 $id       The post id to resize
+		 *	   @type PTE_Thumbnail_Size  $size     The thumbnail size
+		 *	   @type int                 $w        The proposed width
+		 *	   @type int                 $h        The proposed height
+		 *	   @type int                 $x        The proposed starting left point
+		 *	   @type int                 $y        The proposed starting upper
+		 *	                                       point
+		 *	   @type int/boolean         $save     Should the image be saved
+		 *	   @type string              $tmp_dir  Temporary directory
+		 *	   @type string              $tmp_file Temporary directory
+		 *	   @type array          $original_size The original file image
+		 *	                                       parameters
+		 *	   @type string         $original_file The original file name
+		 */
+		do_action( 'pte_api_resize_thumbnail', $data );
+
+		foreach ( $this->get_sizes( $sizes ) as $size ) {
+			$data['size'] = $size;
+			$thumbnails[] = $this->resize_thumbnail( $data );
+		}
+		print('finished api resize thumbnails');
+
+		return $thumbnails;
+	}
+
+	/**
+	 * Resize an individual thumbnail
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $params   The options to create a thumbnail
+	 *
+	 * @return void
+	 */
+	private function resize_thumbnail ( $params ) {
+
+		$thumbnail = new PTE_Thumbnail( $params['id'], $params['size'] );
+
+		return $thumbnail;
+
 	}
 	
 /*

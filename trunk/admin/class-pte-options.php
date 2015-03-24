@@ -98,9 +98,16 @@ class PTE_Options {
 		if ( !is_array( $pte_site_options ) ){
 			$pte_site_options = array();
 		}
+
+		$uploads 	= wp_upload_dir();
+		$tmp_dir    = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR;
+		$tmp_url    = $uploads['baseurl'] . "/ptetmp/";
+
 		$defaults = array(
 			'pte_hidden_sizes' => array(),
-		   	'cache_buster' => true
+			'cache_buster' => true,
+			'tmp_dir' => $tmp_dir,
+			'tmp_url' => $tmp_url,
 		);
 
 		$this->site_options = array_merge( $defaults, $pte_site_options );
@@ -115,14 +122,14 @@ class PTE_Options {
 	 */
 	private function get_options () {
 
-		if ( ! isset( $this->options ) ){
+		if ( ! isset( $this->options ) ) {
 
 			$options = array_merge( $this->get_user_options(), $this->get_site_options() );
 
 			if ( WP_DEBUG )
 				$pte_options['pte_debug'] = true;
 
-			if ( !isset( $options['pte_jpeg_compression'] ) ){
+			if ( !isset( $options['pte_jpeg_compression'] ) ) {
 				/**
 				 * wordpress filter
 				 */
@@ -150,6 +157,39 @@ class PTE_Options {
 			return $options[$option_label];
 		}
 		return $default;
+
+	}
+
+	/**
+	 * Action 'pte_options_load_jpeg_quality' changes what the filters
+	 * jpeg_quality and wp_editor_set_quality return.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function load_jpeg () {
+
+		add_filter( 'jpeg_quality', array( $this, 'jpeg_quality' ) );
+		add_filter( 'wp_editor_set_quality', array( $this, 'jpeg_quality' ) );
+
+		print('finished load jpeg');
+		return func_get_args()[0];
+	}
+	
+	/**
+	 * Set the JPEG Quality
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int  $quality   The quality to return
+	 *
+	 * @return void
+	 */
+	public function jpeg_quality ( $default ) {
+
+		return $this->get_option( $default, 'pte_jpeg_compression' );
+
 	}
 
 	/**

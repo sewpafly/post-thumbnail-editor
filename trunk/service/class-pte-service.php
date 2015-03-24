@@ -50,6 +50,7 @@ class PTE_Service {
 	 * @since 3.0.0
 	 */
 	public function api_handler(){
+
 		//header( 'Content-Type: application/json' );
 
 		switch ($_REQUEST['pte-action'])
@@ -72,6 +73,8 @@ class PTE_Service {
 		case "change-options":
 			$this->change_options();
 			break;
+		default:
+			$this->error( 'invalid API call' );
 		}
 		wp_die();
 	}
@@ -92,7 +95,7 @@ class PTE_Service {
 		 * @param  callback   $filter   filter results with this filter callback
 		 */
 		$thumbnails = apply_filters( 'pte_api_get_sizes', array() );
-		print ( json_encode( $thumbnails ) );
+		$this->message( $thumbnails );
 
 	}
 	
@@ -233,7 +236,7 @@ class PTE_Service {
 	 */
 	public function __call ( $name, $arguments ) {
 
-		$this->error( 'undefined function call' );
+		return $this->error( 'undefined function call' );
 
 	}
 	

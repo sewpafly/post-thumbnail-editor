@@ -214,6 +214,7 @@ class Post_Thumbnail_Editor {
 		$this->loader->add_action( 'load-settings_page_pte', $plugin_options, 'init' );
 		$this->loader->add_action( 'load-options.php', $plugin_options, 'init' );
 		$this->loader->add_action( 'pte_options_launch', $plugin_options, 'launch' );
+		$this->loader->add_action( 'pte_api_resize_thumbnails', $plugin_options, 'load_jpeg' );
 		$this->loader->add_filter( 'pte_options_get', $plugin_options, 'get_option', 10, 2 );
 
 	}
