@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class for using and cataloging the various sizes.
+ * Classes for using and cataloging the various sizes.
  *
  * Provide static methods for getting a list of sizes as well as the object
  * itself.
@@ -13,7 +13,7 @@
  * @subpackage Post_Thumbnail_Editor/includes
  */
 
-class PTE_Thumbnail {
+class PTE_ThumbnailSize {
 
 	/**
 	 * The thumbnail name
@@ -74,7 +74,7 @@ class PTE_Thumbnail {
 	/**
 	 * Create a list of thumbnails
 	 *
-	 * @return array of PTE_Thumbnail
+	 * @return array of PTE_ThumbnailSize
 	 */
 	public static function get_all () {
 
@@ -132,4 +132,85 @@ class PTE_Thumbnail {
 		return intval( get_option( $option_mapping[$param] ) );
 	}
 	
+}
+
+/**
+ * Class PTE_ActualThumbnail
+ */
+class PTE_Thumbnail {
+
+	/**
+	 * Create an PTE_Actual_Thumbnail from a given $id and PTE_Thumbnail
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $id   The post/attachment id to get thumbnail information for.
+	 * @param PTE_Thumbnail $size  The size to return
+	 *
+	 * @return PTE_ActualThumbnail
+	 */
+	public function __construct ( $id, $size ) {
+
+		$this->id = $id;
+		$this->size = $size;
+
+		$fullsizepath = get_attached_file( $id );
+		$path_information = image_get_intermediate_size($id, $size->name);
+		$file = sprintf( '%s' . DIRECTORY_SEPARATOR . '%s',
+			dirname( $fullsizepath )
+			isset( $path_information['file'] ) ? $path_information['file'] : ''
+		);
+
+		// If the path doesn't exist, generate it...
+		// We don't really care how it gets generated, just that it is...
+		// see ajax-thumbnail-rebuild plugin for inspiration
+		if ( $path_information === false || ! @file_exists( $file ) ) {
+
+			// Create the image and update the wordpress metadata
+			$resized = image_make_intermediate_size( $fullsizepath, 
+				$size->width,
+				$size->height,
+				$size->crop
+			);
+
+			if ( $resized ) {
+
+				$metadata = wp_get_attachment_metadata($id, true);
+				$metadata['sizes'][$size->name] = $resized;
+				wp_update_attachment_metadata( $id, $metadata);
+
+			}
+
+			$path_information = image_get_intermediate_size($id, $size->name);
+		}
+
+		$this->path   = $path_information['path'];
+		$this->url    = $path_information['url'];
+		$this->file   = $path_information['file'];
+		$this->width  = $path_information['width'];
+		$this->height = $path_information['height'];
+
+	}
+
+	/**
+	 * Create a list of thumbnails
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $id   The post/attachment id to get thumbnail information for
+	 *
+	 * @return array of PTE_Actual_Thumbnail
+	 */
+	public static function get_all ( $id ) {
+
+		$sizes = parent::get_all();
+
+		foreach ( $sizes as $size ) {
+			$thumbnails[] = new self( $id, $size );
+		}
+
+		return $thumbnails;
+
+	}
+
 }
