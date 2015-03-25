@@ -22,6 +22,27 @@ class PTE_Api extends PTE_Hooker{
 	private $thumbnails;
 
 	/**
+	 * Constructor for PTE_Api sets the arg_keys needed for ahooks (See
+	 * PTE_Hooker)
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed 
+	 */
+	public function __construct () {
+
+		$this->arg_keys['derive_dimensions'] = array( 'size', 'w', 'h' );
+		$this->arg_keys['derive_basename'] = array(
+			'original_file',
+			'dst_w',
+			'dst_h',
+			'transparent'
+	   	);
+
+	}
+	
+
+	/**
 	 * Assert that the current user has access to the given image/post
 	 *
 	 * @since 3.0.0
@@ -116,39 +137,18 @@ class PTE_Api extends PTE_Hooker{
 		$data['tmp_url'] = apply_filters( 'pte_options_get', null, 'tmp_url' );
 
 		if ( ! isset( $data['original_size'] ) ) {
-			throw new Exception( 'Could not read image size' );
+			throw new Exception( __( 'Could not read image size', 'post-thumbnail-editor' ) );
 		}
 
-		/**
-		 * Action `pte_api_resize_thumbnails' is triggered when the
-		 * resize_thumbnails is ready to roll (after the parameters and
-		 * correctly compiled and just before the resize_thumbnail function is
-		 * called
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param array $data {
-		 *	   @type int                 $id       The post id to resize
-		 *	   @type PTE_Thumbnail_Size  $size     The thumbnail size
-		 *	   @type int                 $w        The proposed width
-		 *	   @type int                 $h        The proposed height
-		 *	   @type int                 $x        The proposed starting left point
-		 *	   @type int                 $y        The proposed starting upper
-		 *	                                       point
-		 *	   @type int/boolean         $save     Should the image be saved
-		 *	   @type string              $tmp_dir  Temporary directory
-		 *	   @type string              $tmp_file Temporary directory
-		 *	   @type array          $original_size The original file image
-		 *	                                       parameters
-		 *	   @type string         $original_file The original file name
-		 */
-		do_action( 'pte_api_resize_thumbnail', $data );
+		$thumbnails = array();
 
 		foreach ( $this->get_sizes( $sizes ) as $size ) {
 			$data['size'] = $size;
-			$thumbnails[] = $this->resize_thumbnail( $data );
+			$thumbnail = $this->resize_thumbnail( $data );
+			if ( ! empty( $thumbnail ) ) {
+				$thumbnails[] = $thumbnail;
+			}
 		}
-		print('finished api resize thumbnails');
 
 		return $thumbnails;
 	}
@@ -158,120 +158,142 @@ class PTE_Api extends PTE_Hooker{
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param mixed $params   The options to create a thumbnail
+	 * @param mixed $params {
+	 *	   @type int                 $id       The post id to resize
+	 *	   @type PTE_Thumbnail_Size  $size     The thumbnail size
+	 *	   @type int                 $w        The proposed width
+	 *	   @type int                 $h        The proposed height
+	 *	   @type int                 $x        The proposed starting left point
+	 *	   @type int                 $y        The proposed starting upper
+	 *	                                       point
+	 *	   @type int/boolean         $save     Should the image be saved
+	 *	   @type string              $tmp_dir  Temporary directory
+	 *	   @type string              $tmp_file Temporary directory
+	 *	   @type array          $original_size The original file image
+	 *	                                       parameters
+	 *	   @type string         $original_file The original file name
+	 * }
 	 *
-	 * @return void
+	 * @return PTE_Thumbnail
 	 */
 	private function resize_thumbnail ( $params ) {
 
-		$thumbnail = new PTE_Thumbnail( $params['id'], $params['size'] );
+		/**
+		 * Action `pte_resize_thumbnail' is triggered when resize_thumbnails is
+		 * ready to roll (after the parameters and correctly compiled and just
+		 * before the resize_thumbnail function is called.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param See above
+		 *
+		 * @return filtered params ready to modify the image
+		 */
+		$params = apply_filters( 'pte_api_resize_thumbnail', $params );
 
-		return $thumbnail;
+		var_dump( $params );
+	}
+
+	/**
+	 * Derive the correct width/height given the input width/height and the
+	 * output size
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param PTE_Thumbnail_Size $size   The thumbnail size to output
+	 * @param int                $width  The user selected width
+	 * @param int                $height The user selected height
+	 *
+	 * @return array {
+	 *    @type int width
+	 *    @type int height
+	 * }
+	 */
+	public function derive_dimensions ( $size, $w, $h ) {
+
+		if ( $size->crop ) {
+
+			$dst_w = $size->width;
+			$dst_h = $size->height;
+
+		}
+
+		// Crop isn't set so the height / width should be based on the largest
+		// side of the image itself, unless that side is set to 0 or something
+		// really big, in which case use the other side.
+		else {
+
+			$use_width = false;
+
+			if ( $w > $h ) $use_width = true;
+
+			if ( ! $use_width && ( $size->height == 0 || $size->height > 9998 ) ) $use_width = true;
+			else if ( $use_width && ( $size->width == 0 || $size->width > 9998 ) ) $use_width = false;
+
+			if ( $use_width ) {
+
+				$dst_w = $size->width;
+				$dst_h = intval( round( ($dst_w / $w) * $h, 0 ) );
+
+			}
+			else {
+
+				$dst_h = $size->height;
+				$dst_w = intval( round( ($dst_h / $h) * $w, 0 ) );
+
+			}
+
+		}
+
+		// Sanity Check
+		if ( $dst_h == 0 || $dst_w == 0 ) {
+
+			throw new Exception(
+				sprintf(
+					__( 'Invalid derived dimensions: %s x %s', 'post-thumbnail-editor' ),
+					$dst_w, $dst_h
+				)
+		   	);
+
+		}
+
+		return compact( 'dst_w', 'dst_h' );
 
 	}
 	
-/*
- * resize_images
- *
- * Take an array of sizes along with the associated resize data (w/h/x/y) 
- * and save the images to a temp directory
- * 
- * OUTPUT: JSON object 'size: url'
- */
-function pte_resize_images(){
+	/**
+	 * Generate a basename for the file
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string  $file   The original file name
+	 * @param int     $width  The thumbnail width
+	 * @param int     $height The thumbnail height
+	 * @param bool    $trans  If the image needs transparency it must have a
+	 *                        .png extension
+	 *
+	 * @return array {
+	 *    @type string  $basename  The basename of the file to save
+	 * }
+	 */
+	public function derive_basename ( $file, $w, $h, $transparent) {
 
-	$sizes          = pte_get_all_alternate_size_information( $id );
+		$info         = pathinfo( $file );
+		$ext          = (false !== $transparent) ? 'png' : $info['extension'];
+		$name         = wp_basename( $file, ".$ext" );
+		$suffix       = "{$w}x{$h}";
 
-	// The following information is common to all sizes
-	// *** common-info
-	$original_file  = _load_image_to_edit_path( $id );
-	$original_size  = @getimagesize( $original_file );
-
-	// SETS $PTE_TMP_DIR and $PTE_TMP_URL
-	extract( pte_tmp_dir() );
-	$thumbnails     = array();
-
-	if ( !$original_size ){
-		return pte_json_error("Could not read image size");
-	}
-
-	$logger->debug( "BASE FILE DIMENSIONS/INFO: " . print_r( $original_size, true ) );
-	list( $orig_w, $orig_h, $orig_type ) = $original_size;
-	// *** End common-info
-
-	// So this never interrupts the jpeg_quality anywhere else
-	add_filter('jpeg_quality', 'pte_get_jpeg_quality');
-	add_filter('wp_editor_set_quality', 'pte_get_jpeg_quality');
-
-	foreach ( $sizes as $size => $data ){
-		// Get all the data needed to run image_create
-		//
-		//	$dst_w, $dst_h 
-		extract( pte_get_width_height( $data, $w, $h ) );
-		$logger->debug( "WIDTHxHEIGHT: $dst_w x $dst_h" );
-
-		// Set the cropped filename
-		$transparent = pte_is_crop_border_enabled($w, $h, $dst_w, $dst_h)
-			&& !pte_is_crop_border_opaque();
-		$basename = pte_generate_filename( $original_file, $dst_w, $dst_h, $transparent );
-		$tmpfile  = "{$PTE_TMP_DIR}{$id}" . DIRECTORY_SEPARATOR . "{$basename}";
-
-		// === CREATE IMAGE ===================
-		// This function is in wp-includes/media.php
-		// We've added a filter to return our own editor which extends the wordpress one.
-		add_filter( 'wp_image_editors', 'pte_image_editors' );
-		$editor = wp_get_image_editor( $original_file );
-		if ( is_a( $editor, "WP_Image_Editor_Imagick" ) ) $logger->debug( "EDITOR: ImageMagick" );
-		if ( is_a( $editor, "WP_Image_Editor_GD" ) ) $logger->debug( "EDITOR: GD" );
-		$crop_results = $editor->crop($x, $y, $w, $h, $dst_w, $dst_h); 
-
-		if ( is_wp_error( $crop_results ) ){
-			$logger->error( "Error creating image: {$size}" );
-			continue;
+		if ( apply_filters( 'pte_options_get', false, 'cache_buster' ) ){
+			$cache_buster = time();
+			return sprintf( "%s-%s-%s.%s",
+				$name,
+				$suffix,
+				$cache_buster,
+				$ext );
 		}
 
-		// The directory containing the original file may no longer exist when
-		// using a replication plugin.
-		wp_mkdir_p( dirname( $tmpfile ) );
+		return array( 'basename' => "{$name}-{$suffix}.{$ext}" );
 
-		$tmpfile = dirname( $tmpfile ) . '/' . wp_unique_filename( dirname( $tmpfile ), basename( $tmpfile ) );
-		$tmpurl   = "{$PTE_TMP_URL}{$id}/" . basename( $tmpfile );
-
-		if ( is_wp_error( $editor->save( $tmpfile ) ) ){
-			$logger->error( "Error writing image: {$size} to '{$tmpfile}'" );
-			continue;
-		}
-		// === END CREATE IMAGE ===============
-
-		// URL: wp_upload_dir => base_url/subdir + /basename of $tmpfile
-		// This is for the output
-		$thumbnails[$size]['url'] = $tmpurl;
-		$thumbnails[$size]['file'] = basename( $tmpfile );
 	}
-
-	// Did you process anything?
-	if ( count( $thumbnails ) < 1 ){
-		return pte_json_error("No images processed");
-	}
-
-	$ptenonce = wp_create_nonce( "pte-{$id}" );
-
-	// If save -- return pte_confirm_images
-	if ( $save ){
-		function create_pte_confirm($thumbnail){
-			return $thumbnail['file'];
-		}
-		$_REQUEST['pte-nonce'] = $ptenonce;
-		$_GET['pte-confirm'] = array_map('create_pte_confirm', $thumbnails);
-		$logger->debug( "CONFIRM:" );
-		$logger->debug( print_r( $_GET, true ) );
-		return pte_confirm_images(true);
-	}
-
-	return pte_json_encode( array( 
-		'thumbnails'        => $thumbnails,
-		'pte-nonce'         => $ptenonce,
-		'pte-delete-nonce'  => wp_create_nonce( "pte-delete-{$id}" )
-	) );
-}
+	
 }

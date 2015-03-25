@@ -86,6 +86,7 @@ class PTE_Options {
 	 * Get the site level options
 	 *
 	 * @since 3.0.0
+	 *
 	 * @return array of site-level options and current configuration
 	 */
 	private function get_site_options () {
@@ -129,13 +130,6 @@ class PTE_Options {
 			if ( WP_DEBUG )
 				$pte_options['pte_debug'] = true;
 
-			if ( !isset( $options['pte_jpeg_compression'] ) ) {
-				/**
-				 * wordpress filter
-				 */
-				$options['pte_jpeg_compression'] = apply_filters( 'jpeg_quality', 90, 'pte_options' );
-			}
-
 			$this->options = $options;
 
 		}
@@ -148,6 +142,7 @@ class PTE_Options {
 	 * Get the option current value
 	 *
 	 * @since 3.0.0
+	 *
 	 * @return option value
 	 */
 	public function get_option ($default, $option_label ) {
@@ -173,8 +168,6 @@ class PTE_Options {
 		add_filter( 'jpeg_quality', array( $this, 'jpeg_quality' ) );
 		add_filter( 'wp_editor_set_quality', array( $this, 'jpeg_quality' ) );
 
-		print('finished load jpeg');
-		return func_get_args()[0];
 	}
 	
 	/**

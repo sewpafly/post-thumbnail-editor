@@ -153,14 +153,14 @@ function pte_update_user_options(){
 /**
  * Used in functions.php, log.php & options.php to get pseudo-TMP file paths
  */
-function pte_tmp_dir()
+/*function pte_tmp_dir()
 {
 	$uploads 	    = wp_upload_dir();
 	$PTE_TMP_DIR    = $uploads['basedir'] . DIRECTORY_SEPARATOR . "ptetmp" . DIRECTORY_SEPARATOR;
 	$PTE_TMP_URL    = $uploads['baseurl'] . "/ptetmp/";
 	return compact( 'PTE_TMP_DIR', 'PTE_TMP_URL' );
 }
-
+*/
 
 /*
  * Put Hooks and immediate hook functions in this file

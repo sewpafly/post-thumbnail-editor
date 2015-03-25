@@ -183,6 +183,7 @@ class PTE_Service {
 		 * Return an array of thumbnail objects (size + url information)
 		 *
 		 * @since 3.0.0
+		 *
 		 * @param  callback   $filter   filter results with this filter callback
 		 * @param int     $id    The post/attachment id to modify
 		 * @param int     $w     The width of the crop
@@ -191,6 +192,8 @@ class PTE_Service {
 		 * @param int     $y     The upper position of the crop
 		 * @param array   $sizes An array of the thumbnails to modify
 		 * @param string  $save  Save without confirmation
+		 *
+		 * @return array PTE_Thumbnail instances
 		 */
 		$thumbnails = apply_filters( 'pte_api_resize_thumbnails', array(), $id, $w, $h, $x, $y, $sizes, $save );
 

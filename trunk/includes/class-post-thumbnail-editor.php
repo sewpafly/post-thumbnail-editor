@@ -87,8 +87,13 @@ class Post_Thumbnail_Editor {
 	 *
 	 * - PTE_Loader. Orchestrates the hooks of the plugin.
 	 * - PTE_i18n. Defines internationalization functionality.
+	 * - PTE_Hooker. Helper class for hook functions.
+	 * - PTE_API. Basic functionality of plugin, what the service calls
+	 * - PTE_Thumbnail. Objects for returning / passing thumbnail information.
 	 * - PTE_Admin. Defines all hooks for the admin area.
+	 * - PTE_Options. Defines hooks for options as well as the admin page.
 	 * - PTE_Service. Defines all hooks for the admin area.
+	 * - PTE_Client. Loads the HTML for the editor.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -98,58 +103,24 @@ class Post_Thumbnail_Editor {
 	 */
 	private function load_dependencies() {
 
-		/**
-		 * The class responsible for orchestrating the actions and filters of the
-		 * core plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-loader.php';
+		$dependencies = array(
+			'includes/class-pte-loader.php',
+			'includes/class-pte-i18n.php',
+			//'includes/class-pte.php',
+			'includes/class-pte-hooker.php',
+			'includes/class-pte-api.php',
+			'includes/class-pte-thumbnail.php',
+			'admin/class-pte-admin.php',
+			'admin/class-pte-options.php',
+			'service/class-pte-service.php',
+			'client/class-pte-client.php',
+		);
 
-		/**
-		 * The class responsible for defining internationalization functionality
-		 * of the plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-i18n.php';
+		foreach ( $dependencies as $dep ) {
 
-		/**
-		 * The class responsible for defining shortcuts to api/options/client
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte.php';
+			require_once plugin_dir_path( dirname( __FILE__ ) ) . $dep;
 
-		/**
-		 * This class is a parent class for the admin, service, api, options,
-		 * client... Basically anything that uses hooks
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-hooker.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the admin area.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-pte-admin.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the admin area.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-pte-options.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the api.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-api.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the service.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'service/class-pte-service.php';
-
-		/**
-		 * The class responsible for defining and organizing wordpress thumbnail information
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-thumbnail.php';
-
-		/**
-		 * The class responsible for defining and organizing wordpress thumbnail information
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'client/class-pte-client.php';
+		}
 
 		$this->loader = new PTE_Loader();
 
@@ -214,7 +185,7 @@ class Post_Thumbnail_Editor {
 		$this->loader->add_action( 'load-settings_page_pte', $plugin_options, 'init' );
 		$this->loader->add_action( 'load-options.php', $plugin_options, 'init' );
 		$this->loader->add_action( 'pte_options_launch', $plugin_options, 'launch' );
-		$this->loader->add_action( 'pte_api_resize_thumbnails', $plugin_options, 'load_jpeg' );
+		$this->loader->add_action( 'pte_api_resize_thumbnails', $plugin_options, 'load_jpeg', 9 );
 		$this->loader->add_filter( 'pte_options_get', $plugin_options, 'get_option', 10, 2 );
 
 	}
@@ -264,6 +235,8 @@ class Post_Thumbnail_Editor {
 		$this->loader->add_filter( 'pte_api_assert_valid_id', $api, 'assert_valid_id_hook', 10, 2 );
 		$this->loader->add_filter( 'pte_api_get_sizes', $api, 'get_sizes_hook', 10, 2 );
 		$this->loader->add_filter( 'pte_api_resize_thumbnails', $api, 'resize_thumbnails_hook', 10, 8 );
+		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_dimensions_ahook' );
+		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_basename_ahook' );
 
 	}
 
