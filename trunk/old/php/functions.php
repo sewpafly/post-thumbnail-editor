@@ -302,7 +302,7 @@ function pte_generate_working_image($id)
 	return $url;
 }
 
-function pte_check_int( $int ){
+/*function pte_check_int( $int ){
 	$logger = PteLogger::singleton();
 	if (! is_numeric( $int ) ){
 		$logger->warn( "PARAM not numeric: '{$int}'" );
@@ -310,7 +310,7 @@ function pte_check_int( $int ){
 	}
 	return $int;
 }
-
+*/
 /*
  * Get Destination width & height
  * ==============================
@@ -318,7 +318,7 @@ function pte_check_int( $int ){
  *    the size information for the biggest dimension is accurate, 
  *    but the other dimension is wrong
  */
-function pte_get_width_height( $size_information, $w, $h ){
+/*function pte_get_width_height( $size_information, $w, $h ){
 	$logger = PteLogger::singleton();
 	if ( $size_information['crop'] == 1 ){
 		$logger->debug("GETwidthheightCROPPED");
@@ -353,7 +353,7 @@ function pte_get_width_height( $size_information, $w, $h ){
 	}
 	return compact( "dst_w", "dst_h" );
 }
-
+*/
 /*
  * ================
  * Get the filename
@@ -371,7 +371,7 @@ function pte_get_width_height( $size_information, $w, $h ){
  * @param $h height of the cropped image
  * @param $transparent if the cropped image is transparent
  */
-function pte_generate_filename( $file, $w, $h, $transparent=false){
+/*function pte_generate_filename( $file, $w, $h, $transparent=false){
 	$options      = pte_get_options();
 	$info         = pathinfo( $file );
 	$ext          = (false !== $transparent) ? 'png' : $info['extension'];
@@ -388,7 +388,7 @@ function pte_generate_filename( $file, $w, $h, $transparent=false){
 	}
 	//print_r( compact( "file", "info", "ext", "name", "suffix" ) );
 	return "{$name}-{$suffix}.{$ext}";
-}
+}*/
 
 
 /*
@@ -719,15 +719,15 @@ function pte_init_iframe() {
  * @param $dst_w The width of the dst image
  * @param $dst_h The height of the dst image
  */
-function pte_is_crop_border_enabled( $src_w, $src_h, $dst_w, $dst_h ) {
+/*function pte_is_crop_border_enabled( $src_w, $src_h, $dst_w, $dst_h ) {
 	$src_ar = $src_w / $src_h;
 	$dst_ar = $dst_w / $dst_h;
 	return ( isset( $_REQUEST['pte-fit-crop-color'] ) && abs( $src_ar - $dst_ar ) > 0.01 );
-}
+}*/
 
 /**
  * Is the border transparent
  */
-function pte_is_crop_border_opaque() {
+/*function pte_is_crop_border_opaque() {
 	return ( preg_match( "/^#[a-fA-F0-9]{6}$/", $_REQUEST['pte-fit-crop-color'] ) );
-}
+}*/

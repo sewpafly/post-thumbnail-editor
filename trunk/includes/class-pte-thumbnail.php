@@ -193,6 +193,21 @@ class PTE_Thumbnail {
 	}
 
 	/**
+	 * Save the thumbnail metadata
+	 *
+	 * @return void
+	 */
+	public function save () {
+		$metadata = wp_get_attachment_metadata( $this->id, true );
+		$metadata['sizes'][$this->size->name] = array(
+			'file' => $this->file,
+			'width' => $this->width,
+			'height' => $this->height, 
+		);
+		wp_update_attachment_metadata( $this->id, $metadata );
+	}
+	
+	/**
 	 * Create a list of thumbnails
 	 *
 	 * @since 3.0.0

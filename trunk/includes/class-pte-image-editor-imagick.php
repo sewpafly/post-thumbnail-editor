@@ -19,7 +19,7 @@ class PTE_Image_Editor_Imagick extends WP_Image_Editor_Imagick {
 	 * @return boolean|WP_Error
 	 */
 	public function crop( $src_x, $src_y, $src_w, $src_h, $dst_w = null, $dst_h = null, $src_abs = false ) {
-		if ( pte_is_crop_border_enabled( $src_w, $src_h, $dst_w, $dst_h ) ){
+		if ( apply_filters( 'pte_api_is_crop_border_enabled', false, $src_w, $src_h, $dst_w, $dst_h ) ) {
 			// Crop the image to the correct aspect ratio...
 			$ar = $src_w / $src_h;
 			$dst_ar = $dst_w / $dst_h;
@@ -36,7 +36,7 @@ class PTE_Image_Editor_Imagick extends WP_Image_Editor_Imagick {
 				$tmp_dst_y = ($dst_h / 2) - ($tmp_dst_h / 2);
 			}
 
-			if ( pte_is_crop_border_opaque() ) {
+			if ( apply_filters('pte_api_is_crop_border_opaque', false) ) {
 				$color = new ImagickPixel( $_GET['pte-fit-crop-color'] );
 			}
 

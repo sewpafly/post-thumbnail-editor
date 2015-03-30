@@ -32,11 +32,19 @@ class PTE_Api extends PTE_Hooker{
 	public function __construct () {
 
 		$this->arg_keys['derive_dimensions'] = array( 'size', 'w', 'h' );
-		$this->arg_keys['derive_basename'] = array(
+		$this->arg_keys['derive_transparency'] = array(
+			'w',
+			'h',
+			'dst_w',
+			'dst_h'
+	   	);
+		$this->arg_keys['derive_paths'] = array(
+			'id',
 			'original_file',
 			'dst_w',
 			'dst_h',
-			'transparent'
+			'transparent',
+			'save'
 	   	);
 
 	}
@@ -126,33 +134,77 @@ class PTE_Api extends PTE_Hooker{
 	 * @param array   $sizes An array of the thumbnails to modify
 	 * @param string  $save  Save without confirmation
 	 *
-	 * @return array of PTE_ActualThumbnail
+	 * @return array of PTE_ActualThumbnail, and any errors
 	 */
 	public function resize_thumbnails ( $id, $w, $h, $x, $y, $sizes, $save=false ) {
 
 		$data = compact( 'id', 'w', 'h', 'x', 'y', 'save' );
 		$data['original_file'] = _load_image_to_edit_path( $id );
 		$data['original_size'] = @getimagesize( $data['original_file'] );
-		$data['tmp_dir'] = apply_filters( 'pte_options_get', null, 'tmp_dir' );
-		$data['tmp_url'] = apply_filters( 'pte_options_get', null, 'tmp_url' );
 
 		if ( ! isset( $data['original_size'] ) ) {
 			throw new Exception( __( 'Could not read image size', 'post-thumbnail-editor' ) );
 		}
 
 		$thumbnails = array();
+		$errors = array();
 
 		foreach ( $this->get_sizes( $sizes ) as $size ) {
 			$data['size'] = $size;
-			$thumbnail = $this->resize_thumbnail( $data );
-			if ( ! empty( $thumbnail ) ) {
-				$thumbnails[] = $thumbnail;
+			try {
+				
+				$thumbnail = $this->resize_thumbnail( $data );
+				if ( ! empty( $thumbnail ) ) {
+					$thumbnails[] = $thumbnail;
+				}
+
+			} 
+			catch (Exception $e) {
+				$errors[$size->name] = $e->getMessage();
 			}
 		}
 
-		return $thumbnails;
+		return compact( 'thumbnails', 'errors' );
 	}
 
+	/**
+	 * Load our extended GD and ImageMagick Editocs
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function load_pte_editors () {
+
+		add_filter( 'wp_image_editors', array( $this, 'image_editors' ) );
+
+	}
+
+	/**
+	 * Return our image editors
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array {
+	 *     @var WP_Image_Editor class name
+	 * }
+	 *
+	 * @return array {
+	 *     @var WP_Image_Editor class name
+	 * }
+	 */
+	public function image_editors ( $editors ) {
+
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-image-editor-gd.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-pte-image-editor-imagick.php';
+
+		array_unshift( $editors, 'PTE_Image_Editor_Imagick', 'PTE_Image_Editor_GD' );
+
+		return $editors;
+
+	}
+	
+	
 	/**
 	 * Resize an individual thumbnail
 	 *
@@ -191,8 +243,101 @@ class PTE_Api extends PTE_Hooker{
 		 */
 		$params = apply_filters( 'pte_api_resize_thumbnail', $params );
 
-		var_dump( $params );
+		$editor = wp_get_image_editor( $params['original_file'] );
+
+		if ( is_wp_error( $editor ) ) {
+			throw new Exception( sprintf(
+				__( 'Unable to load file: %s', 'post-thumbnail-editor' ),
+				$params['original_file']
+			) );
+		}
+
+		$crop_results = $editor->crop(
+			$params['x'],
+			$params['y'],
+			$params['w'],
+			$params['h'],
+			$params['dst_w'],
+			$params['dst_h']
+		);
+
+		if ( is_wp_error( $crop_results ) ) {
+			throw new Exception( sprintf(
+				__( 'Error cropping image: %s', 'post-thumbnail-editor' ),
+				$params['size']->name
+			) );
+		}
+
+		wp_mkdir_p( dirname( $params['tmpfile'] ) );
+
+		if ( is_wp_error( $editor->save( $params['tmpfile'] ) ) ) {
+			throw new Exception( sprintf(
+				__( 'Error writing image: %s to %s', 'post-thumbnail-editor' ),
+				$params['size']->name,
+				$params['tmpfile']
+			) );
+		}
+
+		$thumbnail = new PTE_Thumbnail( $params['id'], $params['size'] );
+		$oldfile = dirname( $params['original_file'] )
+			. DIRECTORY_SEPARATOR
+		   	. $thumbnail->file;
+		$thumbnail->url = $params['tmpurl'];
+		$thumbnail->file = $params['basename'];
+		$thumbnail->width = $params['dst_w'];
+		$thumbnail->height = $params['dst_h'];
+
+		if ( $params['save'] ) {
+			$thumbnail->save();
+			$oldfile = apply_filters( 'pte_delete_file', $oldfile );
+			@unlink( apply_filters( 'wp_delete_file', $oldfile ) );
+		}
+
+		return $thumbnail;
+
 	}
+
+	/**
+	 * Are we adding borders?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int $src_w
+	 * @param int $src_h
+	 * @param int $dst_w
+	 * @param int $dst_h
+	 *
+	 * @return boolean borders?
+	 */
+	public function is_crop_border_enabled ( $src_w, $src_h, $dst_w, $dst_h ) {
+
+		$src_ar = $src_w / $src_h;
+		$dst_ar = $dst_w / $dst_h;
+		return ( isset( $_REQUEST['pte-fit-crop-color'] ) && abs( $src_ar - $dst_ar ) > 0.01 );
+
+	}
+	
+	/**
+	 * Is the border transparent
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean transparent?
+	 */
+	public function is_crop_border_opaque () {
+
+		if ( ! isset ( $_REQUEST['pte-fit-crop-color'] ) )
+			return false;
+
+		return ( preg_match( "/^#[a-fA-F0-9]{6}$/", $_REQUEST['pte-fit-crop-color'] ) );
+
+	}
+	
+	/**
+	 * ================================================================
+	 *  Resize Thumbnail hooks - hooked into `pte_api_resize_thumbnail`
+	 * ================================================================
+	 */
 
 	/**
 	 * Derive the correct width/height given the input width/height and the
@@ -262,7 +407,31 @@ class PTE_Api extends PTE_Hooker{
 	}
 	
 	/**
-	 * Generate a basename for the file
+	 * Set 'transparency' value
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int  $width
+	 * @param int  $height
+	 * @param int  $dst_w
+	 * @param int  $dst_h
+	 *
+	 * @return array {
+	 *     @var boolean $transparent  Does the image require transparency?
+	 * }
+	 */
+	public function derive_transparency ( $src_w, $src_h, $dst_w, $dst_h ) {
+
+		$crop_enabled = $this->is_crop_border_enabled( $src_w, $src_h, $dst_w, $dst_h );
+
+		$opaque = $this->is_crop_border_opaque();
+
+		return array( 'transparent' => $crop_enabled && $opaque ); 
+
+	}
+	
+	/**
+	 * Generate the paths for a thumbnail
 	 *
 	 * @since 2.0.0
 	 *
@@ -273,10 +442,14 @@ class PTE_Api extends PTE_Hooker{
 	 *                        .png extension
 	 *
 	 * @return array {
-	 *    @type string  $basename  The basename of the file to save
+	 *    @type string  $tmpfile  The file to save
+	 *    @type string  $tmpurl   The url of the file to save
 	 * }
 	 */
-	public function derive_basename ( $file, $w, $h, $transparent) {
+	public function derive_paths ( $id, $file, $w, $h, $transparent, $save=false) {
+
+		$tmp_dir = apply_filters( 'pte_options_get', null, 'tmp_dir' );
+		$tmp_url = apply_filters( 'pte_options_get', null, 'tmp_url' );
 
 		$info         = pathinfo( $file );
 		$ext          = (false !== $transparent) ? 'png' : $info['extension'];
@@ -285,14 +458,36 @@ class PTE_Api extends PTE_Hooker{
 
 		if ( apply_filters( 'pte_options_get', false, 'cache_buster' ) ){
 			$cache_buster = time();
-			return sprintf( "%s-%s-%s.%s",
+			$basename = sprintf( 
+				"%s-%s-%s.%s",
 				$name,
 				$suffix,
 				$cache_buster,
-				$ext );
+				$ext 
+			);
+		}
+		else {
+			$basename = "{$name}-{$suffix}.{$ext}";
 		}
 
-		return array( 'basename' => "{$name}-{$suffix}.{$ext}" );
+		$basename = apply_filters( 'pte_api_resize_thumbnail_basename', $basename );
+
+		if ( $save ) {
+			$directory = dirname( $file ) . DIRECTORY_SEPARATOR;
+			$tmp_url = dirname( wp_get_attachment_url( $id ) ) . "/";
+		}
+		else {
+			$directory = $tmp_dir;
+		}
+		$directory = apply_filters( 'pte_api_resize_thumbnail_directory', $directory );
+
+		$tmpfile = $directory . $basename;
+		$tmpfile = apply_filters( 'pte_api_resize_thumbnail_file', $tmpfile, func_get_args() );
+
+		$tmpurl = "{$tmp_url}{$basename}";
+		$tmpurl = apply_filters( 'pte_api_resize_thumbnail_url', $tmpurl, func_get_args() );
+
+		return compact( 'basename', 'tmpfile', 'tmpurl' );
 
 	}
 	

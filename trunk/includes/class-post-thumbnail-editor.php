@@ -154,7 +154,6 @@ class Post_Thumbnail_Editor {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new PTE_Admin( $this->get_plugin_name(), $this->get_version() );
-		$plugin_options = new PTE_Options();
 
         // Upload.php (the media library page) fires:
         // - 'load-upload.php' (wp-admin/admin.php)
@@ -235,8 +234,12 @@ class Post_Thumbnail_Editor {
 		$this->loader->add_filter( 'pte_api_assert_valid_id', $api, 'assert_valid_id_hook', 10, 2 );
 		$this->loader->add_filter( 'pte_api_get_sizes', $api, 'get_sizes_hook', 10, 2 );
 		$this->loader->add_filter( 'pte_api_resize_thumbnails', $api, 'resize_thumbnails_hook', 10, 8 );
+		$this->loader->add_filter( 'pte_api_resize_thumbnails', $api, 'load_pte_editors', 1	);
 		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_dimensions_ahook' );
-		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_basename_ahook' );
+		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_transparency_ahook' );
+		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_paths_ahook' );
+		$this->loader->add_filter( 'pte_api_is_crop_border_enabled', $api, 'is_crop_border_enabled_hook', 10, 5 );
+		$this->loader->add_filter( 'pte_api_is_crop_border_opaque', $api, 'is_crop_border_opaque_hook' );
 
 	}
 
