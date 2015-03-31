@@ -65,7 +65,7 @@ class PTE_Service {
 			$this->confirm_images();
 			break;
 		case "delete-images":
-			$this->delete_images();
+			$this->delete_images( $_REQUEST );
 			break;
 		case "get-thumbnail-info":
 			$this->get_thumbnail_info();
@@ -166,6 +166,7 @@ class PTE_Service {
 
 		$save = isset( $request['save'] ) && strtolower( $request['save'] ) === "true";
 
+		// TODO: uncomment this out...
 		// Check nonce
 		//if ( !check_ajax_referer( "pte-resize-{$id}", 'pte-nonce', false ) ){
 		//    return $this->error( "CSRF Check failed" );
@@ -201,6 +202,41 @@ class PTE_Service {
 
 	}
 	
+	/**
+	 * Delete images associated with an ID
+	 *
+	 * @since 1.0
+	 *
+	 * @param int    $id    The ID of the temporary images to delete
+	 *
+	 * @return status message
+	 */
+	public function delete_images ( $request ) {
+
+		// TODO: uncomment
+		// Check nonce
+		//if ( !check_ajax_referer( "pte-delete-{$id}", 'pte-nonce', false ) ){
+		//    return $this->error( __( "CSRF Check failed", 'post-thumbnail-editor' ) );
+		//}
+
+		$id = isset( $request['id'] )
+			? $this->validateInt( $request['id'] )
+			: false;
+
+		if ( $id === false ) {
+			return $this->error( __( "Invalid id:{$id}", 'post-thumbnail-editor' ) );
+		}
+
+		$tmp_dir = apply_filters( 'pte_options_get', null, 'tmp_dir' )
+			. $id
+			. DIRECTORY_SEPARATOR;
+
+		$status = apply_filters( 'pte_api_delete_dir', null, $tmp_dir );
+
+		return $this->message( $status );
+
+	}
+
 	/**
 	 * Take the object passed in, JSON encode it and print out then return
 	 *

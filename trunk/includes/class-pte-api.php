@@ -204,7 +204,6 @@ class PTE_Api extends PTE_Hooker{
 
 	}
 	
-	
 	/**
 	 * Resize an individual thumbnail
 	 *
@@ -333,6 +332,28 @@ class PTE_Api extends PTE_Hooker{
 
 	}
 	
+	/**
+	 * Delete a directory
+	 *
+	 * @return status
+	 */
+	public function delete_dir ( $dir ) {
+
+		if ( !is_dir( $dir ) || !preg_match( "/ptetmp/", $dir ) ){
+			return array(
+				'error' => __( "Tried to delete invalid directory: {$dir}", 'post-thumbnail-editor' )
+			);
+		}
+		foreach ( scandir( $dir ) as $file ){
+			if ( "." == $file || ".." == $file ) continue;
+			$full_path_to_file = $dir . DIRECTORY_SEPARATOR . $file;
+			unlink( $full_path_to_file );
+		}
+		rmdir( $dir );
+
+		return array( 'success' => __( 'Successfully deleted directory', 'post-thumbnail-editor' ) );
+	}
+
 	/**
 	 * ================================================================
 	 *  Resize Thumbnail hooks - hooked into `pte_api_resize_thumbnail`
@@ -477,7 +498,9 @@ class PTE_Api extends PTE_Hooker{
 			$tmp_url = dirname( wp_get_attachment_url( $id ) ) . "/";
 		}
 		else {
-			$directory = $tmp_dir;
+			$directory = $tmp_dir . $id
+				. DIRECTORY_SEPARATOR;
+			$tmp_url = $tmp_url . $id . "/";
 		}
 		$directory = apply_filters( 'pte_api_resize_thumbnail_directory', $directory );
 

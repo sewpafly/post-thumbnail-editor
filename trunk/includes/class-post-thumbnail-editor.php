@@ -240,6 +240,7 @@ class Post_Thumbnail_Editor {
 		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_paths_ahook' );
 		$this->loader->add_filter( 'pte_api_is_crop_border_enabled', $api, 'is_crop_border_enabled_hook', 10, 5 );
 		$this->loader->add_filter( 'pte_api_is_crop_border_opaque', $api, 'is_crop_border_opaque_hook' );
+		$this->loader->add_filter( 'pte_api_delete_dir', $api, 'delete_dir_hook', 10, 2 );
 
 	}
 
