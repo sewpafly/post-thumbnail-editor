@@ -62,7 +62,7 @@ class PTE_Service {
 			$this->resize_thumbnails( $_REQUEST );
 			break;
 		case "confirm-images":
-			$this->confirm_images();
+			$this->confirm_images( $_REQUEST );
 			break;
 		case "delete-images":
 			$this->delete_images( $_REQUEST );
@@ -98,7 +98,7 @@ class PTE_Service {
 		$this->message( $thumbnails );
 
 	}
-	
+
 	/**
 	 * Validate the the given parameter is an integer.  Return false if not
 	 * numeric
@@ -112,7 +112,7 @@ class PTE_Service {
 	{
 		return is_numeric ( $param ) ? intval( $param ) : false;
 	}
-	
+
 	/**
 	 * Validate the keys exist in array
 	 *
@@ -137,7 +137,7 @@ class PTE_Service {
 
 		return true;
 	}
-	
+
 	/**
 	 * Resize image
 	 *
@@ -160,7 +160,7 @@ class PTE_Service {
 		$x  = $this->validateInt( $request['x'] );
 		$y  = $this->validateInt( $request['y'] );
 
-		if ( $id === false || $w === false || $h === false || $x === false || $y === false) {
+		if ( $id === false || $w === false || $h === false || $x === false || $y === false ) {
 			return $this->error( "Invalid resize parameter: 'id:{$id} w:{$w} h:{$h} x:{$x} y:{$y}'" );
 		}
 
@@ -174,7 +174,7 @@ class PTE_Service {
 
 		// Get the sizes to process
 		$sizes = $request['sizes'];
-		if ( !is_array( $sizes ) ){
+		if ( ! is_array( $sizes ) ){
 			$sizes = explode( ",", $sizes );
 		}
 
@@ -201,7 +201,57 @@ class PTE_Service {
 		$this->message( $thumbnails );
 
 	}
-	
+
+    /*
+	 * Confirm images by moving them into the correct folders and updating the
+	 * file metadata in the wordpress database
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array    $request  The request array, allows GET or POST to be
+	 *                           passed in as needed
+	 */
+	public function confirm_images ( $request ) {
+
+		// TODO: Uncomment
+		// Check nonce
+		//if ( ! check_ajax_referer( "pte-{$id}", 'pte-nonce', false ) ){
+		//    return $this->error( __( "CSRF Check failed" ), 'post-thumbnail-editor );
+		//}
+
+		if ( true !== $msg = $this->validateKeys( $request, array( 'id', 'files' ) ) ) {
+			return $this->error( "Missing input: {$msg}" );
+		}
+
+		if ( false === $id = $this->validateInt( $request['id'] ) ) {
+			return $this->error( "Invalid id:{$id}'" );
+		}
+
+		// Get the sizes to process
+		$files = $request['files'];
+		if ( ! is_array( $files ) ){
+			return $this->error( "Invalid id:{$id}'" );
+		}
+
+		/**
+		 * Confirm the thumbnails and return the thumbnail instances
+		 *
+		 * Return an array of thumbnail objects (size + url information)
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param  callback   $filter   filter results with this filter callback
+		 * @param int         $id       The post/attachment id to modify
+		 * @param array       $files    An array of the thumbnails to modify
+		 *
+		 * @return array PTE_Thumbnail instances
+		 */
+		$thumbnails = apply_filters( 'pte_api_confirm_images', array(), $id, $files );
+
+		$this->message( $thumbnails );
+
+	}
+
 	/**
 	 * Delete images associated with an ID
 	 *
@@ -231,9 +281,24 @@ class PTE_Service {
 			. $id
 			. DIRECTORY_SEPARATOR;
 
-		$status = apply_filters( 'pte_api_delete_dir', null, $tmp_dir );
+		try {
 
-		return $this->message( $status );
+			$status = apply_filters( 'pte_api_delete_dir', null, $tmp_dir );
+
+			return $this->message( array( 'success' => sprintf(
+				__( 'Successfully deleted directory: %s', 'post-thumbnail-editor'),
+				$tmp_dir
+			) ) );
+
+		}
+		catch (Exception $e) {
+
+			return $this->message( array( 'error' => sprintf(
+				__( 'Error deleting directory: %s', 'post-thumbnail-editor'),
+				$tmp_dir
+			)));
+
+		}
 
 	}
 
@@ -252,7 +317,7 @@ class PTE_Service {
 		return null;
 
 	}
-	
+
 	/**
 	 * Print a JSON error message and die
 	 *
@@ -265,7 +330,7 @@ class PTE_Service {
 		return $this->message( array( 'error' => $message ) );
 
 	}
-	
+
 	/**
 	 * Check for undeclared functions
 	 *
@@ -278,5 +343,5 @@ class PTE_Service {
 		return $this->error( 'undefined function call' );
 
 	}
-	
+
 }

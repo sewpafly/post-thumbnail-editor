@@ -38,6 +38,9 @@ class PTE_Api extends PTE_Hooker{
 			'dst_w',
 			'dst_h'
 	   	);
+		$this->arg_keys['derive_dimensions_from_file'] = array(
+			'file',
+	   	);
 		$this->arg_keys['derive_paths'] = array(
 			'id',
 			'original_file',
@@ -104,6 +107,8 @@ class PTE_Api extends PTE_Hooker{
 			return $this->thumbnails;
 		}
 
+		$thumbnails = array();
+
 		$filtered_sizes = apply_filters( 'pte_options_get', array(), 'pte_hidden_sizes');
 
 		foreach ( $this->thumbnails as $size ) {
@@ -114,6 +119,7 @@ class PTE_Api extends PTE_Hooker{
 				$thumbnails[] = $size;
 			}
 		}
+
 		return $thumbnails;
 
 	}
@@ -280,7 +286,7 @@ class PTE_Api extends PTE_Hooker{
 		$thumbnail = new PTE_Thumbnail( $params['id'], $params['size'] );
 		$oldfile = dirname( $params['original_file'] )
 			. DIRECTORY_SEPARATOR
-		   	. $thumbnail->file;
+			. $thumbnail->file;
 		$thumbnail->url = $params['tmpurl'];
 		$thumbnail->file = $params['basename'];
 		$thumbnail->width = $params['dst_w'];
@@ -288,9 +294,103 @@ class PTE_Api extends PTE_Hooker{
 
 		if ( $params['save'] ) {
 			$thumbnail->save();
-			$oldfile = apply_filters( 'pte_delete_file', $oldfile );
-			@unlink( apply_filters( 'wp_delete_file', $oldfile ) );
+			$this->delete_file( $oldfile );
 		}
+
+		return $thumbnail;
+
+	}
+
+	/**
+	 * Confirm Images
+	 *
+	 * Move images and update database
+	 *
+	 * @since 0.1
+	 *
+	 * @param int     $id    The post/attachment id to modify
+	 * @param array   $files A mapping of sizes to filenames to move
+	 *
+	 * @return array of PTE_ActualThumbnail, and any errors
+	 */
+	public function confirm_images ( $id, $files ) {
+
+		$data = compact( 'id', 'files' );
+		$thumbnails = array();
+		$errors = array();
+
+		foreach ( $this->get_sizes( array_keys( $files ) ) as $size ) {
+			$tmp_dir = apply_filters( 'pte_options_get', null, 'tmp_dir' );
+
+			$data['size'] = $size;
+			$data['file'] = $tmp_dir
+				. $id
+				. DIRECTORY_SEPARATOR
+				. $files[$size->name];
+
+			try {
+
+				$thumbnail = $this->confirm_image( $data );
+				if ( ! empty( $thumbnail ) ) {
+					$thumbnails[] = $thumbnail;
+				}
+
+			}
+			catch (Exception $e) {
+				$errors[$size->name] = $e->getMessage();
+			}
+		}
+
+		return compact( 'thumbnails', 'errors' );
+	}
+
+	/**
+	 * Move files and update database
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $params {
+	 *	   @type int                 $id       The post id to resize
+	 *	   @type string              $size     The PTE_ThumbnailSize to modify
+	 *	   @type string              $file     The temporary files to move
+	 * }
+	 *
+	 * @return PTE_Thumbnail
+	 */
+	private function confirm_image ( $params ) {
+
+		/**
+		 * Action `pte_confirm_image' is triggered when confirm_image is
+		 * ready to roll.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param See above
+		 *
+		 * @return filtered params ready to modify the image
+		 */
+		$params = apply_filters( 'pte_api_confirm_image', $params );
+
+		$thumbnail = new PTE_Thumbnail( $params['id'], $params['size'] );
+
+		$copy_from = $params['file'];
+
+		$copy_to = dirname( get_attached_file( $params['id'] ) )
+			. DIRECTORY_SEPARATOR
+			. basename( $params['file'] );
+
+		$url = dirname( wp_get_attachment_url( $params['id'] ) )
+			. "/"
+			. basename( $params['file'] );
+
+		// Move good image
+		$this->copy_file( $copy_from, $copy_to );
+
+		$thumbnail->url = $url;
+		$thumbnail->file = $params['file'];
+		$thumbnail->width = $params['dst_w'];
+		$thumbnail->height = $params['dst_h'];
+		$thumbnail->save();
 
 		return $thumbnail;
 
@@ -333,26 +433,71 @@ class PTE_Api extends PTE_Hooker{
 	}
 	
 	/**
+	 * Copy a file
+	 *
+	 * @return true on success
+	 *
+	 * @throws Exception on any sort of problem
+	 */
+	private function copy_file ( $from, $to ) {
+
+		if ( ! ( isset( $from ) && file_exists( $from ) ) ){
+			throw new Exception( 
+				sprintf(
+					__( 'Invalid file to copy: %s', 'post-thumbnail-editor' ),
+					$from
+				)
+		   	);
+		}
+
+		wp_mkdir_p( dirname( $to ) );
+		rename( $from, $to );
+
+		return true;
+
+	}
+	
+	/**
 	 * Delete a directory
 	 *
 	 * @return status
 	 */
 	public function delete_dir ( $dir ) {
 
+		$dir = apply_filters( 'pte_delete_dir', $dir );
+
 		if ( !is_dir( $dir ) || !preg_match( "/ptetmp/", $dir ) ){
-			return array(
-				'error' => __( "Tried to delete invalid directory: {$dir}", 'post-thumbnail-editor' )
+			throw new Exception(
+				__( "Tried to delete invalid directory: {$dir}", 'post-thumbnail-editor' )
 			);
 		}
+
 		foreach ( scandir( $dir ) as $file ){
 			if ( "." == $file || ".." == $file ) continue;
-			$full_path_to_file = $dir . DIRECTORY_SEPARATOR . $file;
-			unlink( $full_path_to_file );
+			$this->delete_file( $dir . DIRECTORY_SEPARATOR . $file );
 		}
 		rmdir( $dir );
 
-		return array( 'success' => __( 'Successfully deleted directory', 'post-thumbnail-editor' ) );
+		return true;
 	}
+
+	/**
+	 * Delete a file, ensure that it exists first
+	 *
+	 * @return bool   true if file was deleted, false otherwise
+	 */
+	private function delete_file ( $file ) {
+
+		if ( isset( $file ) && @is_file( $file ) ) {
+			$file = apply_filters( 'pte_delete_file', $file );
+			@unlink( apply_filters( 'wp_delete_file', $file ) );
+			return true;
+		}
+
+		return false;
+
+	}
+	
 
 	/**
 	 * ================================================================
@@ -426,6 +571,26 @@ class PTE_Api extends PTE_Hooker{
 		return compact( 'dst_w', 'dst_h' );
 
 	}
+
+	/**
+	 * Take a file and pull out the width and height from it
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param  $file   The file to try and get dimensions from
+	 *
+	 * @return array {
+	 *    @type int width
+	 *    @type int height
+	 * }
+	 */
+	public function derive_dimensions_from_file ( $file ) {
+
+		list( $dst_w, $dst_h, $type ) = @getimagesize( $file );
+
+		return compact( 'dst_w', 'dst_h' );
+	}
+	
 	
 	/**
 	 * Set 'transparency' value

@@ -108,11 +108,11 @@ class Post_Thumbnail_Editor {
 			'includes/class-pte-i18n.php',
 			//'includes/class-pte.php',
 			'includes/class-pte-hooker.php',
+			'includes/class-pte-service.php',
 			'includes/class-pte-api.php',
 			'includes/class-pte-thumbnail.php',
 			'admin/class-pte-admin.php',
 			'admin/class-pte-options.php',
-			'service/class-pte-service.php',
 			'client/class-pte-client.php',
 		);
 
@@ -240,6 +240,8 @@ class Post_Thumbnail_Editor {
 		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_paths_ahook' );
 		$this->loader->add_filter( 'pte_api_is_crop_border_enabled', $api, 'is_crop_border_enabled_hook', 10, 5 );
 		$this->loader->add_filter( 'pte_api_is_crop_border_opaque', $api, 'is_crop_border_opaque_hook' );
+		$this->loader->add_filter( 'pte_api_confirm_images', $api, 'confirm_images_hook', 10, 3 );
+		$this->loader->add_filter( 'pte_api_confirm_image', $api, 'derive_dimensions_from_file_ahook' );
 		$this->loader->add_filter( 'pte_api_delete_dir', $api, 'delete_dir_hook', 10, 2 );
 
 	}
