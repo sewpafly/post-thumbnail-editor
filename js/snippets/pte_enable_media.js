@@ -81,7 +81,7 @@
    oldFeaturedImageFrame = $.proxy( wp.media.featuredImage.frame, wp.media.featuredImage );
    wp.media.featuredImage.frame = function() {
       var frame = oldFeaturedImageFrame()
-      frame.setState('featured-image')
+      frame.setState('library')
       return frame;
    }
 

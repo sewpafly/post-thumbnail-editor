@@ -3,7 +3,7 @@ Contributors: sewpafly
 Donate link: http://sewpafly.github.io/post-thumbnail-editor/#toc_donations
 Tags: post-thumbnail, post thumbnail, featured image, featured, editor, image, awesome, crop
 Requires at least: 4.1
-Tested up to: 4.1.x
+Tested up to: 4.2.x
 Stable tag: trunk
 License: GPLv2
 
@@ -74,6 +74,9 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 5. Save the resized/recropped images by clicking the save icon.
 
 == Changelog ==
+
+= 2.4.5 =
+* Fixed bug with post's media library
 
 = 2.4.4 =
 * Fixed bug with debug mode and certain plugins
@@ -189,6 +192,5 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Upgrade Notice ==
 
-= 2.4.4 =
-* Updated french translation
-* Fixed debug mode bug
+= 2.4.5 =
+* Fixed post media library bug
