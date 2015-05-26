@@ -78,11 +78,13 @@
    });
 
    // Set the featuredImage object as `this` for the frame function...
-   oldFeaturedImageFrame = $.proxy( wp.media.featuredImage.frame, wp.media.featuredImage );
-   wp.media.featuredImage.frame = function() {
-      var frame = oldFeaturedImageFrame()
-      frame.setState('library')
-      return frame;
+   if ( typeof wp.media.featuredImage !== 'undefined' ) {
+      oldFeaturedImageFrame = $.proxy( wp.media.featuredImage.frame, wp.media.featuredImage );
+      wp.media.featuredImage.frame = function() {
+         var frame = oldFeaturedImageFrame()
+         frame.setState('library')
+         return frame;
+      }
    }
 
    // Overwrite the MediaFrame.Post class
