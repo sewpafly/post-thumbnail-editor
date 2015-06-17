@@ -4,113 +4,219 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Post Thumbnail Editor 2.0.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-thumbnail-editor\n"
-"POT-Creation-Date: 2013-03-08 04:51:59+00:00\n"
+"POT-Creation-Date: 2015-06-16 11:57+0100\n"
+"PO-Revision-Date: 2015-06-16 11:57+0100\n"
+"Last-Translator: Batek Florczak <kontakt@bartekflorczak.pl>\n"
+"Language-Team: Bartosz Florczak <kontakt@bartekflorczak.pl>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2013-11-14 22:21+0100\n"
-"Last-Translator: Batek Florczak <kontakt@bartekflorczak.pl>\n"
-"Language-Team: Bartosz Florczak <kontakt@bartekflorczak.pl>\n"
-"Language: Polish\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.8.1\n"
+"X-Poedit-Basepath: ..\\\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: js-build\n"
 
-#. #-#-#-#-#  post-thumbnail-editor.pot (Post Thumbnail Editor 2.0.0-beta)  #-#-#-#-#
-#. Plugin Name of the plugin/theme
-#: html/pte.php:166 php/options.php:55 post-thumbnail-editor.php:107
-#: post-thumbnail-editor.php:207 post-thumbnail-editor.php:208
-#: post-thumbnail-editor.php:216 post-thumbnail-editor.php:217
-msgid "Post Thumbnail Editor"
-msgstr "Edytor Ikon Wpisu"
+#: html/pte.php:23
+msgid "No thumbnails selected"
+msgstr "Nie wybrano miniatur"
 
-#: html/pte.php:167
-msgid "crop and resize"
-msgstr "przytnij i pomniejsz"
+#: html/pte.php:24
+msgid "No crop selected"
+msgstr "Nie zaznaczono obszaru kadrowania"
 
-#: html/pte.php:171 html/pte.php:206
+#: html/pte.php:25
+msgid "Cropping will likely result in skewed imagery"
+msgstr "Kadrowanie może doprowadzić do zniekształceń"
+
+#: html/pte.php:26
+msgid "There was a problem saving the crop..."
+msgstr "Wystąpił problem z zapisem kadru..."
+
+#: html/pte.php:27 php/options.php:22
+msgid "Crop and Save"
+msgstr "Przytnij i zapisz"
+
+#: html/pte.php:28 html/pte.php:52
 msgid "Crop"
 msgstr "Przycinanie"
 
-#: html/pte.php:172
-msgid "View"
-msgstr "Zobacz"
-
-#: html/pte.php:201
-msgid "Options"
-msgstr "Opcje"
-
-#: html/pte.php:214
-msgid "Aspect Ratio"
-msgstr "Proporcje Obrazu"
-
-#: html/pte.php:215
-msgid "width/height"
-msgstr "szerokość/wysokość"
-
-#: html/pte.php:229 php/options.php:37 post-thumbnail-editor.php:178
-msgid "Thumbnails"
-msgstr "Miniatury"
-
-#: html/pte.php:235
-msgid "Save all"
-msgstr "Zapisz wszystko"
-
-#: html/pte.php:240
-msgid "Reset all"
-msgstr "Zresetuj wszystko"
-
-#: html/pte.php:244
-msgid "View all/modified"
-msgstr "Zobacz wszystkie/zmodyfikowane"
-
-#: html/pte.php:263
+#: html/pte.php:29 html/pte.php:201
 msgid "Save"
 msgstr "Zapisz"
 
-#: html/pte.php:266
+#: html/pte.php:30
+msgid "Set transparent"
+msgstr "Przezroczyste"
+
+#: html/pte.php:31
+msgid "transparent/white"
+msgstr "przezroczysty / biały"
+
+#: html/pte.php:46 php/options.php:79 post-thumbnail-editor.php:211
+#: post-thumbnail-editor.php:340 post-thumbnail-editor.php:393
+#: post-thumbnail-editor.php:394 post-thumbnail-editor.php:400
+#: post-thumbnail-editor.php:401 post-thumbnail-editor.php:444
+msgid "Post Thumbnail Editor"
+msgstr "Edytor Ikon Wpisu"
+
+#: html/pte.php:47
+msgid "crop and resize"
+msgstr "przytnij i pomniejsz"
+
+#: html/pte.php:53
+msgid "View"
+msgstr "Zobacz"
+
+#: html/pte.php:85
+msgid "Options"
+msgstr "Opcje"
+
+#: html/pte.php:101
+msgid "Aspect Ratio"
+msgstr "Proporcje Obrazu"
+
+#: html/pte.php:104
+msgid "width/height"
+msgstr "szerokość/wysokość"
+
+#: html/pte.php:110
+msgid "Crop and save"
+msgstr "Przytnij i zapisz"
+
+#: html/pte.php:119
+msgid "Change the current thumbnails position:"
+msgstr "Zmień bieżącą pozycję miniatury:"
+
+#: html/pte.php:122 php/options.php:54
+msgid "JPEG Compression"
+msgstr "Kompresja JPEG"
+
+#: html/pte.php:126
+#, php-format
+msgid "0 to 100 (Default: %d)"
+msgstr "0 do 100 (Domyślnie:% d)"
+
+#: html/pte.php:135
+msgid "Fit crop to thumbnail by adding border"
+msgstr "Przytnij do miniatury dodając ramkę"
+
+#: html/pte.php:157 php/options.php:49 post-thumbnail-editor.php:361
+msgid "Thumbnails"
+msgstr "Miniatury"
+
+#: html/pte.php:158
+msgid "width"
+msgstr "szerokość"
+
+#: html/pte.php:158
+msgid "W"
+msgstr "Sz."
+
+#: html/pte.php:159
+msgid "height"
+msgstr "Wysokość"
+
+#: html/pte.php:159
+msgid "H"
+msgstr "Wys."
+
+#: html/pte.php:160
+msgid "crop"
+msgstr "przycinanie"
+
+#: html/pte.php:160
+msgid "C"
+msgstr "Przyc."
+
+#: html/pte.php:166
+msgid "Save all"
+msgstr "Zapisz wszystko"
+
+#: html/pte.php:171
+msgid "Reset all"
+msgstr "Zresetuj wszystko"
+
+#: html/pte.php:175
+msgid "View all/modified"
+msgstr "Zobacz wszystkie/zmodyfikowane"
+
+#: html/pte.php:204
 msgid "Reset"
 msgstr "Zresetuj"
 
-#: html/pte.php:269
+#: html/pte.php:207
 msgid "Compare/View"
 msgstr "Porównaj/Zobacz"
 
-#: html/pte.php:276
+#: html/pte.php:214
 msgid "These thumbnails have an aspect ratio set:"
 msgstr "Proporcje miniatur:"
 
-#: html/pte.php:301
+#: html/pte.php:223
+msgid "Current Thumbnails"
+msgstr "Obecne miniatury"
+
+#: html/pte.php:253
 msgid "Original"
 msgstr "Oryginał"
 
-#: html/pte.php:308
+#: html/pte.php:260
 msgid "No image has been generated yet for image: "
 msgstr "Nie wygenerowano jeszcze obrazu dla pliku:"
 
-#: html/pte.php:315
+#: html/pte.php:267
 msgid "Proposed"
 msgstr "Propozycja"
 
-#: php/functions.php:239
+#: php/class-pte-image-editor-gd.php:65 php/class-pte-image-editor-imagick.php:61
+msgid "Image crop failed."
+msgstr "Przycinanie nie powiodło się"
+
+#: php/functions.php:110
+msgid "Thumbnail"
+msgstr "Miniatura"
+
+#: php/functions.php:111
+msgid "Medium"
+msgstr "Średni"
+
+#: php/functions.php:112
+msgid "Large"
+msgstr "Duży"
+
+#: php/functions.php:113
+msgid "Full Size"
+msgstr "Pełny rozmiar"
+
+#: php/functions.php:241
+#, php-format
 msgid "Invalid meta data for POST #%d: %s"
 msgstr "Błędne dane POST #%d: %s"
 
-#: php/functions.php:244
+#: php/functions.php:246
 msgid "Please contact support"
 msgstr "Proszę skontaktować się z pomocą techniczną"
 
-#: php/log.php:15
+#: php/log.php:16
 msgid "ERROR"
 msgstr "BŁĄD"
 
-#: php/log.php:18
+#: php/log.php:19
 msgid "WARNING"
 msgstr "OSTRZEŻENIE"
 
-#: php/log.php:21
+#: php/log.php:22
+msgid "INFO"
+msgstr "INFO"
+
+#: php/log.php:25
 msgid "DEBUG"
 msgstr "DEBUGOWANIE"
 
-#: php/log.php:101
+#: php/log.php:222
+#, php-format
 msgid "ERROR Logging Message: %s"
 msgstr "BŁĄD logowania wiadomości: %s"
 
@@ -122,98 +228,125 @@ msgstr "Opcje użytkownika"
 msgid "Debug"
 msgstr "Debugowanie"
 
-#: php/options.php:22
+#: php/options.php:28
+msgid "Crop Picture Size"
+msgstr "Wielkość kadrowanego obrazka"
+
+#: php/options.php:34
 msgid "Reset to defaults"
 msgstr "Przywróć do stanu pierwotnego"
 
-#: php/options.php:33
+#: php/options.php:45
 msgid "Site Options"
 msgstr "Opcje Strony"
 
-#: php/options.php:42
-msgid "JPEG Compression"
-msgstr "Kompresja JPEG"
+#: php/options.php:59
+msgid "Cache Buster"
+msgstr "Cache Buster"
 
-#: php/options.php:63
-msgid "Save Changes"
-msgstr "Zapisz Zmiany"
-
-#: php/options.php:77
+#: php/options.php:101
 msgid ""
-"Only users with the 'manage_options' capability may make changes to these "
-"settings."
+"Only users with the 'manage_options' capability may make changes to these settings."
 msgstr ""
-"Tylko użytkownicy z uprawnieniami na poziomie 'manage_options' mogą zmieniać "
-"te ustawienia."
+"Tylko użytkownicy z uprawnieniami na poziomie 'manage_options' mogą zmieniać te "
+"ustawienia."
 
-#: php/options.php:103
+#: php/options.php:127
 msgid "JPEG Compression needs to be set from 0 to 100."
 msgstr "Kompresja JPEG powinna mieścić się w zakresie 0 do 100."
 
-#: php/options.php:129
+#: php/options.php:165
+msgid "Crop Size must be between 0 and 10000."
+msgstr "Obszar kadrowania musi wynosić pomiędzy 0 a 10000."
+
+#: php/options.php:184
 msgid "Enable debugging"
 msgstr "Włącz debugowanie"
 
-#: php/options.php:132
-msgid "WP_DEBUG is currently set to true and will override this setting."
-msgstr "WP_DEBUG jest ustawiona na true i nadpisuje to ustawienie."
+#: php/options.php:187
+msgid ""
+"WP_DEBUG is currently set to true and will override this setting. (debug is enabled)"
+msgstr "WP_DEBUG jest ustawiona na \"true\" i nadpisuje to ustawienie."
 
-#: php/options.php:143
-msgid "Reset User Options"
-msgstr "Zresetuj Opcje Użytkownika"
+#: php/options.php:194
+#, php-format
+msgid "Use <a href=\"%s\">ChromePhp</a> for log output"
+msgstr "Użyj <a href=\"%s\">ChromePhp</a> dla logów."
 
-#: php/options.php:169
+#: php/options.php:202
+#, php-format
+msgid "Write log output to a <a href=\"%s\">file</a>"
+msgstr "Zapisz log do <a href=\"%s\">pliku</a>"
+
+#: php/options.php:217
+msgid "I know what I'm doing, bypass the image verification."
+msgstr "Wiem co robię, pomiń weryfikację obrazka."
+
+#: php/options.php:230
+msgid "Set the max size for the crop image."
+msgstr "Ustaw maksymalny rozmiar kadrowanego obrazka."
+
+#: php/options.php:231
+msgid "No entry defaults to 600"
+msgstr "Puste pole oznacza domyślne 600"
+
+#: php/options.php:238
+msgid ""
+"Check this to save the generated working image to disk instead of creating on the "
+"fly (experimental)"
+msgstr ""
+"Zaznacz aby zapisać wersję roboczą generowanego pliku na dysku, zamiast tworzyć go w "
+"locie (funkcja eksperymentalna)"
+
+#: php/options.php:275
 msgid "Post Thumbnail"
 msgstr "Ikona Wpisu"
 
-#: php/options.php:170
+#: php/options.php:276
 msgid "Hidden"
 msgstr "Ukryte"
 
-#: php/options.php:199
+#: php/options.php:306
 msgid "Set the compression level for resizing jpeg images (0 to 100)."
 msgstr "Ustaw poziom kompresji dla zmienianych obrazów (0 do 100)."
 
-#: php/options.php:200
+#: php/options.php:307
 msgid "No entry defaults to using the 'jpeg_quality' filter or 90"
 msgstr "Brak domyślnego ustawienia filtra ' 'jpeg_quality'"
 
-#: php/options.php:210
+#: php/options.php:319
+msgid "Append timestamp to filename. Useful for solving caching problems."
+msgstr ""
+"Dodaj znacznik czasu do pliku. Użyteczne w przypadku problemów z pamięcią podręczną."
+
+#: php/options.php:330
 msgid "These site-wide settings can only be changed by an administrator"
 msgstr "Te ustawienia mogą być zmieniane tylko przez administratora"
 
-#: post-thumbnail-editor.php:177
+#: post-thumbnail-editor.php:360
 msgid "Edit Thumbnails"
 msgstr "Edytuj Miniatury"
 
-#: post-thumbnail-editor.php:276
-msgid "No thumbnails selected"
-msgstr "Nie wybrano miniatur"
+#~ msgid "Save Changes"
+#~ msgstr "Zapisz Zmiany"
 
-#: post-thumbnail-editor.php:277
-msgid "No crop selected"
-msgstr "Nie zaznaczono obszaru kadrowania"
+#~ msgid "Reset User Options"
+#~ msgstr "Zresetuj Opcje Użytkownika"
 
-#: post-thumbnail-editor.php:278
-msgid "Cropping will likely result in skewed imagery"
-msgstr "Kadrowanie może doprowadzić do zniekształceń"
+#~ msgid "http://sewpafly.github.io/post-thumbnail-editor/"
+#~ msgstr "http://sewpafly.github.io/post-thumbnail-editor/"
 
-#: post-thumbnail-editor.php:279
-msgid "There was a problem saving the crop..."
-msgstr "Wystąpił problem z zapisem kadru..."
+#~ msgid "Individually manage your post thumbnails"
+#~ msgstr "Osobno zarządzaj ikonami wpisów"
 
-#. Plugin URI of the plugin/theme
-msgid "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
-msgstr "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
+#~ msgid "sewpafly"
+#~ msgstr "sewpafly"
 
-#. Description of the plugin/theme
-msgid "Individually manage your post thumbnails"
-msgstr "Osobno zarządzaj ikonami wpisów"
+#~ msgid "WP_DEBUG is currently set to true and will override this setting."
+#~ msgstr "WP_DEBUG jest ustawiona na true i nadpisuje to ustawienie."
 
-#. Author of the plugin/theme
-msgid "sewpafly"
-msgstr "sewpafly"
+#~ msgid "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
+#~ msgstr "http://wordpress.org/extend/plugins/post-thumbnail-editor/"
 
-#. Author URI of the plugin/theme
-msgid "http://sewpafly.github.com/post-thumbnail-editor"
-msgstr "http://sewpafly.github.com/post-thumbnail-editor"
+#~ msgid "http://sewpafly.github.com/post-thumbnail-editor"
+#~ msgstr "http://sewpafly.github.com/post-thumbnail-editor"

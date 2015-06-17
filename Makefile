@@ -28,6 +28,7 @@ ifdef I18N
 	php '$(I18N)' wp-plugin ../
 endif
 # To translate the .po to .mo files
+# for file in `find . -name "*.po"` ; do msgfmt -o ${file/.po/.mo} $file ; done
 # msgfmt -o filename.mo filename.po
 
 # Clean
