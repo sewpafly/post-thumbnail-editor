@@ -36,7 +36,7 @@ To meet the needs of themes where the post-thumbnails have random and capricious
 	2. Click the "Post Thumbnail Editor" link under the other thumbnail options.
 3. Using Post Thumbnail Editor Interface
 	1. Select the thumbnails you want to edit. If a thumbnail defines a specific aspect ratio it will be applied to the editor.  If you select thumbnails with different aspect ratios (`width / height`), this feature is disabled.  Be careful or you might make some of your pictures look funny.
-	2. Select the cropped/scaled area, by clicking and dragging on the left-hand image. 
+	2. Select the cropped/scaled area, by clicking and dragging on the left-hand image.
 	3. Click the "Crop" button.
 	4. Use the save icon to save the pictures, or use the view tab to compare the old and new versions before you commit.
 4. It's possible that you might have to refresh the cache (ctrl+f5 on the page) to see changes, but they should be there.
@@ -74,6 +74,10 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 5. Save the resized/recropped images by clicking the save icon.
 
 == Changelog ==
+
+= 2.4.6 =
+* Fixed bug with post's media library
+* Check if featuredImage exists before override to avoid JS error (@gbonhevi)
 
 = 2.4.5 =
 * Fixed bug with post's media library
@@ -192,5 +196,6 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 
 == Upgrade Notice ==
 
-= 2.4.5 =
+= 2.4.6 =
+* Updated polish translation
 * Fixed post media library bug
