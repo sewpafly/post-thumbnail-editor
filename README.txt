@@ -76,7 +76,7 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 == Changelog ==
 
 = 2.4.6 =
-* Fixed bug with post's media library
+* Updated polish translation
 * Check if featuredImage exists before override to avoid JS error (@gbonhevi)
 
 = 2.4.5 =
