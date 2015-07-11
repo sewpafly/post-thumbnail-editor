@@ -28,8 +28,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
-/* 
- * Useful constants  
+/*
+ * Useful constants
  */
 define( 'PTE_PLUGINURL', plugins_url(basename( dirname(__FILE__))) . "/");
 define( 'PTE_PLUGINPATH', dirname(__FILE__) . "/");
@@ -142,7 +142,7 @@ function pte_url( $id, $iframe=false ){
 			. "&TB_iframe=true";
 	}
 	else {
-		$pte_url = admin_url('upload.php') 
+		$pte_url = admin_url('upload.php')
 			. "?page=pte-edit&pte-id={$id}";
 	}
 
@@ -245,10 +245,10 @@ function pte_admin_post_thumbnail_html( $content, $post_id ){
 	if ( $thumbnail_id == null )
 		return $content;
 
-	return $content .= '<p id="pte-link" class="hide-if-no-js"><a class="thickbox" href="' 
+	return $content .= '<p id="pte-link" class="hide-if-no-js"><a class="thickbox" href="'
 		. pte_url( $thumbnail_id, true )
-		. '">' 
-		. esc_html__( 'Post Thumbnail Editor', PTE_DOMAIN ) 
+		. '">'
+		. esc_html__( 'Post Thumbnail Editor', PTE_DOMAIN )
 		. '</a></p>';
 }
 
@@ -269,6 +269,8 @@ function pte_ajax(){
 	// Move all adjuntant functions to a separate file and include that here
 	require_once(PTE_PLUGINPATH . 'php/functions.php');
 	PteLogger::debug( "PARAMETERS: " . print_r( $_REQUEST, true ) );
+
+	header('Content-type: application/json');
 
 	switch ($_GET['pte-action'])
 	{
@@ -308,26 +310,26 @@ function pte_check_id( $id ) {
 	}
 	if ( current_user_can( 'edit_post', $id )
 		|| current_user_can( 'pte-edit', $id ) )
-   	{
+	{
 		return apply_filters( 'pte-capability-check', true, $id );
 	}
 	return apply_filters( 'pte-capability-check', false, $id );
 }
 
-/** 
+/**
  * Upload.php (the media library page) fires:
  * - 'load-upload.php' (wp-admin/admin.php)
  * - GRID VIEW:
- *   + 'wp_enqueue_media' (upload.php:wp-includes/media.php:wp_enqueue_media) 
+ *   + 'wp_enqueue_media' (upload.php:wp-includes/media.php:wp_enqueue_media)
  * - LIST VIEW:
  *   + 'media_row_actions' (filter)(class-wp-media-list-table.php)
  */
 add_action('load-upload.php', 'pte_media_library_boot');
-function pte_media_library_boot() { 
+function pte_media_library_boot() {
     add_action('wp_enqueue_media', 'pte_load_media_library');
 }
 function pte_load_media_library() {
-    global $mode; 
+    global $mode;
     if ('grid' !== $mode) return;
 	wp_enqueue_script( 'pte'
 		, PTE_PLUGINURL . 'js/snippets/pte_enable_media.js'
@@ -432,7 +434,7 @@ add_action( 'load-media_page_pte-edit', 'pte_edit_setup' );
 function pte_edit_setup() {
 	global $post, $title, $pte_body;
 	$post_id = (int) $_GET['pte-id'];
-	if ( !isset( $post_id ) 
+	if ( !isset( $post_id )
 			|| !is_int( $post_id )
 			|| !wp_attachment_is_image( $post_id )
 			|| !pte_check_id( $post_id ) ) {
