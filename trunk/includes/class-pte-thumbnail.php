@@ -274,7 +274,7 @@ class PTE_Thumbnail {
 		}
 
 		$oldfile = path_join(dirname($original_file), $this->file);
-		$oldfile = ($oldfile == $tmpfile)? FALSE, $oldfile;
+		$oldfile = ($oldfile == $tmpfile) ? FALSE : $oldfile;
 		$this->url = $tmpurl;
 		$this->file = basename($tmpfile);
 		$this->width = $dst_w;

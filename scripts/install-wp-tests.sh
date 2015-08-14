@@ -18,9 +18,9 @@ set -ex
 
 download() {
     if [ `which curl` ]; then
-        curl -s -k "$1" > "$2";
+        curl -s "$1" > "$2";
     elif [ `which wget` ]; then
-        wget --no-check-certificate -nv -O "$2" "$1"
+        wget -nv -O "$2" "$1"
     fi
 }
 

@@ -38,6 +38,7 @@ class PTE_Api extends PTE_Hooker{
 			'dst_h'
 		),
 		'derive_dimensions_from_file' => array( 'file',),
+		'derive_paths' => array(
 			'id',
 			'original_file',
 			'dst_w',
@@ -271,9 +272,8 @@ class PTE_Api extends PTE_Hooker{
 
 		$copy_from = $params['file'];
 
-		$copy_to = dirname( get_attached_file( $params['id'] ) )
-			. DIRECTORY_SEPARATOR
-			. basename( $params['file'] );
+		$copy_to = path_join( dirname( get_attached_file( $params['id'] ) ),
+			basename( $params['file'] ) );
 
 		$url = dirname( wp_get_attachment_url( $params['id'] ) )
 			. "/"
