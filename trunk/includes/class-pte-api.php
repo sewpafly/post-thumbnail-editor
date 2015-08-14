@@ -27,7 +27,7 @@ class PTE_Api extends PTE_Hooker{
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param mixed 
+	 * @param mixed
 	 */
 	public function __construct () {
 
@@ -37,10 +37,10 @@ class PTE_Api extends PTE_Hooker{
 			'h',
 			'dst_w',
 			'dst_h'
-	   	);
+		);
 		$this->arg_keys['derive_dimensions_from_file'] = array(
 			'file',
-	   	);
+);
 		$this->arg_keys['derive_paths'] = array(
 			'id',
 			'original_file',
@@ -48,10 +48,9 @@ class PTE_Api extends PTE_Hooker{
 			'dst_h',
 			'transparent',
 			'save'
-	   	);
+		);
 
 	}
-	
 
 	/**
 	 * Assert that the current user has access to the given image/post
@@ -93,7 +92,7 @@ class PTE_Api extends PTE_Hooker{
 	 *                          A 'truthy' value will check the options for
 	 *                          filtered values.  An array will only return
 	 *                          sizes with names in the array, and a single name
-	 *                          will return just that size. 
+	 *                          will return just that size.
 	 *
 	 * @return mixed   $sizes   The list of Thumbnail objects
 	 */
@@ -123,7 +122,7 @@ class PTE_Api extends PTE_Hooker{
 		return $thumbnails;
 
 	}
-	
+
 	/**
 	 * Resize Images
 	 *
@@ -131,7 +130,7 @@ class PTE_Api extends PTE_Hooker{
 	 * temporary directory (or save in place with the right option)
 	 *
 	 * @since 0.1
-	 * 
+	 *
 	 * @param int     $id    The post/attachment id to modify
 	 * @param int     $w     The width of the crop
 	 * @param int     $h     The height of the crop
@@ -158,13 +157,13 @@ class PTE_Api extends PTE_Hooker{
 		foreach ( $this->get_sizes( $sizes ) as $size ) {
 			$data['size'] = $size;
 			try {
-				
+
 				$thumbnail = $this->resize_thumbnail( $data );
 				if ( ! empty( $thumbnail ) ) {
 					$thumbnails[] = $thumbnail;
 				}
 
-			} 
+			}
 			catch (Exception $e) {
 				$errors[$size->name] = $e->getMessage();
 			}
@@ -209,7 +208,7 @@ class PTE_Api extends PTE_Hooker{
 		return $editors;
 
 	}
-	
+
 	/**
 	 * Resize an individual thumbnail
 	 *
@@ -415,7 +414,7 @@ class PTE_Api extends PTE_Hooker{
 		return ( isset( $_REQUEST['pte-fit-crop-color'] ) && abs( $src_ar - $dst_ar ) > 0.01 );
 
 	}
-	
+
 	/**
 	 * Is the border transparent
 	 *
@@ -431,7 +430,7 @@ class PTE_Api extends PTE_Hooker{
 		return ( preg_match( "/^#[a-fA-F0-9]{6}$/", $_REQUEST['pte-fit-crop-color'] ) );
 
 	}
-	
+
 	/**
 	 * Copy a file
 	 *
@@ -442,12 +441,12 @@ class PTE_Api extends PTE_Hooker{
 	private function copy_file ( $from, $to ) {
 
 		if ( ! ( isset( $from ) && file_exists( $from ) ) ){
-			throw new Exception( 
+			throw new Exception(
 				sprintf(
 					__( 'Invalid file to copy: %s', 'post-thumbnail-editor' ),
 					$from
 				)
-		   	);
+			);
 		}
 
 		wp_mkdir_p( dirname( $to ) );
@@ -456,7 +455,7 @@ class PTE_Api extends PTE_Hooker{
 		return true;
 
 	}
-	
+
 	/**
 	 * Delete a directory
 	 *
@@ -497,7 +496,6 @@ class PTE_Api extends PTE_Hooker{
 		return false;
 
 	}
-	
 
 	/**
 	 * ================================================================
@@ -564,7 +562,7 @@ class PTE_Api extends PTE_Hooker{
 					__( 'Invalid derived dimensions: %s x %s', 'post-thumbnail-editor' ),
 					$dst_w, $dst_h
 				)
-		   	);
+			);
 
 		}
 
@@ -590,8 +588,7 @@ class PTE_Api extends PTE_Hooker{
 
 		return compact( 'dst_w', 'dst_h' );
 	}
-	
-	
+
 	/**
 	 * Set 'transparency' value
 	 *
@@ -612,10 +609,10 @@ class PTE_Api extends PTE_Hooker{
 
 		$opaque = $this->is_crop_border_opaque();
 
-		return array( 'transparent' => $crop_enabled && $opaque ); 
+		return array( 'transparent' => $crop_enabled && $opaque );
 
 	}
-	
+
 	/**
 	 * Generate the paths for a thumbnail
 	 *
@@ -644,12 +641,12 @@ class PTE_Api extends PTE_Hooker{
 
 		if ( apply_filters( 'pte_options_get', false, 'cache_buster' ) ){
 			$cache_buster = time();
-			$basename = sprintf( 
+			$basename = sprintf(
 				"%s-%s-%s.%s",
 				$name,
 				$suffix,
 				$cache_buster,
-				$ext 
+				$ext
 			);
 		}
 		else {
@@ -678,5 +675,5 @@ class PTE_Api extends PTE_Hooker{
 		return compact( 'basename', 'tmpfile', 'tmpurl' );
 
 	}
-	
+
 }

@@ -22,18 +22,20 @@ Instead, the options are:
 
 ### Copying a Directory
 
-1. Copy the `trunk` directory into your `wp-content/plugins` directory. You may wish to rename this to something else.
+1. Copy the `trunk` directory into your `wp-content/plugins` directory. You may
+   wish to rename this to something else.
 2. In the WordPress dashboard, navigation to the *Plugins* page
-Locate the menu item that reads “Post Thumbnail Editor”.
+   Locate the menu item that reads “Post Thumbnail Editor”.
 3. Click on *Activate*.
 
 ### Creating a Symbolic Link
 
 #### On Linux or OS X
 
-1. Create a symbolic link between the `trunk` directory and the plugin. For example: `ln -s post-thumbnail-editor/trunk /path/to/wordpress/wp-content/plugins/post-thumbnail-editor`
-2. In the WordPress dashboard, navigation to the *Plugins* page
-Locate the menu item that reads “Post Thumbnail Editor”.
+1. Create a symbolic link between the `trunk` directory and the plugin. For
+   example: `ln -s post-thumbnail-editor/trunk /path/to/wordpress/wp-content/plugins/post-thumbnail-editor`
+2. In the WordPress dashboard, navigate to the *Plugins* page, and
+   locate the menu item that reads “Post Thumbnail Editor”.
 3. Click on *Activate*.
 
 #### On Windows
@@ -76,6 +78,24 @@ delete, etc.)
 `client` is an almost standalone javascript client for PTE. `class-pte-client`
 has some code for generating the HTML to start the client and for accessing the
 URLs.
+
+## Testing
+
+1. *(optional)* Install [WP-CLI][cli].
+2. Run `bash bin/install-wp-tests.sh test test test localhost latest` to
+   download the core wordpress files, the wordpress unit test files and install
+   a database `test` with the username/password of `test`/`test`.
+3. Run `phpunit`
+
+[cli]: http://wp-cli.org/
+
+## TODO
+
+* Refactor api file (680 lines!)
+* Build Unit tests
+* Build functional tests
+* Rebuild client
+* Integrate unit tests with travisci
 
 ## License
 
