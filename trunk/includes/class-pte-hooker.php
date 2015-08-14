@@ -99,7 +99,8 @@ class PTE_Hooker {
 	private function filter ( $array_to_filter, $array_keys ) {
 
 		if ( ! is_array( $array_to_filter ) ) {
-			throw new Exception( __( 'invalid argument, array expected', 'post-thumbnail-editor' ) );
+			throw new InvalidArgumentException(
+				__( 'invalid argument, array expected', 'post-thumbnail-editor' ) );
 		}
 
 		if ( ! is_array( $array_keys ) ) {
@@ -110,7 +111,7 @@ class PTE_Hooker {
 
 		foreach ( $array_keys as $key ) {
 			if ( ! isset( $array_to_filter[$key] ) ) {
-				throw new Exception( sprintf(
+				throw new InvalidArgumentException( sprintf(
 					__( 'Key not found: [%s]', 'post-thumbnail-editor' ),
 					$key
 			   	) );
