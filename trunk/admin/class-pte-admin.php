@@ -58,7 +58,7 @@ class PTE_Admin {
 	public function media_row_actions($actions, $post, $detached) {
 		
 		/**
-		 * Return if id is valid.
+		 * Return if id is invalid.
 		 *
 		 * @since 3.0.0
 		 * @param int     $id     The post id

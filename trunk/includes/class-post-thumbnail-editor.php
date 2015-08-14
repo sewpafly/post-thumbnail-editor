@@ -110,6 +110,7 @@ class Post_Thumbnail_Editor {
 			'includes/class-pte-hooker.php',
 			'includes/class-pte-service.php',
 			'includes/class-pte-api.php',
+			'includes/class-pte-file-utils.php',
 			'includes/class-pte-thumbnail.php',
 			'admin/class-pte-admin.php',
 			'admin/class-pte-options.php',
@@ -158,14 +159,16 @@ class Post_Thumbnail_Editor {
         // Upload.php (the media library page) fires:
         // - 'load-upload.php' (wp-admin/admin.php)
         // - GRID VIEW:
-        //   + 'wp_enqueue_media' (upload.php:wp-includes/media.php:wp_enqueue_media) 
+        //   + 'wp_enqueue_media' (upload.php:wp-includes/media.php:wp_enqueue_media)
         // - LIST VIEW:
         //   + 'media_row_actions' (filter)(class-wp-media-list-table.php)
 		$this->loader->add_filter( 'media_row_actions', $plugin_admin, 'media_row_actions', 10, 3 );
 		$this->loader->add_action( 'load-upload.php', $plugin_admin, 'add_media_library_load_action' );
+
 		// Add the PTE link to the featured image in the post screen
 		// Called in wp-admin/includes/post.php
 		$this->loader->add_filter( 'admin_post_thumbnail_html', $plugin_admin, 'link_featured_image', 10, 2 );
+
 		// Admin Menus
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'admin_menu' );
 
@@ -229,15 +232,17 @@ class Post_Thumbnail_Editor {
 	 */
 	private function define_api_hooks() {
 
-		$api = new PTE_Api();
+		$file_utils = new PTE_File_Utils();
+		$this->loader->add_filter( 'pte_resize_thumbnail', $file_utils, 'derive_paths_ahook' );
+		$this->loader->add_action( 'pte_copy_file', $file_utils, 'copy_file', 10, 2 );
 
+		$api = new PTE_Api();
 		$this->loader->add_filter( 'pte_api_assert_valid_id', $api, 'assert_valid_id_hook', 10, 2 );
 		$this->loader->add_filter( 'pte_api_get_sizes', $api, 'get_sizes_hook', 10, 2 );
 		$this->loader->add_filter( 'pte_api_resize_thumbnails', $api, 'resize_thumbnails_hook', 10, 8 );
 		$this->loader->add_filter( 'pte_api_resize_thumbnails', $api, 'load_pte_editors', 1	);
-		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_dimensions_ahook' );
-		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_transparency_ahook' );
-		$this->loader->add_filter( 'pte_api_resize_thumbnail', $api, 'derive_paths_ahook' );
+		$this->loader->add_filter( 'pte_resize_thumbnail', $api, 'derive_dimensions_ahook' );
+		$this->loader->add_filter( 'pte_resize_thumbnail', $api, 'derive_transparency_ahook' );
 		$this->loader->add_filter( 'pte_api_is_crop_border_enabled', $api, 'is_crop_border_enabled_hook', 10, 5 );
 		$this->loader->add_filter( 'pte_api_is_crop_border_opaque', $api, 'is_crop_border_opaque_hook' );
 		$this->loader->add_filter( 'pte_api_confirm_images', $api, 'confirm_images_hook', 10, 3 );

@@ -22,35 +22,30 @@ class PTE_Api extends PTE_Hooker{
 	private $thumbnails;
 
 	/**
-	 * Constructor for PTE_Api sets the arg_keys needed for ahooks (See
-	 * PTE_Hooker)
+	 * For hooks that need to take a selective array of inputs (as well as
+	 * return that array)
 	 *
 	 * @since 3.0.0
-	 *
-	 * @param mixed
+	 * @access protected
+	 * @var    array   $arg_keys func_name => array('func_args')
 	 */
-	public function __construct () {
-
-		$this->arg_keys['derive_dimensions'] = array( 'size', 'w', 'h' );
-		$this->arg_keys['derive_transparency'] = array(
+	protected $arg_keys = array(
+		'derive_dimensions' => array( 'size', 'w', 'h' ),
+		'derive_transparency' => array(
 			'w',
 			'h',
 			'dst_w',
 			'dst_h'
-		);
-		$this->arg_keys['derive_dimensions_from_file'] = array(
-			'file',
-);
-		$this->arg_keys['derive_paths'] = array(
+		),
+		'derive_dimensions_from_file' => array( 'file',),
 			'id',
 			'original_file',
 			'dst_w',
 			'dst_h',
 			'transparent',
 			'save'
-		);
-
-	}
+		),
+	);
 
 	/**
 	 * Assert that the current user has access to the given image/post
@@ -144,21 +139,14 @@ class PTE_Api extends PTE_Hooker{
 	public function resize_thumbnails ( $id, $w, $h, $x, $y, $sizes, $save=false ) {
 
 		$data = compact( 'id', 'w', 'h', 'x', 'y', 'save' );
-		$data['original_file'] = _load_image_to_edit_path( $id );
-		$data['original_size'] = @getimagesize( $data['original_file'] );
-
-		if ( ! isset( $data['original_size'] ) ) {
-			throw new Exception( __( 'Could not read image size', 'post-thumbnail-editor' ) );
-		}
-
 		$thumbnails = array();
 		$errors = array();
 
 		foreach ( $this->get_sizes( $sizes ) as $size ) {
-			$data['size'] = $size;
 			try {
 
-				$thumbnail = $this->resize_thumbnail( $data );
+				$thumbnail = new PTE_Thumbnail($id, $size);
+				$thumbnail->resize( $w, $h, $x, $y, $save);
 				if ( ! empty( $thumbnail ) ) {
 					$thumbnails[] = $thumbnail;
 				}
@@ -206,97 +194,6 @@ class PTE_Api extends PTE_Hooker{
 		array_unshift( $editors, 'PTE_Image_Editor_Imagick', 'PTE_Image_Editor_GD' );
 
 		return $editors;
-
-	}
-
-	/**
-	 * Resize an individual thumbnail
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param mixed $params {
-	 *	   @type int                 $id       The post id to resize
-	 *	   @type PTE_Thumbnail_Size  $size     The thumbnail size
-	 *	   @type int                 $w        The proposed width
-	 *	   @type int                 $h        The proposed height
-	 *	   @type int                 $x        The proposed starting left point
-	 *	   @type int                 $y        The proposed starting upper
-	 *	                                       point
-	 *	   @type int/boolean         $save     Should the image be saved
-	 *	   @type string              $tmp_dir  Temporary directory
-	 *	   @type string              $tmp_file Temporary directory
-	 *	   @type array          $original_size The original file image
-	 *	                                       parameters
-	 *	   @type string         $original_file The original file name
-	 * }
-	 *
-	 * @return PTE_Thumbnail
-	 */
-	private function resize_thumbnail ( $params ) {
-
-		/**
-		 * Action `pte_resize_thumbnail' is triggered when resize_thumbnails is
-		 * ready to roll (after the parameters and correctly compiled and just
-		 * before the resize_thumbnail function is called.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param See above
-		 *
-		 * @return filtered params ready to modify the image
-		 */
-		$params = apply_filters( 'pte_api_resize_thumbnail', $params );
-
-		$editor = wp_get_image_editor( $params['original_file'] );
-
-		if ( is_wp_error( $editor ) ) {
-			throw new Exception( sprintf(
-				__( 'Unable to load file: %s', 'post-thumbnail-editor' ),
-				$params['original_file']
-			) );
-		}
-
-		$crop_results = $editor->crop(
-			$params['x'],
-			$params['y'],
-			$params['w'],
-			$params['h'],
-			$params['dst_w'],
-			$params['dst_h']
-		);
-
-		if ( is_wp_error( $crop_results ) ) {
-			throw new Exception( sprintf(
-				__( 'Error cropping image: %s', 'post-thumbnail-editor' ),
-				$params['size']->name
-			) );
-		}
-
-		wp_mkdir_p( dirname( $params['tmpfile'] ) );
-
-		if ( is_wp_error( $editor->save( $params['tmpfile'] ) ) ) {
-			throw new Exception( sprintf(
-				__( 'Error writing image: %s to %s', 'post-thumbnail-editor' ),
-				$params['size']->name,
-				$params['tmpfile']
-			) );
-		}
-
-		$thumbnail = new PTE_Thumbnail( $params['id'], $params['size'] );
-		$oldfile = dirname( $params['original_file'] )
-			. DIRECTORY_SEPARATOR
-			. $thumbnail->file;
-		$thumbnail->url = $params['tmpurl'];
-		$thumbnail->file = $params['basename'];
-		$thumbnail->width = $params['dst_w'];
-		$thumbnail->height = $params['dst_h'];
-
-		if ( $params['save'] ) {
-			$thumbnail->save();
-			$this->delete_file( $oldfile );
-		}
-
-		return $thumbnail;
 
 	}
 
@@ -383,7 +280,7 @@ class PTE_Api extends PTE_Hooker{
 			. basename( $params['file'] );
 
 		// Move good image
-		$this->copy_file( $copy_from, $copy_to );
+		PTE_File_Utils::copy_file( $copy_from, $copy_to );
 
 		$thumbnail->url = $url;
 		$thumbnail->file = $params['file'];
@@ -428,72 +325,6 @@ class PTE_Api extends PTE_Hooker{
 			return false;
 
 		return ( preg_match( "/^#[a-fA-F0-9]{6}$/", $_REQUEST['pte-fit-crop-color'] ) );
-
-	}
-
-	/**
-	 * Copy a file
-	 *
-	 * @return true on success
-	 *
-	 * @throws Exception on any sort of problem
-	 */
-	private function copy_file ( $from, $to ) {
-
-		if ( ! ( isset( $from ) && file_exists( $from ) ) ){
-			throw new Exception(
-				sprintf(
-					__( 'Invalid file to copy: %s', 'post-thumbnail-editor' ),
-					$from
-				)
-			);
-		}
-
-		wp_mkdir_p( dirname( $to ) );
-		rename( $from, $to );
-
-		return true;
-
-	}
-
-	/**
-	 * Delete a directory
-	 *
-	 * @return status
-	 */
-	public function delete_dir ( $dir ) {
-
-		$dir = apply_filters( 'pte_delete_dir', $dir );
-
-		if ( !is_dir( $dir ) || !preg_match( "/ptetmp/", $dir ) ){
-			throw new Exception(
-				__( "Tried to delete invalid directory: {$dir}", 'post-thumbnail-editor' )
-			);
-		}
-
-		foreach ( scandir( $dir ) as $file ){
-			if ( "." == $file || ".." == $file ) continue;
-			$this->delete_file( $dir . DIRECTORY_SEPARATOR . $file );
-		}
-		rmdir( $dir );
-
-		return true;
-	}
-
-	/**
-	 * Delete a file, ensure that it exists first
-	 *
-	 * @return bool   true if file was deleted, false otherwise
-	 */
-	private function delete_file ( $file ) {
-
-		if ( isset( $file ) && @is_file( $file ) ) {
-			$file = apply_filters( 'pte_delete_file', $file );
-			@unlink( apply_filters( 'wp_delete_file', $file ) );
-			return true;
-		}
-
-		return false;
 
 	}
 
@@ -574,7 +405,7 @@ class PTE_Api extends PTE_Hooker{
 	 * Take a file and pull out the width and height from it
 	 *
 	 * @since 3.0.0
-	 *
+
 	 * @param  $file   The file to try and get dimensions from
 	 *
 	 * @return array {
@@ -656,23 +487,22 @@ class PTE_Api extends PTE_Hooker{
 		$basename = apply_filters( 'pte_api_resize_thumbnail_basename', $basename );
 
 		if ( $save ) {
-			$directory = dirname( $file ) . DIRECTORY_SEPARATOR;
-			$tmp_url = dirname( wp_get_attachment_url( $id ) ) . "/";
+			$directory = dirname( $file );
+			$tmp_url = dirname( wp_get_attachment_url( $id ) );
 		}
 		else {
-			$directory = $tmp_dir . $id
-				. DIRECTORY_SEPARATOR;
-			$tmp_url = $tmp_url . $id . "/";
+			$directory = $tmp_dir . $id;
+			$tmp_url = $tmp_url . $id;
 		}
 		$directory = apply_filters( 'pte_api_resize_thumbnail_directory', $directory );
 
-		$tmpfile = $directory . $basename;
+		$tmpfile = path_join($directory, $basename);
 		$tmpfile = apply_filters( 'pte_api_resize_thumbnail_file', $tmpfile, func_get_args() );
 
-		$tmpurl = "{$tmp_url}{$basename}";
+		$tmpurl = "{$tmp_url}/{$basename}";
 		$tmpurl = apply_filters( 'pte_api_resize_thumbnail_url', $tmpurl, func_get_args() );
 
-		return compact( 'basename', 'tmpfile', 'tmpurl' );
+		return compact( 'tmpfile', 'tmpurl' );
 
 	}
 

@@ -59,7 +59,7 @@ class PTE_Thumbnail_Size {
 	 * Constructor for the thumbnail object
 	 *
 	 * @since 3.0.0
-	 * @param mixed 
+	 * @param mixed
 	 */
 	public function __construct ( $name, $label, $width, $height, $crop ) {
 
@@ -110,7 +110,7 @@ class PTE_Thumbnail_Size {
 	/**
 	 * Inspect the wordpress global $_wp_additional_image_sizes for image
 	 * information.  If that information isn't found inspect the wordpress
-	 * options.  
+	 * options.
 	 *
 	 * @return void
 	 */
@@ -131,43 +131,40 @@ class PTE_Thumbnail_Size {
 
 		return intval( get_option( $option_mapping[$param] ) );
 	}
-	
 }
 
 /**
- * Class PTE_ActualThumbnail
+ * Class PTE_Thumbnail
  */
 class PTE_Thumbnail {
 
 	/**
-	 * Create an PTE_Actual_Thumbnail from a given $id and PTE_Thumbnail
+	 * Create an PTE_Thumbnail from a given $id and PTE_Thumbnail
 	 *
 	 * @since 3.0.0
 	 *
 	 * @param int $id   The post/attachment id to get thumbnail information for.
-	 * @param PTE_Thumbnail $size  The size to return
+	 * @param PTE_Thumbnail_Size $size  The size to return
 	 *
-	 * @return PTE_ActualThumbnail
+	 * @return PTE_Thumbnail
 	 */
 	public function __construct ( $id, $size ) {
 
 		$this->id = $id;
 		$this->size = $size;
 
-		$fullsizepath = get_attached_file( $id );
+		$this->filepath = get_attached_file( $id );
 		$path_information = image_get_intermediate_size($id, $size->name);
-		$file = sprintf( '%s' . DIRECTORY_SEPARATOR . '%s',
-			dirname( $fullsizepath ),
-			isset( $path_information['file'] ) ? $path_information['file'] : ''
-		);
 
 		// If the path doesn't exist, generate it...
 		// We don't really care how it gets generated, just that it is...
 		// see ajax-thumbnail-rebuild plugin for inspiration
-		if ( $path_information === false || ! @file_exists( $file ) ) {
+		if ( $path_information === false || ! @file_exists(
+			path_join( dirname($this->filepath), $path_information['file'])
+		) ) {
 
 			// Create the image and update the wordpress metadata
-			$resized = image_make_intermediate_size( $fullsizepath, 
+			$resized = image_make_intermediate_size( $fullsizepath,
 				$size->width,
 				$size->height,
 				$size->crop
@@ -202,11 +199,95 @@ class PTE_Thumbnail {
 		$metadata['sizes'][$this->size->name] = array(
 			'file' => $this->file,
 			'width' => $this->width,
-			'height' => $this->height, 
+			'height' => $this->height,
 		);
 		wp_update_attachment_metadata( $this->id, $metadata );
 	}
-	
+
+	/**
+	 * Resize an individual thumbnail
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int                 $w        The proposed width
+	 * @param int                 $h        The proposed height
+	 * @param int                 $x        The proposed starting left point
+	 * @param int                 $y        The proposed starting upper
+	 *                                      point
+	 * @param int/boolean         $save     Should the image be saved
+	 *
+	 * @return PTE_Thumbnail
+	 */
+	private function resize ( $w, $h, $x, $y, $save = false ) {
+
+		/**
+		 * Action `pte_resize_thumbnail' is triggered when resize_thumbnails is
+		 * ready to roll (after the parameters and correctly compiled and just
+		 * before the resize_thumbnail function is called.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param mixed
+		 *	   @type int            $id             The post id to resize
+		 *	   @type int            $w              The proposed width
+		 *	   @type int            $h              The proposed height
+		 *	   @type int            $dst_w          The final width
+		 *	   @type int            $dst_h          The final height
+		 *	   @type int            $x              The proposed starting left point
+		 *	   @type int            $y              The proposed starting upper
+		 *	                                        point
+		 *	   @type int/boolean    $save           Should the image be saved
+		 *	   @type string         $tmpfile        Temporary file
+		 *	   @type string         $tmpurl         Temporary url
+		 *	   @type string         $original_file  The original file name
+		 *
+		 * @return filtered params ready to modify the image
+		 */
+		extract(apply_filters('pte_resize_thumbnail', array_merge(
+			func_get_args(),
+			array('original_file' => $this->filepath, 'id' => $this->id)
+		)));
+
+		$editor = wp_get_image_editor( $original_file );
+
+		if ( is_wp_error( $editor ) ) {
+			throw new Exception( sprintf(
+				__( 'Unable to load file: %s', 'post-thumbnail-editor' ), $original_file)
+			);
+		}
+
+		if ( is_wp_error( $editor->crop( $x, $y, $w, $h, $dst_w, $dst_h ) ) ) {
+			throw new Exception( sprintf(
+				__( 'Error cropping image: %s', 'post-thumbnail-editor' ),
+				$params['size']->name
+			) );
+		}
+
+		wp_mkdir_p( dirname( $tmpfile ) );
+
+		if ( is_wp_error( $editor->save( $tmpfile ) ) ) {
+			throw new Exception( sprintf(
+				__( 'Error writing image: %s to %s', 'post-thumbnail-editor' ),
+				$this->size->label,
+				$tmpfile
+			) );
+		}
+
+		$oldfile = path_join(dirname($original_file), $this->file);
+		$oldfile = ($oldfile == $tmpfile)? FALSE, $oldfile;
+		$this->url = $tmpurl;
+		$this->file = basename($tmpfile);
+		$this->width = $dst_w;
+		$this->height = $dst_h;
+
+		if ( $save ) {
+			$this->save();
+			PTE_File_Utils::delete_file( $oldfile );
+		}
+
+		return $this;
+	}
+
 	/**
 	 * Create a list of thumbnails
 	 *
@@ -214,7 +295,7 @@ class PTE_Thumbnail {
 	 *
 	 * @param int $id   The post/attachment id to get thumbnail information for
 	 *
-	 * @return array of PTE_Actual_Thumbnail
+	 * @return array of PTE_Thumbnail
 	 */
 	public static function get_all ( $id ) {
 

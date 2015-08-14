@@ -92,6 +92,7 @@ URLs.
 ## TODO
 
 * Refactor api file (680 lines!)
+  * Rename service to API?
 * Build Unit tests
 * Build functional tests
 * Rebuild client

@@ -51,7 +51,18 @@ class PTE_Service {
 	 */
 	public function api_handler(){
 
-		//header( 'Content-Type: application/json' );
+		header( 'Content-Type: application/json' );
+
+		/**
+		 * Return if id is invalid.
+		 *
+		 * @since 3.0.0
+		 * @param int     $id     The post id
+		 */
+		if ( isset($_REQUEST['id']) && ! apply_filters( 'pte_api_assert_valid_id', false, $_REQUEST['id'] ) ) {
+			$this->error(__("Permission denied", 'post-thumbnail-editor'));
+		}
+
 
 		switch ($_REQUEST['pte-action'])
 		{
@@ -248,7 +259,7 @@ class PTE_Service {
 		 */
 		$thumbnails = apply_filters( 'pte_api_confirm_images', array(), $id, $files );
 
-		$this->message( $thumbnails );
+		return $this->message( $thumbnails );
 
 	}
 
@@ -293,10 +304,10 @@ class PTE_Service {
 		}
 		catch (Exception $e) {
 
-			return $this->message( array( 'error' => sprintf(
+			return $this->error( sprintf(
 				__( 'Error deleting directory: %s', 'post-thumbnail-editor'),
 				$tmp_dir
-			)));
+			));
 
 		}
 
