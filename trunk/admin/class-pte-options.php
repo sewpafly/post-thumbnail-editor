@@ -137,7 +137,7 @@ class PTE_Options {
 		return $this->options;
 
 	}
-	
+
 	/**
 	 * Get the option current value
 	 *
@@ -169,7 +169,7 @@ class PTE_Options {
 		add_filter( 'wp_editor_set_quality', array( $this, 'jpeg_quality' ) );
 
 	}
-	
+
 	/**
 	 * Set the JPEG Quality
 	 *
@@ -267,7 +267,7 @@ class PTE_Options {
 
 		foreach ( $sizes as $size ){
 			// Hidden
-			if ( isset($input['pte_hidden_sizes']) && is_array( $input['pte_hidden_sizes'] ) 
+			if ( isset($input['pte_hidden_sizes']) && is_array( $input['pte_hidden_sizes'] )
 				&& in_array( $size->name, $input['pte_hidden_sizes'] ) ){
 				$pte_hidden_sizes[] = $size->name;
 			}
@@ -279,7 +279,7 @@ class PTE_Options {
 		if ( isset($input['pte_jpeg_compression']) && $input['pte_jpeg_compression'] != "" ){
 			$tmp_jpeg_compression = (int) preg_replace( "/[\D]/", "", $input['pte_jpeg_compression'] );
 			if ( ! is_int( $tmp_jpeg_compression )
-				|| $tmp_jpeg_compression < 0 
+				|| $tmp_jpeg_compression < 0
 				|| $tmp_jpeg_compression > 100 )
 			{
 				add_settings_error('pte_options_site'
@@ -301,7 +301,7 @@ class PTE_Options {
 
 	}
 
-	
+
 	/**
 	 * Shortcut for adding settings
 	 *
@@ -310,10 +310,10 @@ class PTE_Options {
 	public function add_setting ( $name, $title, $callback, $section) {
 		add_settings_field( $name, $title, array( $this, $callback ), 'pte', $section );
 	}
-	
+
 	/**
 	 * Init the option parameters
-	 * 
+	 *
 	 * All the methods referred to here are dynamically created (overloaded)
 	 * using the `__call` php method.  User options are shunted to
 	 * display_html and site options go to display_site_html.  These
@@ -327,7 +327,7 @@ class PTE_Options {
 	 * @since 3.0.0
 	 */
 	public function init () {
-		
+
 		add_filter( 'option_page_capability_pte_options', array( $this, 'edit_options_cap' ) );
 
 		register_setting( 'pte_options',
@@ -344,13 +344,13 @@ class PTE_Options {
 		// display_user_<function>_html: this will then attempt to load the
 		// options-<function>.php file in the partials directory
 		$this->add_setting( 'pte_debug', __( 'Debug', 'post-thumbnail-editor' ),
-		   	'display_user_debug_html', 'pte_main' );
+			display_user_debug_html', 'pte_main' );
 		$this->add_setting( 'pte_crop_save', __( 'Crop and Save', 'post-thumbnail-editor' ),
-		   	'display_user_cropsave_html', 'pte_main' );
+			'display_user_cropsave_html', 'pte_main' );
 		$this->add_setting( 'pte_imgedit_max_size', __( 'Crop Picture Size', 'post-thumbnail-editor' ),
-		   	'display_user_cropsize_html', 'pte_main' );
+			'display_user_cropsize_html', 'pte_main' );
 		$this->add_setting( 'pte_reset', __( 'Reset to defaults', 'post-thumbnail-editor' ),
-		   	'display_user_reset_html', 'pte_main' );
+			'display_user_reset_html', 'pte_main' );
 
 		// Only show for admins...//
 		if ( current_user_can( 'manage_options' ) ){
@@ -358,7 +358,7 @@ class PTE_Options {
 			register_setting( 'pte_options'
 				, 'pte-site-options'     // Settings are site-wide
 				, array( $this, 'validate_site_options' )
-		   	);
+			);
 
 			add_settings_section( 'pte_site'
 				, __('Site Options', 'post-thumbnail-editor')
@@ -385,7 +385,7 @@ class PTE_Options {
 	public function edit_options_cap ( $capability ) {
 		return 'edit_posts';
 	}
-	
+
 	/**
 	 * Launch the options page
 	 *
@@ -394,7 +394,7 @@ class PTE_Options {
 	public function launch () {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/options-page.php';
 	}
-	
+
 	/**
 	 * Overload: Display the user HTML for a given snippet/partial
 	 *
@@ -427,7 +427,7 @@ class PTE_Options {
 			return $this->display_html( $matches[2], $matches[1] );
 		}
 		else if ( preg_match ( '/^site_options_html$/', $name ) ) {
-			_e( "These site-wide settings can only be changed by an administrator", 'post-thumbnail-editor' ); 
+			_e( "These site-wide settings can only be changed by an administrator", 'post-thumbnail-editor' );
 			return;
 		}
 
@@ -441,5 +441,5 @@ class PTE_Options {
 	 * @since 3.0.0
 	 */
 	public static function noop () {}
-	
+
 }
