@@ -24,7 +24,7 @@ class PTE_Client extends PTE_Hooker {
 	public function url ( $id, $iframe = 'false' ) {
 
 		if ( empty( $iframe ) || $iframe != 'true') {
-			$url = admin_url('upload.php') 
+			$url = admin_url('upload.php')
 				. "?page=pte-edit&pte-id={$id}";
 		}
 		else {
@@ -35,5 +35,15 @@ class PTE_Client extends PTE_Hooker {
 		return $url;
 
 	}
+
+/**
+ * Return the HTML for the client
+ *
+ * @return string of html
+ */
+public function launch()
+{
+	return 'bob';
+}
 
 }

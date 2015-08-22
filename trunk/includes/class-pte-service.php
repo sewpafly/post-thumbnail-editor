@@ -51,7 +51,8 @@ class PTE_Service {
 	 */
 	public function api_handler(){
 
-		header( 'Content-Type: application/json' );
+		if ( 'client' !== $_REQUEST['pte-action'] )
+			header( 'Content-Type: application/json' );
 
 		/**
 		 * Return if id is invalid.
@@ -88,6 +89,16 @@ class PTE_Service {
 			$this->error( 'invalid API call' );
 		}
 		wp_die();
+	}
+
+	/**
+	 * Display the HTML client
+	 *
+	 * @return void
+	 */
+	public function display_client()
+	{
+		print apply_filters('pte_client_launch', '');
 	}
 
 	/**

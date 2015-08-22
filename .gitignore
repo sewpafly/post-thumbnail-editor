@@ -6,3 +6,4 @@
 local.mk
 .pot
 *.svgz
+node_modules/
