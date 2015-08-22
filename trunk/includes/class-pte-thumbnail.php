@@ -219,7 +219,7 @@ class PTE_Thumbnail {
 	 *
 	 * @return PTE_Thumbnail
 	 */
-	private function resize ( $w, $h, $x, $y ) {
+	public function resize ( $w, $h, $x, $y ) {
 
 		/**
 		 * Action `pte_resize_thumbnail' is triggered when resize_thumbnails is
@@ -243,9 +243,14 @@ class PTE_Thumbnail {
 		 *
 		 * @return filtered params ready to modify the image
 		 */
-		extract(apply_filters('pte_resize_thumbnail', array_merge(
-			func_get_args(),
-			array('original_file' => $this->filepath, 'id' => $this->id)
+		extract(apply_filters('pte_resize_thumbnail', array(
+			'id' => $this->id,
+			'w' => $w,
+			'h' => $h,
+			'x' => $x,
+			'y' => $y,
+			'size' => $this->size,
+			'original_file' => $this->filepath,
 		)));
 
 		$editor = wp_get_image_editor( $original_file );

@@ -208,11 +208,10 @@ class PTE_Service {
 		 * @param int     $x     The left position of the crop
 		 * @param int     $y     The upper position of the crop
 		 * @param array   $sizes An array of the thumbnails to modify
-		 * @param string  $save  Save without confirmation
 		 *
 		 * @return array PTE_Thumbnail instances
 		 */
-		$thumbnails = apply_filters( 'pte_api_resize_thumbnails', array(), $id, $w, $h, $x, $y, $sizes, $save );
+		$thumbnails = apply_filters( 'pte_api_resize_thumbnails', array(), $id, $w, $h, $x, $y, $sizes );
 
 		$this->message( $thumbnails );
 

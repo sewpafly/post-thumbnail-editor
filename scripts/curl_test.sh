@@ -2,7 +2,14 @@
 
 print_usage() {
   echo "Usage: $0 [-l] <domain> <id>"
-  echo "  -l   Prompt for login information and set local cookies"
+  echo "  -l            Prompt for login information and set local cookies"
+  echo "  --help        Show help"
+  echo "  -r  --resize  Run the resize command, defaults (x:0 y:0 w:100 h:100)"
+  echo "  -x            (Resize) Set the x parameter"
+  echo "  -y            (Resize) Set the y parameter"
+  echo "  -w            (Resize) Set the w parameter"
+  echo "  -h            (Resize) Set the h parameter"
+  echo "  --sizes       comma-separated list of sizes"
   exit 1
 }
 
@@ -11,8 +18,14 @@ args=()
 while [[ $1 ]]; do
   case "$1" in
     -l) LOGIN=1;;
-	--help) ;&
-	-h) print_usage;;
+    --help) print_usage;;
+    --resize) ;&
+    -r) action="resize";;
+    -x) x="${2}" && shift;;
+    -y) y="${2}" && shift;;
+    -h) h="${2}" && shift;;
+    -w) w="${2}" && shift;;
+    --sizes) sizes="${2}" && shift;;
     *) args+=($1);;
   esac
   shift
@@ -56,7 +69,17 @@ get_thumbnail_info() {
   curl -v -s -b "${cookies}" "${url}" | json2yaml
 }
 
+resize() {
+  echo "[*] RESIZING: x:$x y:$y w:$w h:$h sizes:$sizes"
+  printf -v args "x=${x}&y=${y}&w=${w}&h=${h}&sizes=${sizes}"
+  url="http://${domain}/wp-admin/admin-ajax.php?action=pte_api&pte-action=resize-thumbnails&id=${id}&${args}"
+  printf "   [*] URL: [%s]\n" $url
+  curl -v -s -b "${cookies}" "${url}" | json2yaml
+}
+
 case "$action" in
+  resize )
+    resize ${w:=100} ${h:=100} ${x:=0} ${y:=0} ${sizes:=thumbnail};;
   * )
     get_thumbnail_info;;
 esac

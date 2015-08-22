@@ -232,18 +232,15 @@ class Post_Thumbnail_Editor {
 	 */
 	private function define_api_hooks() {
 
-		$file_utils = new PTE_File_Utils();
-		$this->loader->add_filter( 'pte_resize_thumbnail', $file_utils, 'derive_paths_ahook' );
-		$this->loader->add_action( 'pte_copy_file', $file_utils, 'copy_file', 10, 2 );
-
 		$api = new PTE_Api();
 		$this->loader->add_filter( 'pte_api_assert_valid_id', $api, 'assert_valid_id_hook', 10, 2 );
 		$this->loader->add_filter( 'pte_api_get_sizes', $api, 'get_sizes_hook', 10, 2 );
 		$this->loader->add_filter( 'pte_api_get_thumbnails', $api, 'get_thumbnails_hook', 10, 3 );
-		$this->loader->add_filter( 'pte_api_resize_thumbnails', $api, 'resize_thumbnails_hook', 10, 8 );
+		$this->loader->add_filter( 'pte_api_resize_thumbnails', $api, 'resize_thumbnails_hook', 10, 7 );
 		$this->loader->add_filter( 'pte_api_resize_thumbnails', $api, 'load_pte_editors', 1	);
 		$this->loader->add_filter( 'pte_resize_thumbnail', $api, 'derive_dimensions_ahook' );
 		$this->loader->add_filter( 'pte_resize_thumbnail', $api, 'derive_transparency_ahook' );
+		$this->loader->add_filter( 'pte_resize_thumbnail', $api, 'derive_paths_ahook' );
 		$this->loader->add_filter( 'pte_api_is_crop_border_enabled', $api, 'is_crop_border_enabled_hook', 10, 5 );
 		$this->loader->add_filter( 'pte_api_is_crop_border_opaque', $api, 'is_crop_border_opaque_hook' );
 		$this->loader->add_filter( 'pte_api_confirm_images', $api, 'confirm_images_hook', 10, 3 );
