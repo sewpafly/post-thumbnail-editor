@@ -12,6 +12,7 @@ print_usage() {
   echo "  --sizes       comma-separated list of sizes"
   echo "  -c  --confirm Run the confirm command, requires --files option"
   echo "  -f, --file    <size> <path>, can be repeated"
+  echo "  -i, --info    Get attachment information"
   exit 1
 }
 
@@ -33,6 +34,8 @@ while [[ $1 ]]; do
     -c) action="confirm";;
     -f) ;&
     --file) files["${2}"]=${3} && shift && shift;;
+    -i) ;&
+    --info) action="info";;
     *) args+=($1);;
   esac
   shift
@@ -76,6 +79,13 @@ get_thumbnail_info() {
   curl -v -s -b "${cookies}" "${url}" | json2yaml
 }
 
+get_image_info() {
+  url="http://${domain}/wp-admin/admin-ajax.php?action=pte_api&pte-action=get-image-info&id=${id}"
+  echo "[*] Getting info"
+  printf "   [*] URL: [%s]\n" $url
+  curl -v -s -b "${cookies}" "${url}" | json2yaml
+}
+
 resize() {
   echo "[*] RESIZING: x:$x y:$y w:$w h:$h sizes:$sizes"
   printf -v args "x=${x}&y=${y}&w=${w}&h=${h}&sizes=${sizes}"
@@ -107,6 +117,8 @@ case "$action" in
     resize ${w:=100} ${h:=100} ${x:=0} ${y:=0} ${sizes:=thumbnail};;
   confirm )
     confirm ;;
+  info )
+    get_image_info ;;
   * )
     get_thumbnail_info;;
 esac

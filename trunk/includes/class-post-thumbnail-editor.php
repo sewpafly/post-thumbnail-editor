@@ -245,6 +245,8 @@ class Post_Thumbnail_Editor {
 		$this->loader->add_filter( 'pte_api_is_crop_border_opaque', $api, 'is_crop_border_opaque_hook' );
 		$this->loader->add_filter( 'pte_api_confirm_images', $api, 'confirm_images_hook', 10, 3 );
 		$this->loader->add_filter( 'pte_api_confirm_image', $api, 'derive_dimensions_from_file_ahook' );
+		$this->loader->add_filter(
+			'pte_api_derive_dimensions_from_file', $api, 'derive_dimensions_from_file_ahook' );
 		$this->loader->add_filter( 'pte_api_delete_dir', $api, 'delete_dir_hook', 10, 2 );
 
 	}

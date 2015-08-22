@@ -51,8 +51,9 @@ class PTE_Service {
 	 */
 	public function api_handler(){
 
-		if ( 'client' !== $_REQUEST['pte-action'] )
+		if ( 'client' !== $_REQUEST['pte-action'] ) {
 			header( 'Content-Type: application/json' );
+		}
 
 		/**
 		 * Return if id is invalid.
@@ -69,6 +70,9 @@ class PTE_Service {
 		{
 		case "client":
 			$this->display_client();
+			break;
+		case "get-image-info":
+			$this->get_image_info( $_REQUEST );
 			break;
 		case "resize-thumbnails":
 			$this->resize_thumbnails( $_REQUEST );
@@ -101,6 +105,33 @@ class PTE_Service {
 		print apply_filters('pte_client_launch', '');
 	}
 
+	/**
+	 * Get the basic image information
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array    $request  The request array, allows GET or POST to be
+	 *                           passed in as needed
+	 * @return void
+	 */
+	public function get_image_info( $request )
+	{
+		$id = $this->validateInt( $request['id'] );
+		if ( $id === false ) {
+			return $this->error( __("Invalid id", 'post-thumbnail-editor'));
+		}
+		$file = get_attached_file( $id );
+		extract(apply_filters('pte_api_derive_dimensions_from_file', array(
+			'_file' => $file,
+		)));
+		$info = array('filepath' => $file,
+			'width' => $dst_w,
+			'height' => $dst_h,
+			'url' => wp_get_attachment_url( $id ),
+		);
+		return $this->message( $info );
+	}
+	
 	/**
 	 * Print thumbnail information
 	 *
