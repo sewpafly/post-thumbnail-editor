@@ -79,7 +79,7 @@ class PTE_Service {
 			$this->delete_images( $_REQUEST );
 			break;
 		case "get-thumbnail-info":
-			$this->get_thumbnail_info();
+			$this->get_thumbnail_info( $_REQUEST );
 			break;
 		case "change-options":
 			$this->change_options();
@@ -93,9 +93,11 @@ class PTE_Service {
 	/**
 	 * Print thumbnail information
 	 *
+	 * @param array    $request  The request array, allows GET or POST to be
+	 *                           passed in as needed
 	 * @return void
 	 */
-	public function get_thumbnail_info () {
+	public function get_thumbnail_info ( $request ) {
 
 		/**
 		 * Get the size information
@@ -105,9 +107,12 @@ class PTE_Service {
 		 * @since 3.0.0
 		 * @param  callback   $filter   filter results with this filter callback
 		 */
-		$thumbnails = apply_filters( 'pte_api_get_sizes', array() );
-		$this->message( $thumbnails );
-
+		$id = $this->validateInt( $request['id'] );
+		if ( $id === false ) {
+			return $this->error( __("Invalid id", 'post-thumbnail-editor'));
+		}
+		$thumbnails = apply_filters( 'pte_api_get_thumbnails', array(), $id );
+		return $this->message( $thumbnails );
 	}
 
 	/**

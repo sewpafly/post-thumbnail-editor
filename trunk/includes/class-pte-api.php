@@ -44,7 +44,6 @@ class PTE_Api extends PTE_Hooker{
 			'dst_w',
 			'dst_h',
 			'transparent',
-			'save'
 		),
 	);
 
@@ -120,6 +119,25 @@ class PTE_Api extends PTE_Hooker{
 	}
 
 	/**
+	 * Get the PTE_Thumbnails for a given id
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param $id The image ID to use
+	 *
+	 * @return mixed array of PTE_Thumbnail objects
+	 */
+	public function get_thumbnails( $id )
+	{
+		$thumbnails = array();
+		foreach ($this->get_sizes() as $size) {
+			$thumbnails[] = new PTE_Thumbnail($id, $size);
+		}
+		return $thumbnails;
+	}
+
+
+	/**
 	 * Resize Images
 	 *
 	 * Given the appropriate parameters resize the given images, and place in a
@@ -133,13 +151,12 @@ class PTE_Api extends PTE_Hooker{
 	 * @param int     $x     The left position of the crop
 	 * @param int     $y     The upper position of the crop
 	 * @param array   $sizes An array of the thumbnails to modify
-	 * @param string  $save  Save without confirmation
 	 *
 	 * @return array of PTE_ActualThumbnail, and any errors
 	 */
-	public function resize_thumbnails ( $id, $w, $h, $x, $y, $sizes, $save=false ) {
+	public function resize_thumbnails ( $id, $w, $h, $x, $y, $sizes ) {
 
-		$data = compact( 'id', 'w', 'h', 'x', 'y', 'save' );
+		$data = compact( 'id', 'w', 'h', 'x', 'y' );
 		$thumbnails = array();
 		$errors = array();
 
@@ -147,7 +164,7 @@ class PTE_Api extends PTE_Hooker{
 			try {
 
 				$thumbnail = new PTE_Thumbnail($id, $size);
-				$thumbnail->resize( $w, $h, $x, $y, $save);
+				$thumbnail->resize( $w, $h, $x, $y );
 				if ( ! empty( $thumbnail ) ) {
 					$thumbnails[] = $thumbnail;
 				}
@@ -460,7 +477,7 @@ class PTE_Api extends PTE_Hooker{
 	 *    @type string  $tmpurl   The url of the file to save
 	 * }
 	 */
-	public function derive_paths ( $id, $file, $w, $h, $transparent, $save=false) {
+	public function derive_paths ( $id, $file, $w, $h, $transparent ) {
 
 		$tmp_dir = apply_filters( 'pte_options_get', null, 'tmp_dir' );
 		$tmp_url = apply_filters( 'pte_options_get', null, 'tmp_url' );
@@ -486,7 +503,7 @@ class PTE_Api extends PTE_Hooker{
 
 		$basename = apply_filters( 'pte_api_resize_thumbnail_basename', $basename );
 
-		if ( $save ) {
+		if ( apply_filters( 'pte_options_get', false, 'pte_crop_save' ) ) {
 			$directory = dirname( $file );
 			$tmp_url = dirname( wp_get_attachment_url( $id ) );
 		}

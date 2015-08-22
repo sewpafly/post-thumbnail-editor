@@ -11,6 +11,8 @@ args=()
 while [[ $1 ]]; do
   case "$1" in
     -l) LOGIN=1;;
+	--help) ;&
+	-h) print_usage;;
     *) args+=($1);;
   esac
   shift

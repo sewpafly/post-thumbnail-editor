@@ -202,6 +202,7 @@ class PTE_Thumbnail {
 			'height' => $this->height,
 		);
 		wp_update_attachment_metadata( $this->id, $metadata );
+		$this->saved = true;
 	}
 
 	/**
@@ -218,7 +219,7 @@ class PTE_Thumbnail {
 	 *
 	 * @return PTE_Thumbnail
 	 */
-	private function resize ( $w, $h, $x, $y, $save = false ) {
+	private function resize ( $w, $h, $x, $y ) {
 
 		/**
 		 * Action `pte_resize_thumbnail' is triggered when resize_thumbnails is
@@ -236,7 +237,6 @@ class PTE_Thumbnail {
 		 *	   @type int            $x              The proposed starting left point
 		 *	   @type int            $y              The proposed starting upper
 		 *	                                        point
-		 *	   @type int/boolean    $save           Should the image be saved
 		 *	   @type string         $tmpfile        Temporary file
 		 *	   @type string         $tmpurl         Temporary url
 		 *	   @type string         $original_file  The original file name
@@ -280,33 +280,12 @@ class PTE_Thumbnail {
 		$this->width = $dst_w;
 		$this->height = $dst_h;
 
-		if ( $save ) {
+		if ( apply_filters( 'pte_options_get', false, 'pte_crop_save' ) ) {
 			$this->save();
 			PTE_File_Utils::delete_file( $oldfile );
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Create a list of thumbnails
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param int $id   The post/attachment id to get thumbnail information for
-	 *
-	 * @return array of PTE_Thumbnail
-	 */
-	public static function get_all ( $id ) {
-
-		$sizes = PTE_Thumbnail_Size::get_all();
-
-		foreach ( $sizes as $size ) {
-			$thumbnails[] = new self( $id, $size );
-		}
-
-		return $thumbnails;
-
 	}
 
 }

@@ -344,7 +344,7 @@ class PTE_Options {
 		// display_user_<function>_html: this will then attempt to load the
 		// options-<function>.php file in the partials directory
 		$this->add_setting( 'pte_debug', __( 'Debug', 'post-thumbnail-editor' ),
-			display_user_debug_html', 'pte_main' );
+			'display_user_debug_html', 'pte_main' );
 		$this->add_setting( 'pte_crop_save', __( 'Crop and Save', 'post-thumbnail-editor' ),
 			'display_user_cropsave_html', 'pte_main' );
 		$this->add_setting( 'pte_imgedit_max_size', __( 'Crop Picture Size', 'post-thumbnail-editor' ),

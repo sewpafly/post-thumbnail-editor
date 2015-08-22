@@ -239,6 +239,7 @@ class Post_Thumbnail_Editor {
 		$api = new PTE_Api();
 		$this->loader->add_filter( 'pte_api_assert_valid_id', $api, 'assert_valid_id_hook', 10, 2 );
 		$this->loader->add_filter( 'pte_api_get_sizes', $api, 'get_sizes_hook', 10, 2 );
+		$this->loader->add_filter( 'pte_api_get_thumbnails', $api, 'get_thumbnails_hook', 10, 3 );
 		$this->loader->add_filter( 'pte_api_resize_thumbnails', $api, 'resize_thumbnails_hook', 10, 8 );
 		$this->loader->add_filter( 'pte_api_resize_thumbnails', $api, 'load_pte_editors', 1	);
 		$this->loader->add_filter( 'pte_resize_thumbnail', $api, 'derive_dimensions_ahook' );
