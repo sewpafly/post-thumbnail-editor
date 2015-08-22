@@ -36,14 +36,54 @@ class PTE_Client extends PTE_Hooker {
 
 	}
 
-/**
- * Return the HTML for the client
- *
- * @return string of html
- */
-public function launch()
-{
-	return 'bob';
-}
+	/**
+	 * Return the HTML for the client
+	 *
+	 * @return string of html
+	 */
+	public function launch()
+	{
+		$this->load_scripts();
+		$styles = $this->load_styles();
+		include 'client.php';
+	}
+
+	/**
+	 * Load the required scripts
+	 *
+	 * @return WP_Scripts instance
+	 */
+	public function load_scripts()
+	{
+		$scripts = new WP_Scripts();
+		$scripts->add('pte-client',
+			plugins_url("post-thumbnail-editor/client/build/bundle.js"));
+		$scripts->add_data('pte-client', 'group', 1);
+		$scripts->enqueue('jquery-ui-dialog');
+		$scripts->enqueue('pte-client');
+		add_action('pte_client_print_head_scripts', array($scripts, 'do_head_items'), 10, 0);
+		add_action('pte_client_print_footer_scripts', array($scripts, 'do_footer_items'), 10, 0);
+		return $scripts;
+	}
+
+	/**
+	 * Load the required styles
+	 *
+	 * @return WP_Styles instance
+	 */
+	public function load_styles()
+	{
+		$styles = new WP_Styles();
+		$styles->add('font-awesome',
+			'//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+		$styles->add('normalize',
+			'//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css');
+		$styles->enqueue('normalize');
+		$styles->enqueue('font-awesome');
+		$styles->enqueue('buttons');
+		$styles->enqueue('wp-jquery-ui-dialog');
+		add_action('pte_client_print_styles', array($styles, 'do_items'), 10, 0);
+		return $styles;
+	}
 
 }

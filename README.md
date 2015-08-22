@@ -91,6 +91,9 @@ URLs.
 
 ## TODO
 
+* Fix formatting of files (make js/php consistent across all files)
+   * JS: // vim: set noet sw=2 sts=2 ts=2
+   * PHP: // vim: set et sw=4 sts=4 ts=4
 * Build Unit tests
 * Build functional tests
 * Rebuild client
