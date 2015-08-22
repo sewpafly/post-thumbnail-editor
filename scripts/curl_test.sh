@@ -10,11 +10,14 @@ print_usage() {
   echo "  -w            (Resize) Set the w parameter"
   echo "  -h            (Resize) Set the h parameter"
   echo "  --sizes       comma-separated list of sizes"
+  echo "  -c  --confirm Run the confirm command, requires --files option"
+  echo "  -f, --file    <size> <path>, can be repeated"
   exit 1
 }
 
 # check input options
 args=()
+declare -A files # associative array
 while [[ $1 ]]; do
   case "$1" in
     -l) LOGIN=1;;
@@ -26,6 +29,10 @@ while [[ $1 ]]; do
     -h) h="${2}" && shift;;
     -w) w="${2}" && shift;;
     --sizes) sizes="${2}" && shift;;
+    --confirm) ;&
+    -c) action="confirm";;
+    -f) ;&
+    --file) files["${2}"]=${3} && shift && shift;;
     *) args+=($1);;
   esac
   shift
@@ -35,7 +42,7 @@ if [[ ${#args} -lt 2 ]]
 then
   print_usage $0
 fi
-#echo "${args[@]}"
+#echo "${!files[@]}"
 
 domain=${args[0]:-}
 id=${args[1]:-}
@@ -77,9 +84,29 @@ resize() {
   curl -v -s -b "${cookies}" "${url}" | json2yaml
 }
 
+confirm() {
+  if [[ ${#files[@]} -eq 0 ]]; then
+    echo " *"
+    echo " * Missing file options"
+    echo " *"
+    print_usage
+  fi
+  echo "[*] Confirming"
+  args=""
+  for size in "${!files[@]}"; do
+    printf "   [*] %s: '%s'\n" $size ${files["$size"]}
+    args+="&files%5B${size}%5D=${files["$size"]}"
+  done
+  url="http://${domain}/wp-admin/admin-ajax.php?action=pte_api&pte-action=confirm-images&id=${id}${args}"
+  printf "   [*] URL: [%s]\n" $url
+  curl -v -s -b "${cookies}" "${url}" | json2yaml
+}
+
 case "$action" in
   resize )
     resize ${w:=100} ${h:=100} ${x:=0} ${y:=0} ${sizes:=thumbnail};;
+  confirm )
+    confirm ;;
   * )
     get_thumbnail_info;;
 esac

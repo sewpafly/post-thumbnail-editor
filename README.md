@@ -91,12 +91,12 @@ URLs.
 
 ## TODO
 
-* Refactor api file (680 lines!)
-  * Rename service to API?
 * Build Unit tests
 * Build functional tests
 * Rebuild client
 * Integrate unit tests with travisci
+* Fix translations (see PTE_Service especially)
+* Add nonces (see PTE_Service)
 
 ## License
 

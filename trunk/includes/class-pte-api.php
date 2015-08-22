@@ -37,7 +37,7 @@ class PTE_Api extends PTE_Hooker{
 			'dst_w',
 			'dst_h'
 		),
-		'derive_dimensions_from_file' => array( 'file',),
+		'derive_dimensions_from_file' => array( '_file',),
 		'derive_paths' => array(
 			'id',
 			'original_file',
@@ -234,20 +234,10 @@ class PTE_Api extends PTE_Hooker{
 		$errors = array();
 
 		foreach ( $this->get_sizes( array_keys( $files ) ) as $size ) {
-			$tmp_dir = apply_filters( 'pte_options_get', null, 'tmp_dir' );
-
-			$data['size'] = $size;
-			$data['file'] = $tmp_dir
-				. $id
-				. DIRECTORY_SEPARATOR
-				. $files[$size->name];
-
 			try {
 
-				$thumbnail = $this->confirm_image( $data );
-				if ( ! empty( $thumbnail ) ) {
-					$thumbnails[] = $thumbnail;
-				}
+				$thumbnail = new PTE_Thumbnail( $id, $size );
+				$thumbnails[] = $thumbnail->confirm($files[$size->name]);
 
 			}
 			catch (Exception $e) {
@@ -258,56 +248,6 @@ class PTE_Api extends PTE_Hooker{
 		return compact( 'thumbnails', 'errors' );
 	}
 
-	/**
-	 * Move files and update database
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param mixed $params {
-	 *	   @type int                 $id       The post id to resize
-	 *	   @type string              $size     The PTE_ThumbnailSize to modify
-	 *	   @type string              $file     The temporary files to move
-	 * }
-	 *
-	 * @return PTE_Thumbnail
-	 */
-	private function confirm_image ( $params ) {
-
-		/**
-		 * Action `pte_confirm_image' is triggered when confirm_image is
-		 * ready to roll.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param See above
-		 *
-		 * @return filtered params ready to modify the image
-		 */
-		$params = apply_filters( 'pte_api_confirm_image', $params );
-
-		$thumbnail = new PTE_Thumbnail( $params['id'], $params['size'] );
-
-		$copy_from = $params['file'];
-
-		$copy_to = path_join( dirname( get_attached_file( $params['id'] ) ),
-			basename( $params['file'] ) );
-
-		$url = dirname( wp_get_attachment_url( $params['id'] ) )
-			. "/"
-			. basename( $params['file'] );
-
-		// Move good image
-		PTE_File_Utils::copy_file( $copy_from, $copy_to );
-
-		$thumbnail->url = $url;
-		$thumbnail->file = $params['file'];
-		$thumbnail->width = $params['dst_w'];
-		$thumbnail->height = $params['dst_h'];
-		$thumbnail->save();
-
-		return $thumbnail;
-
-	}
 
 	/**
 	 * Are we adding borders?

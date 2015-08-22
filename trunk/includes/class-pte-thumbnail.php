@@ -293,4 +293,49 @@ class PTE_Thumbnail {
 		return $this;
 	}
 
+	/**
+	 * Move files and update database
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $params {
+	 *	   @type string              $file     The temporary file to move
+	 * }
+	 *
+	 * @return PTE_Thumbnail
+	 */
+	public function confirm ( $file ) {
+
+		/**
+		 * Action `pte_confirm_image' is triggered when confirm_image is
+		 * ready to roll.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param See above
+		 *
+		 * @return filtered params ready to modify the image
+		 */
+		$tmp_dir = apply_filters('pte_options_get', false, 'tmp_dir');
+		extract(apply_filters( 'pte_api_confirm_image',  array(
+			'_file' => path_join($tmp_dir . $this->id, $file),
+		)));
+
+		$copy_from = $_file;
+		$copy_to = path_join( dirname( $this->filepath ), $file );
+		$url = dirname( $this->url ) . "/" . $file;
+
+		// Move good image
+		PTE_File_Utils::copy_file( $copy_from, $copy_to );
+
+		$this->file = $file;
+		$this->width = $dst_w;
+		$this->height = $dst_h;
+		$this->save();
+
+		$thumb = new PTE_Thumbnail($this->id, $this->size);
+		$thumb->save = true;
+		return $thumb;
+
+	}
 }

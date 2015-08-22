@@ -245,7 +245,7 @@ class PTE_Service {
 		// Get the sizes to process
 		$files = $request['files'];
 		if ( ! is_array( $files ) ){
-			return $this->error( "Invalid id:{$id}'" );
+			return $this->error( "Invalid files:{$files}'" );
 		}
 
 		/**
