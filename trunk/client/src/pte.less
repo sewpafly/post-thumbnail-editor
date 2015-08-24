@@ -1,12 +1,64 @@
+body {
+   position: relative;
+}
+
 .no-title .ui-dialog-title,
 .no-title .ui-dialog-titlebar-close {
-    display: none;
+   display: none;
 }
 
 .no-title .ui-dialog-titlebar {
-	height: 0;
+   height: 0;
 }
 
 #pte-spinner {
-	text-align: center;
+   text-align: center;
+}
+
+@menu-width: 60px;
+
+pte-editor {
+   display: block;
+   margin: 20px;
+   position: relative;
+}
+
+#pte-editor-main {
+   display: block;
+   width: auto;
+   height: 100px;
+   margin-right: @menu-width;
+   position: relative;
+
+   #image, #actions {
+      width: 100;
+   }
+
+   #actions {
+      text-align: right;
+      padding: 20px 20px 0 0;
+   }
+
+   #image {
+      background: #DDD;
+      img {
+         max-width: 100%;
+         max-height: 100%;
+      }
+   }
+}
+
+pte-editor-menu {
+   background-color: #aaa;
+   display: block;
+   float: right;
+   width: @menu-width;
+   text-align: center;
+   ul {
+      padding: 0;
+      list-style-type: none;
+      li {
+         padding-bottom: 10px;
+      }
+   }
 }

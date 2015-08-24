@@ -59,6 +59,7 @@ class PTE_Client extends PTE_Hooker {
 		$scripts->add('pte-client',
 			plugins_url("post-thumbnail-editor/client/build/bundle.js"));
 		$scripts->add_data('pte-client', 'group', 1);
+		$scripts->enqueue('jquery-ui-button');
 		$scripts->enqueue('jquery-ui-dialog');
 		$scripts->enqueue('pte-client');
 		add_action('pte_client_print_head_scripts', array($scripts, 'do_head_items'), 10, 0);

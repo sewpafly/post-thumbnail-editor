@@ -9,7 +9,7 @@ let PteStore = function () {
     (global || window).setTimeout(() => {
         console.log('Trigger DATA_LOADED');
         this.trigger(events.DATA_LOADED);
-    }, 5000);
+    }, 1000);
 }
 
 export default PteStore;
