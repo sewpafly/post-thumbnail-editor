@@ -1,14 +1,17 @@
 'use strict';
 
-var events = require('./pte-constants')
+var events = require('./pte-constants').events
 var riot = require('riot')
+var rc = require('riotcontrol')
 var $ = require('jQuery')
 
 let html = `
 <pte-editor-menu></pte-editor-menu>
 <div id="pte-editor-main">
-  <div id="image">
-    <img src="{ img.src }" alt="">
+  <div id="pte-editor-image">
+    <div id="image-wrapper">
+      <img src="{ data && data.img.url || '' }" alt="" width="{ width }" height="{ height }">
+    </div>
   </div>
   <div id="actions" class="wp-core-ui">
     <button class="button-primary">CropText</button>
@@ -16,15 +19,19 @@ let html = `
 </div>
 `
 
+let jcrop = null
+let jcrop_options = {}
+
+function getLargestBox (ratio, w, h) {
+  if ((w/h) > ratio)
+    return [h * ratio, h]
+  else
+    return [w, w / ratio]
+}
+
 let tag = riot.tag('pte-editor', html, function (opts) {
 
   let mounted = false
-
-  this.img = {
-    src: 'http://wordpress/wp-content/uploads/2015/03/pin-up_motorcycle_fill.jpg',
-    width: '500',
-    height: '340',
-  }
 
   this.resize = () => {
     /*
@@ -35,24 +42,48 @@ let tag = riot.tag('pte-editor', html, function (opts) {
      * WIDTH:
      * should just be the width of #pte-editor-main
      */
-    var $imgDiv = $('#image', this.root)
-    var width = $imgDiv.width()
+    var $imgDiv = $('#pte-editor-image', this.root)
     var height = $(window).innerHeight()
         - $('#actions', this.root).outerHeight(true)
         - 40;
     $imgDiv.height(height)
 
-    if ( ! mounted ) {
+    if ( ! mounted || ! this.data) {
       return
     }
 
-    $('img', this.root).position({
+    let tw = Math.min($imgDiv.width(), this.data.img.width)
+    let th = Math.min(height, this.data.img.height)
+    let [w, h] = getLargestBox(this.data.img.width/this.data.img.height, tw, th)
+    this.width = w
+    this.height = h
+
+    $('#image-wrapper', this.root)
+    .width(w)
+    .height(h)
+    .position({
       my: 'center center',
       at: 'center center',
-      of: '#image',
+      of: '#pte-editor-image',
       collision: 'none'
     })
   }
+
+  rc.on(events.DATA_LOADED, (data) => {
+    // change the image src/width/height
+    this.data = data
+    this.update()
+
+    $('img', this.root).Jcrop({
+      boxHeight: this.height,
+      boxWidth: this.width
+    }, function(){
+      jcrop = this
+      jcrop.container.on('cropend', (e,s,c) => {
+        console.log([e,s,c])
+      })
+    })
+  })
 
   this.on('mount', () => {
     console.log('set the image dimensions of the image')
@@ -65,7 +96,7 @@ let tag = riot.tag('pte-editor', html, function (opts) {
   })
 
   $(window).resize(() => {
-    this.resize()
+    this.update()
   })
 
 });

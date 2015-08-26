@@ -5,13 +5,15 @@ var pte = require('./pte-constants');
 var rc = require('riotcontrol');
 var $ = require('jQuery');
 
-module.exports = riot.tag('pte-app',
-    `<div id="pte-spinner"><i class="fa fa-5x fa-spin fa-refresh"></i></div>
-    <pte-editor></pte-editor>
-    <pte-thumbnail-selector store={opts.store}></pte-thumbnail-selector>
-    <pte-instructions></pte-instructions>
-    <pte-confirmation></pte-confirmation>
-    `, function (opts) {
+let html = `
+<div id="pte-spinner"><i class="fa fa-5x fa-spin fa-refresh"></i></div>
+<pte-editor></pte-editor>
+<pte-thumbnail-selector store={opts.store}></pte-thumbnail-selector>
+<pte-instructions></pte-instructions>
+<pte-confirmation></pte-confirmation>
+`
+
+module.exports = riot.tag('pte-app', html, function (opts) {
         this.loaded = false;
 
         this.on('mount', () => {

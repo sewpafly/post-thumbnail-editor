@@ -100,6 +100,7 @@ URLs.
 * Integrate unit tests with travisci
 * Fix translations (see PTE_Service especially)
 * Add nonces (see PTE_Service)
+* Update documentation
 
 ## License
 

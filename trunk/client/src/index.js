@@ -14,5 +14,6 @@ var PteStore = require('./pte-store.js');
 
 let store = new PteStore();
 rc.addStore(store);
-riot.mount('*', {store: store});
 
+riot.mount('*', {store: store});
+store.init()

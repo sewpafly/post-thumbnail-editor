@@ -58,9 +58,13 @@ class PTE_Client extends PTE_Hooker {
 		$scripts = new WP_Scripts();
 		$scripts->add('pte-client',
 			plugins_url("post-thumbnail-editor/client/build/bundle.js"));
+		$scripts->add('jcrop2',
+			'//jcrop-cdn.tapmodo.com/v2.0.0-RC1/js/Jcrop.js');
 		$scripts->add_data('pte-client', 'group', 1);
 		$scripts->enqueue('jquery-ui-button');
 		$scripts->enqueue('jquery-ui-dialog');
+		//$scripts->enqueue('jquery-color');
+		$scripts->enqueue('jcrop2');
 		$scripts->enqueue('pte-client');
 		add_action('pte_client_print_head_scripts', array($scripts, 'do_head_items'), 10, 0);
 		add_action('pte_client_print_footer_scripts', array($scripts, 'do_footer_items'), 10, 0);
@@ -79,9 +83,12 @@ class PTE_Client extends PTE_Hooker {
 			'//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
 		$styles->add('normalize',
 			'//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css');
+		$styles->add('jcrop2',
+			'//jcrop-cdn.tapmodo.com/v2.0.0-RC1/css/Jcrop.css');
 		$styles->enqueue('normalize');
 		$styles->enqueue('font-awesome');
 		$styles->enqueue('buttons');
+		$styles->enqueue('jcrop2');
 		$styles->enqueue('wp-jquery-ui-dialog');
 		add_action('pte_client_print_styles', array($styles, 'do_items'), 10, 0);
 		return $styles;
