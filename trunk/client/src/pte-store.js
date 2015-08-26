@@ -32,6 +32,12 @@ let PteStore = function () {
     })
   }
 
+  this.on(events.SELECT_THUMB, (thumbs, value) => {
+    thumbs.forEach(thumb => {
+      thumb.selected = (value) ? true : false;
+    })
+    this.trigger(events.DATA_UPDATED)
+  })
   //(global || window).setTimeout(() => {
   //    console.log('Trigger DATA_LOADED');
   //    this.trigger(events.DATA_LOADED);
