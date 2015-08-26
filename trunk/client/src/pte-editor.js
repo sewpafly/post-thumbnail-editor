@@ -85,6 +85,13 @@ let tag = riot.tag('pte-editor', html, function (opts) {
     })
   })
 
+  rc.on(events.DATA_UPDATED, () => {
+    // Set the aspect ratio?
+    let thumbs = this.data.thumb.filter(t => {
+      return t.selected
+    })
+  })
+
   this.on('mount', () => {
     console.log('set the image dimensions of the image')
     mounted = true

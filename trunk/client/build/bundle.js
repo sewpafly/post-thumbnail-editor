@@ -60,7 +60,9 @@
 	
 	var store = new PteStore();
 	rc.addStore(store);
+	
 	riot.mount('*', { store: store });
+	store.init();
 
 /***/ },
 /* 1 */
@@ -1496,7 +1498,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  position: relative;\n}\n.no-title .ui-dialog-title,\n.no-title .ui-dialog-titlebar-close {\n  display: none;\n}\n.no-title .ui-dialog-titlebar {\n  height: 0;\n}\n#pte-spinner {\n  text-align: center;\n}\npte-editor {\n  display: block;\n  margin: 20px;\n  position: relative;\n}\n#pte-editor-main {\n  display: block;\n  width: auto;\n  height: 100px;\n  margin-right: 60px;\n  position: relative;\n}\n#pte-editor-main #image,\n#pte-editor-main #actions {\n  width: 100;\n}\n#pte-editor-main #actions {\n  text-align: right;\n  padding: 20px 20px 0 0;\n}\n#pte-editor-main #image {\n  background: #DDD;\n}\n#pte-editor-main #image img {\n  max-width: 100%;\n  max-height: 100%;\n}\npte-editor-menu {\n  background-color: #aaa;\n  display: block;\n  float: right;\n  width: 60px;\n  text-align: center;\n}\npte-editor-menu ul {\n  padding: 0;\n  list-style-type: none;\n}\npte-editor-menu ul li {\n  padding-bottom: 10px;\n}\n", ""]);
+	exports.push([module.id, "body {\n  position: relative;\n}\n.no-title .ui-dialog-title,\n.no-title .ui-dialog-titlebar-close {\n  display: none;\n}\n.inline {\n  display: inline-block;\n}\n.no-title .ui-dialog-titlebar {\n  height: 0;\n}\n#pte-spinner {\n  text-align: center;\n}\npte-editor {\n  display: block;\n  margin: 20px;\n  position: relative;\n}\n#pte-editor-main {\n  display: block;\n  width: auto;\n  height: 100px;\n  margin-right: 60px;\n  position: relative;\n}\n#pte-editor-main #pte-editor-image,\n#pte-editor-main #actions {\n  width: 100%;\n}\n#pte-editor-main #actions {\n  text-align: right;\n  padding: 20px 20px 0 0;\n}\n#pte-editor-main #pte-editor-image {\n  background: #DDD;\n}\n#pte-editor-main #pte-editor-image #image-wrapper {\n  max-width: 100%;\n  max-height: 100%;\n}\npte-editor-menu {\n  background-color: #aaa;\n  display: block;\n  float: right;\n  width: 60px;\n  text-align: center;\n}\npte-editor-menu ul {\n  padding: 0;\n  list-style-type: none;\n}\npte-editor-menu ul li {\n  padding-bottom: 10px;\n}\n/* Post Thumbnail Selector */\npte-thumbnail-selector {\n  display: block;\n  padding: 0 !important;\n  margin: 20px;\n}\npte-thumbnail-selector h2 {\n  margin-top: 0;\n}\npte-thumbnail-selector h2 span {\n  font-size: .6em;\n  font-weight: normal;\n}\n.table-div,\n.qs-div {\n  width: 49%;\n  vertical-align: top;\n}\n.table {\n  width: 100%;\n  border-spacing: 0;\n  border-collapse: collapse;\n  text-align: left;\n}\n.table tbody {\n  cursor: pointer;\n}\n.table th,\n.table td {\n  border-bottom: 2px #d1d1d1 solid;\n  padding: 8px 12px;\n}\n.table td {\n  border-bottom: 1px #d4d4d4 solid;\n}\n.table tr.selected {\n  background-color: #ebffeb;\n}\n.table.table-striped tbody tr:nth-child(2n+1) {\n  background-color: #f3f3f3;\n}\n.table.table-striped tbody tr:nth-child(2n+1).selected {\n  background-color: #dbffdb;\n}\n.table.table-bordered {\n  border: 1px #CCC solid;\n}\n.table.table-bordered td,\n.table.table-bordered th {\n  border: 1px #CCC solid;\n}\n.table .r {\n  text-align: right;\n}\n", ""]);
 	
 	// exports
 
@@ -1793,30 +1795,36 @@
 	var rc = __webpack_require__(2);
 	var $ = __webpack_require__(9);
 	
-	module.exports = riot.tag('pte-app', '<div id="pte-spinner"><i class="fa fa-5x fa-spin fa-refresh"></i></div>\n    <pte-editor></pte-editor>\n    <pte-thumbnail-selector store={opts.store}></pte-thumbnail-selector>\n    <pte-instructions></pte-instructions>\n    <pte-confirmation></pte-confirmation>\n    ', function (opts) {
-	    var _this = this;
+	var html = '\n<div id="pte-spinner"><i class="fa fa-5x fa-spin fa-refresh"></i></div>\n<pte-editor></pte-editor>\n<pte-thumbnail-selector store={opts.store}></pte-thumbnail-selector>\n<pte-instructions></pte-instructions>\n<pte-confirmation></pte-confirmation>\n';
 	
-	    this.loaded = false;
+	module.exports = riot.tag('pte-app', html, function (opts) {
+	  var _this = this;
 	
-	    this.on('mount', function () {
-	        $('#pte-spinner').dialog({
-	            closeOnEscape: false,
-	            modal: true,
-	            width: 80,
-	            height: 114,
-	            resizable: false,
-	            draggable: false,
-	            dialogClass: 'no-title'
-	        });
-	        rc.trigger(pte.events.APP_STARTED);
+	  this.loaded = false;
+	
+	  this.on('mount', function () {
+	    $('#pte-spinner').dialog({
+	      closeOnEscape: false,
+	      modal: true,
+	      width: 80,
+	      height: 114,
+	      resizable: false,
+	      draggable: false,
+	      dialogClass: 'no-title'
 	    });
+	    rc.trigger(pte.events.APP_STARTED);
+	  });
 	
-	    rc.on(pte.events.DATA_LOADED, function () {
-	        $('#pte-spinner').dialog('close');
-	        console.log("DATA_LOADED received");
-	        _this.loaded = true;
-	        _this.update();
-	    });
+	  rc.on(pte.events.DATA_LOADED, function () {
+	    $('#pte-spinner').dialog('close');
+	    console.log("DATA_LOADED received");
+	    _this.loaded = true;
+	    _this.update();
+	  });
+	
+	  rc.on(pte.events.DATA_UPDATED, function () {
+	    _this.update();
+	  });
 	});
 
 /***/ },
@@ -1831,7 +1839,9 @@
 	var events = {
 	  APP_STARTED: 'APP_STARTED',
 	  DATA_LOADED: 'DATA_LOADED',
-	  TOGGLE_THUMB_SELECTOR: "TOGGLE_THUMB_SELECTOR"
+	  DATA_UPDATED: 'DATA_UPDATED',
+	  TOGGLE_THUMB_SELECTOR: 'TOGGLE_THUMB_SELECTOR',
+	  SELECT_THUMB: 'SELECT_THUMB'
 	};
 	exports.events = events;
 
@@ -1850,22 +1860,27 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	var events = __webpack_require__(8);
+	
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+	
+	var events = __webpack_require__(8).events;
 	var riot = __webpack_require__(1);
+	var rc = __webpack_require__(2);
 	var $ = __webpack_require__(9);
 	
-	var html = '\n<pte-editor-menu></pte-editor-menu>\n<div id="pte-editor-main">\n  <div id="image">\n    <img src="{ img.src }" alt="">\n  </div>\n  <div id="actions" class="wp-core-ui">\n    <button class="button-primary">CropText</button>\n  </div>\n</div>\n';
+	var html = '\n<pte-editor-menu></pte-editor-menu>\n<div id="pte-editor-main">\n  <div id="pte-editor-image">\n    <div id="image-wrapper">\n      <img src="{ data && data.img.url || \'\' }" alt="" width="{ width }" height="{ height }">\n    </div>\n  </div>\n  <div id="actions" class="wp-core-ui">\n    <button class="button-primary">CropText</button>\n  </div>\n</div>\n';
+	
+	var jcrop = null;
+	var jcrop_options = {};
+	
+	function getLargestBox(ratio, w, h) {
+	  if (w / h > ratio) return [h * ratio, h];else return [w, w / ratio];
+	}
 	
 	var tag = riot.tag('pte-editor', html, function (opts) {
 	  var _this = this;
 	
 	  var mounted = false;
-	
-	  this.img = {
-	    src: 'http://wordpress/wp-content/uploads/2015/03/pin-up_motorcycle_fill.jpg',
-	    width: '500',
-	    height: '340'
-	  };
 	
 	  this.resize = function () {
 	    /*
@@ -1876,22 +1891,57 @@
 	     * WIDTH:
 	     * should just be the width of #pte-editor-main
 	     */
-	    var $imgDiv = $('#image', _this.root);
-	    var width = $imgDiv.width();
+	    var $imgDiv = $('#pte-editor-image', _this.root);
 	    var height = $(window).innerHeight() - $('#actions', _this.root).outerHeight(true) - 40;
 	    $imgDiv.height(height);
 	
-	    if (!mounted) {
+	    if (!mounted || !_this.data) {
 	      return;
 	    }
 	
-	    $('img', _this.root).position({
+	    var tw = Math.min($imgDiv.width(), _this.data.img.width);
+	    var th = Math.min(height, _this.data.img.height);
+	
+	    var _getLargestBox = getLargestBox(_this.data.img.width / _this.data.img.height, tw, th);
+	
+	    var _getLargestBox2 = _slicedToArray(_getLargestBox, 2);
+	
+	    var w = _getLargestBox2[0];
+	    var h = _getLargestBox2[1];
+	
+	    _this.width = w;
+	    _this.height = h;
+	
+	    $('#image-wrapper', _this.root).width(w).height(h).position({
 	      my: 'center center',
 	      at: 'center center',
-	      of: '#image',
+	      of: '#pte-editor-image',
 	      collision: 'none'
 	    });
 	  };
+	
+	  rc.on(events.DATA_LOADED, function (data) {
+	    // change the image src/width/height
+	    _this.data = data;
+	    _this.update();
+	
+	    $('img', _this.root).Jcrop({
+	      boxHeight: _this.height,
+	      boxWidth: _this.width
+	    }, function () {
+	      jcrop = this;
+	      jcrop.container.on('cropend', function (e, s, c) {
+	        console.log([e, s, c]);
+	      });
+	    });
+	  });
+	
+	  rc.on(events.DATA_UPDATED, function () {
+	    // Set the aspect ratio?
+	    var thumbs = _this.data.thumb.filter(function (t) {
+	      return t.selected;
+	    });
+	  });
 	
 	  this.on('mount', function () {
 	    console.log('set the image dimensions of the image');
@@ -1904,7 +1954,7 @@
 	  });
 	
 	  $(window).resize(function () {
-	    _this.resize();
+	    _this.update();
 	  });
 	});
 	
@@ -1957,17 +2007,99 @@
 	var events = __webpack_require__(8).events;
 	var $ = __webpack_require__(9);
 	
-	var html = '<div>THUMBNAIL_SELECTOR</div>\n';
+	function roundToTwo(num) {
+	  return +(Math.round(num + "e+2") + "e-2");
+	}
+	
+	function toggle(thumbs) {
+	  var value = true;
+	  var items = thumbs.filter(function (t) {
+	    return t.selected;
+	  });
+	
+	  if (items.length == thumbs.length) {
+	    value = false;
+	  }
+	
+	  rc.trigger(events.SELECT_THUMB, thumbs, value);
+	}
+	
+	var html = '<div>\n  <div class="inline qs-div">\n    <h2>Quick Select <span><a href="#" onclick="{ toggleAll }">All</a></span></h2>\n    <p>These thumbnails share the same aspect ratio. Clicking them will toggle their selection</p>\n    <ul>\n      <li each="{ ratioGroups }"><a href="" onclick="{ toggleAR }">{ parent.printRGNames(this.ratios) }</a></li>\n    </ul>\n  </div>\n  <div class="inline table-div">\n    <table class=\'table table-striped\'>\n      <thead>\n        <tr>\n          <th>Name</th>\n          <th class="r">Width</th>\n          <th class="r">Height</th>\n          <th class="r">Crop</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr each="{ thumbnails }" class="{ selected: selected }" onclick="{ toggleThumb }">\n          <td>{ size.label }</td>\n          <td class="r">{ size.width }</td>\n          <td class="r">{ size.height }</td>\n          <td class="r">{ size.crop ? \'Yes\' : \'No\' }</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</div>\n';
 	
 	var tag = riot.tag('pte-thumbnail-selector', html, function (opts) {
 	  var _this = this;
 	
+	  this.printRGNames = function (ratioGroup) {
+	    return ratioGroup.map(function (t) {
+	      return t.size.label;
+	    }).join(', ');
+	  };
+	
+	  this.toggleAR = function (e) {
+	    toggle(e.item.ratios);
+	    e.preventUpdate = true;
+	  };
+	
+	  this.toggleAll = function (e) {
+	    toggle(_this.thumbnails);
+	    e.preventUpdate = true;
+	  };
+	
+	  this.toggleThumb = function (e) {
+	    rc.trigger(events.SELECT_THUMB, [e.item], !e.item.selected);
+	    e.preventUpdate = true;
+	  };
+	
 	  this.on('mount', function () {
-	    $(_this.root).dialog({ autoOpen: false });
+	    $('h2 a').button();
+	    $(_this.root).dialog({
+	      autoOpen: false,
+	      buttons: {
+	        'OK': function OK() {
+	          $(this).dialog('close');
+	        }
+	      },
+	      minHeight: 300,
+	      modal: true,
+	      title: 'Thumbnails — Click the ones you want to edit',
+	      width: 650
+	    });
 	  });
+	
+	  rc.on(events.DATA_LOADED, function (data) {
+	    var ratios = data.thumb
+	    // Only get those with properly defined data
+	    .filter(function (t) {
+	      return t.size.width > 0 && t.size.height > 0 && t.size.crop;
+	    })
+	    // Change the thumbnail to a ratio
+	    .map(function (t) {
+	      return roundToTwo(t.size.width / t.size.height);
+	    })
+	    // Keep the unique ratios
+	    .filter(function (r, i, s) {
+	      return s.indexOf(r) === i;
+	    });
+	
+	    var ratioGroups = [];
+	    ratios.forEach(function (r) {
+	      var ratioGroup = [];
+	      data.thumb.forEach(function (t) {
+	        if (!t.size.width || !t.size.height || !t.size.crop) return;
+	        if (r - 0.01 < t.size.width / t.size.height && r + 0.01 > t.size.width / t.size.height) {
+	          ratioGroup.push(t);
+	        }
+	      });
+	      ratioGroups.push({ ratios: ratioGroup });
+	    });
+	
+	    _this.update({ thumbnails: data.thumb, ratioGroups: ratioGroups });
+	  });
+	
 	  rc.on([events.DATA_LOADED, events.TOGGLE_THUMB_SELECTOR].join(' '), function () {
 	    if ($(_this.root).dialog('isOpen')) $(_this.root).dialog('close');else $(_this.root).dialog('open');
 	  });
+	
 	  this.on('update', function () {
 	    console.log('pte-thumbnail-selector updated');
 	  });
@@ -1980,30 +2112,65 @@
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 	
 	'use client';
 	
 	Object.defineProperty(exports, '__esModule', {
-	    value: true
+	  value: true
 	});
 	var riot = __webpack_require__(1);
 	var events = __webpack_require__(8).events;
+	var $ = __webpack_require__(9);
+	
+	var data = {};
+	
+	function getUrl(action) {
+	  var url = './admin-ajax.php?action=pte_api&pte-action=' + action;
+	
+	  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	    args[_key - 1] = arguments[_key];
+	  }
+	
+	  return url + '&' + args.join('&');
+	}
 	
 	var PteStore = function PteStore() {
-	    var _this = this;
+	  var _this = this;
 	
-	    riot.observable(this);
+	  riot.observable(this);
 	
-	    (global || window).setTimeout(function () {
-	        console.log('Trigger DATA_LOADED');
-	        _this.trigger(events.DATA_LOADED);
-	    }, 1000);
+	  this.init = function () {
+	    getData();
+	  };
+	
+	  var getData = function getData() {
+	    var id = /(id=\d+)/.exec(window.location.search)[0];
+	    var info_url = getUrl('get-image-info', id);
+	    var thumb_url = getUrl('get-thumbnail-info', id);
+	    $.when($.getJSON(info_url), $.getJSON(thumb_url)).done(function (i_data, t_data) {
+	      $.extend(data, {
+	        img: i_data[0],
+	        thumb: t_data[0]
+	      });
+	      _this.trigger(events.DATA_LOADED, data);
+	    });
+	  };
+	
+	  this.on(events.SELECT_THUMB, function (thumbs, value) {
+	    thumbs.forEach(function (thumb) {
+	      thumb.selected = value ? true : false;
+	    });
+	    _this.trigger(events.DATA_UPDATED);
+	  });
+	  //(global || window).setTimeout(() => {
+	  //    console.log('Trigger DATA_LOADED');
+	  //    this.trigger(events.DATA_LOADED);
+	  //}, 1000);
 	};
 	
 	exports['default'] = PteStore;
 	module.exports = exports['default'];
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }
 /******/ ]);

@@ -44,8 +44,8 @@ let html = `<div>
       <tbody>
         <tr each="{ thumbnails }" class="{ selected: selected }" onclick="{ toggleThumb }">
           <td>{ size.label }</td>
-          <td class="r">{ width }</td>
-          <td class="r">{ height }</td>
+          <td class="r">{ size.width }</td>
+          <td class="r">{ size.height }</td>
           <td class="r">{ size.crop ? 'Yes' : 'No' }</td>
         </tr>
       </tbody>
@@ -122,10 +122,6 @@ let tag = riot.tag('pte-thumbnail-selector', html, function (opts) {
     })
 
     this.update({thumbnails: data.thumb, ratioGroups: ratioGroups})
-  })
-
-  rc.on(events.DATA_UPDATED, () => {
-    this.update()
   })
 
   rc.on([events.DATA_LOADED, events.TOGGLE_THUMB_SELECTOR].join(' '), () => {
