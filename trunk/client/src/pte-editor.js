@@ -1,9 +1,10 @@
 'use strict';
 
-var events = require('./pte-constants').events
-var riot = require('riot')
-var rc = require('riotcontrol')
 var $ = require('jQuery')
+var rc = require('riotcontrol')
+var riot = require('riot')
+var jcrop = require('./pte-jcropper')
+var events = require('./pte-constants').events
 
 let html = `
 <pte-editor-menu></pte-editor-menu>
@@ -19,10 +20,6 @@ let html = `
 </div>
 `
 
-let jcrop = null
-let minWidth = 0
-let minHeight = 0
-
 function getLargestBox (ratio, w, h) {
   if ((w/h) > ratio)
     return [h * ratio, h]
@@ -30,36 +27,6 @@ function getLargestBox (ratio, w, h) {
     return [w, w / ratio]
 }
 
-function setJcropAR(ratio) {
-  if (!jcrop) {
-    console.log('jcrop not defined')
-    return
-  }
-
-  ratio = ratio ? ratio : 0
-  jcrop.setOptions({
-    aspectRatio: ratio
-  })
-}
-
-function updateJcropOnEnd(e,s,c){
-  let color = 'green'
-  if (c.w < 10 && c.h < 10) {
-    jcrop.removeSelection(jcrop.ui.selection)
-    $('.jcrop-shades > div', jcrop.container).width(0).height(0)
-    color = 'black'
-  }
-  if (c.w < minWidth || c.h < minHeight) {
-    color = 'red'
-  }
-  setJcropColor(color)
-}
-
-function setJcropColor(color){
-  jcrop.setOptions({
-    bgColor: color
-  })
-}
 
 function findAR(thumbs) {
   let ar = null
@@ -78,8 +45,6 @@ function findAR(thumbs) {
   }
   return ar
 }
-
-
 
 let tag = riot.tag('pte-editor', html, function (opts) {
 
@@ -124,23 +89,15 @@ let tag = riot.tag('pte-editor', html, function (opts) {
   }
 
   rc.on(events.DATA_LOADED, (data) => {
-    // change the image src/width/height
     this.update({data: data})
-
-    $('img', this.root).Jcrop({
-      boxHeight: this.height,
-      boxWidth: this.width
-    }, function(){
-      jcrop = this
-      jcrop.container.on('cropend', updateJcropOnEnd)
-    })
+    jcrop.init($('img', this.root), {boxHeight: this.height, boxWidth: this.width})
   })
 
   rc.on(events.DATA_UPDATED, () => {
     // Set the aspect ratio?
     let thumbs = this.data.thumbnails.filter(t => t.selected)
 
-    setJcropAR(findAR(thumbs))
+    jcrop.setAR(findAR(thumbs))
 
     ;[minWidth, minHeight] = [0,0]
 
@@ -149,8 +106,7 @@ let tag = riot.tag('pte-editor', html, function (opts) {
       minHeight = Math.max(t.size.height, minHeight)
     })
 
-    if (jcrop.ui.selection)
-      updateJcropOnEnd(null, null, jcrop.getSelection())
+    jcrop.update()
   })
 
   this.on('mount', () => {
