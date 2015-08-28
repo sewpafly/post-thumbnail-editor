@@ -20,15 +20,13 @@ let PteStore = function () {
 
   let getData = () => {
     let id = /(id=\d+)/.exec(window.location.search)[0]
-    let info_url = getUrl('get-image-info', id) 
-    let thumb_url = getUrl('get-thumbnail-info', id) 
-    $.when($.getJSON(info_url), $.getJSON(thumb_url))
-    .done((i_data, t_data) => {
-      $.extend(data, {
-        img: i_data[0],
-        thumb: t_data[0]
-      })
-      this.trigger(events.DATA_LOADED, data)
+    let info_url = getUrl('get-metadata', id) 
+    $.getJSON(info_url)
+    .done((info_data) => {
+      $.extend(data, info_data)
+      window.setTimeout(() => {
+        this.trigger(events.DATA_LOADED, data)
+      }, 1000)
     })
   }
 
@@ -38,10 +36,6 @@ let PteStore = function () {
     })
     this.trigger(events.DATA_UPDATED)
   })
-  //(global || window).setTimeout(() => {
-  //    console.log('Trigger DATA_LOADED');
-  //    this.trigger(events.DATA_LOADED);
-  //}, 1000);
 }
 
 export default PteStore;

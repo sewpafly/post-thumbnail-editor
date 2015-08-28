@@ -93,7 +93,7 @@ let tag = riot.tag('pte-thumbnail-selector', html, function (opts) {
   })
 
   rc.on(events.DATA_LOADED, (data) => {
-    let ratios = data.thumb
+    let ratios = data.thumbnails
     // Only get those with properly defined data
     .filter(t => {
       return t.size.width > 0 && t.size.height > 0 && t.size.crop
@@ -110,7 +110,7 @@ let tag = riot.tag('pte-thumbnail-selector', html, function (opts) {
     let ratioGroups = []
     ratios.forEach(r => {
       let ratioGroup = []
-      data.thumb.forEach(t => {
+      data.thumbnails.forEach(t => {
         if (! t.size.width || ! t.size.height || ! t.size.crop)
           return
         if (r - 0.01 < t.size.width / t.size.height &&
@@ -121,7 +121,7 @@ let tag = riot.tag('pte-thumbnail-selector', html, function (opts) {
       ratioGroups.push({ratios: ratioGroup})
     })
 
-    this.update({thumbnails: data.thumb, ratioGroups: ratioGroups})
+    this.update({thumbnails: data.thumbnails, ratioGroups: ratioGroups})
   })
 
   rc.on([events.DATA_LOADED, events.TOGGLE_THUMB_SELECTOR].join(' '), () => {

@@ -10,7 +10,7 @@ let html = `
 <div id="pte-editor-main">
   <div id="pte-editor-image">
     <div id="image-wrapper">
-      <img src="{ data && data.img.url || '' }" alt="" width="{ width }" height="{ height }">
+      <img src="{ data && data.url || '' }" alt="" width="{ width }" height="{ height }">
     </div>
   </div>
   <div id="actions" class="wp-core-ui">
@@ -52,9 +52,11 @@ let tag = riot.tag('pte-editor', html, function (opts) {
       return
     }
 
-    let tw = Math.min($imgDiv.width(), this.data.img.width)
-    let th = Math.min(height, this.data.img.height)
-    let [w, h] = getLargestBox(this.data.img.width/this.data.img.height, tw, th)
+    let naturalWidth = this.data.width
+    let naturalHeight = this.data.height
+    let tw = Math.min($imgDiv.width(), naturalWidth)
+    let th = Math.min(height, naturalHeight)
+    let [w, h] = getLargestBox(naturalWidth/naturalHeight, tw, th)
     this.width = w
     this.height = h
 
@@ -71,8 +73,7 @@ let tag = riot.tag('pte-editor', html, function (opts) {
 
   rc.on(events.DATA_LOADED, (data) => {
     // change the image src/width/height
-    this.data = data
-    this.update()
+    this.update({data: data})
 
     $('img', this.root).Jcrop({
       boxHeight: this.height,
@@ -87,7 +88,7 @@ let tag = riot.tag('pte-editor', html, function (opts) {
 
   rc.on(events.DATA_UPDATED, () => {
     // Set the aspect ratio?
-    let thumbs = this.data.thumb.filter(t => {
+    let thumbs = this.data.thumbnails.filter(t => {
       return t.selected
     })
   })

@@ -118,8 +118,15 @@ class PTE_Service {
 			return $this->error( __("Invalid id", 'post-thumbnail-editor'));
 		}
 
+		$file = get_attached_file( $id );
+		$dimensions = apply_filters('pte_api_derive_dimensions_from_file', array(
+			'_file' => $file,
+		));
+
 		$metadata = array(
 			'id' => $id,
+			'width' => $dimensions['dst_w'],
+			'height' => $dimensions['dst_h'],
 			'url' => wp_get_attachment_url( $id ),
 			'thumbnails' => apply_filters( 'pte_api_get_thumbnails', array(), $id )
 		);
