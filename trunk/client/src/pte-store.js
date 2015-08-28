@@ -24,9 +24,10 @@ let PteStore = function () {
     $.getJSON(info_url)
     .done((info_data) => {
       $.extend(data, info_data)
-      window.setTimeout(() => {
-        this.trigger(events.DATA_LOADED, data)
-      }, 1000)
+      this.trigger(events.DATA_LOADED, data)
+      //window.setTimeout(() => {
+      //  this.trigger(events.DATA_LOADED, data)
+      //}, 1000)
     })
   }
 

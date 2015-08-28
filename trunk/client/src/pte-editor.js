@@ -20,7 +20,8 @@ let html = `
 `
 
 let jcrop = null
-let jcrop_options = {}
+let minWidth = 0
+let minHeight = 0
 
 function getLargestBox (ratio, w, h) {
   if ((w/h) > ratio)
@@ -28,6 +29,57 @@ function getLargestBox (ratio, w, h) {
   else
     return [w, w / ratio]
 }
+
+function setJcropAR(ratio) {
+  if (!jcrop) {
+    console.log('jcrop not defined')
+    return
+  }
+
+  ratio = ratio ? ratio : 0
+  jcrop.setOptions({
+    aspectRatio: ratio
+  })
+}
+
+function updateJcropOnEnd(e,s,c){
+  let color = 'green'
+  if (c.w < 10 && c.h < 10) {
+    jcrop.removeSelection(jcrop.ui.selection)
+    $('.jcrop-shades > div', jcrop.container).width(0).height(0)
+    color = 'black'
+  }
+  if (c.w < minWidth || c.h < minHeight) {
+    color = 'red'
+  }
+  setJcropColor(color)
+}
+
+function setJcropColor(color){
+  jcrop.setOptions({
+    bgColor: color
+  })
+}
+
+function findAR(thumbs) {
+  let ar = null
+  for (let i=0; i < thumbs.length; ++i) {
+    if ( thumbs[i].size.crop != true || thumbs[i].size.height == 0 || thumbs[i].size.width == 0 ) {
+      return 0
+    }
+    let tmp_ar = thumbs[i].size.width / thumbs[i].size.height
+    if (!ar)
+      ar = tmp_ar
+    else {
+      if (ar - 0.01 > tmp_ar || ar + 0.01 < tmp_ar) {
+        return 0
+      }
+    }
+  }
+  return ar
+}
+
+
 
 let tag = riot.tag('pte-editor', html, function (opts) {
 
@@ -80,17 +132,25 @@ let tag = riot.tag('pte-editor', html, function (opts) {
       boxWidth: this.width
     }, function(){
       jcrop = this
-      jcrop.container.on('cropend', (e,s,c) => {
-        console.log([e,s,c])
-      })
+      jcrop.container.on('cropend', updateJcropOnEnd)
     })
   })
 
   rc.on(events.DATA_UPDATED, () => {
     // Set the aspect ratio?
-    let thumbs = this.data.thumbnails.filter(t => {
-      return t.selected
+    let thumbs = this.data.thumbnails.filter(t => t.selected)
+
+    setJcropAR(findAR(thumbs))
+
+    ;[minWidth, minHeight] = [0,0]
+
+    thumbs.forEach(t => {
+      minWidth = Math.max(t.size.width, minWidth)
+      minHeight = Math.max(t.size.height, minHeight)
     })
+
+    if (jcrop.ui.selection)
+      updateJcropOnEnd(null, null, jcrop.getSelection())
   })
 
   this.on('mount', () => {
