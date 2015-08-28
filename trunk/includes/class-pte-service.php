@@ -71,8 +71,8 @@ class PTE_Service {
 		case "client":
 			$this->display_client();
 			break;
-		case "get-image-info":
-			$this->get_image_info( $_REQUEST );
+		case "get-metadata":
+			$this->get_metadata( $_REQUEST );
 			break;
 		case "resize-thumbnails":
 			$this->resize_thumbnails( $_REQUEST );
@@ -82,9 +82,6 @@ class PTE_Service {
 			break;
 		case "delete-images":
 			$this->delete_images( $_REQUEST );
-			break;
-		case "get-thumbnail-info":
-			$this->get_thumbnail_info( $_REQUEST );
 			break;
 		case "change-options":
 			$this->change_options();
@@ -114,47 +111,19 @@ class PTE_Service {
 	 *                           passed in as needed
 	 * @return void
 	 */
-	public function get_image_info( $request )
+	public function get_metadata( $request )
 	{
 		$id = $this->validateInt( $request['id'] );
 		if ( $id === false ) {
 			return $this->error( __("Invalid id", 'post-thumbnail-editor'));
 		}
-		$file = get_attached_file( $id );
-		extract(apply_filters('pte_api_derive_dimensions_from_file', array(
-			'_file' => $file,
-		)));
-		$info = array('filepath' => $file,
-			'width' => $dst_w,
-			'height' => $dst_h,
-			'url' => wp_get_attachment_url( $id ),
-		);
-		return $this->message( $info );
-	}
-	
-	/**
-	 * Print thumbnail information
-	 *
-	 * @param array    $request  The request array, allows GET or POST to be
-	 *                           passed in as needed
-	 * @return void
-	 */
-	public function get_thumbnail_info ( $request ) {
 
-		/**
-		 * Get the size information
-		 *
-		 * Return an array of thumbnail objects describing the size information
-		 *
-		 * @since 3.0.0
-		 * @param  callback   $filter   filter results with this filter callback
-		 */
-		$id = $this->validateInt( $request['id'] );
-		if ( $id === false ) {
-			return $this->error( __("Invalid id", 'post-thumbnail-editor'));
-		}
-		$thumbnails = apply_filters( 'pte_api_get_thumbnails', array(), $id );
-		return $this->message( $thumbnails );
+		$metadata = array(
+			'id' => $id,
+			'url' => wp_get_attachment_url( $id ),
+			'thumbnails' => apply_filters( 'pte_api_get_thumbnails', array(), $id )
+		);
+		return $this->message( $metadata );
 	}
 
 	/**

@@ -136,7 +136,7 @@ class PTE_Thumbnail_Size {
 /**
  * Class PTE_Thumbnail
  */
-class PTE_Thumbnail {
+class PTE_Thumbnail implements JsonSerializable {
 
 	/**
 	 * Create an PTE_Thumbnail from a given $id and PTE_Thumbnail
@@ -337,5 +337,19 @@ class PTE_Thumbnail {
 		$thumb->save = true;
 		return $thumb;
 
+	}
+
+	/**
+	 * Control the JSON output
+	 *
+	 * @return mixed jsonObj
+	 */
+	public function jsonSerialize()
+	{
+		$obj = PTE_Api::object_to_array($this);
+		unset($obj['id']);
+		unset($obj['filepath']);
+		unset($obj['path']);
+		return $obj;
 	}
 }
