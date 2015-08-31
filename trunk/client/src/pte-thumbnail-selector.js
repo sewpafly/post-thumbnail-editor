@@ -5,7 +5,7 @@ var rc = require('riotcontrol')
 var events = require('./pte-constants').events
 var $ = require('jQuery')
 
-function roundToTwo(num) {    
+function roundToTwo(num) {
   return +(Math.round(num + "e+2")  + "e-2");
 }
 

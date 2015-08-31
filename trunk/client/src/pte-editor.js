@@ -15,7 +15,7 @@ let html = `
     </div>
   </div>
   <div id="actions" class="wp-core-ui">
-    <button class="button-primary">CropText</button>
+    <button class="button-primary" onclick="{ crop }">CropText</button>
   </div>
 </div>
 `
@@ -49,6 +49,10 @@ function findAR(thumbs) {
 let tag = riot.tag('pte-editor', html, function (opts) {
 
   let mounted = false
+
+  this.crop = (e) => {
+    rc.trigger(events.CROP, jcrop.getSelection())
+  }
 
   this.resize = () => {
     /*
@@ -99,14 +103,14 @@ let tag = riot.tag('pte-editor', html, function (opts) {
 
     jcrop.setAR(findAR(thumbs))
 
-    ;[minWidth, minHeight] = [0,0]
+    let [minWidth, minHeight] = [0,0]
 
     thumbs.forEach(t => {
       minWidth = Math.max(t.size.width, minWidth)
       minHeight = Math.max(t.size.height, minHeight)
     })
 
-    jcrop.update()
+    jcrop.update({minWidth,minHeight})
   })
 
   this.on('mount', () => {

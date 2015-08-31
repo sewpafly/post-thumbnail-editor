@@ -3,7 +3,11 @@
 var $ = require('jQuery')
 
 function PteJcrop() {
-  this.api = null
+  let api = null
+  let data = {
+     minWidth: 0,
+     minHeight: 0
+  }
 
   function updateJcropOnEnd(e,s,c){
     let color = 'green'
@@ -12,7 +16,7 @@ function PteJcrop() {
       $('.jcrop-shades > div', api.container).width(0).height(0)
       color = 'black'
     }
-    if (c.w < minWidth || c.h < minHeight) {
+    if (c.w < data.minWidth || c.h < data.minHeight) {
       color = 'red'
     }
     setJcropColor(color)
@@ -43,7 +47,13 @@ function PteJcrop() {
     })
   }
 
-  this.update = function() {
+  this.getSelection = () => {
+     return api.getSelection()
+  }
+
+  this.update = function(d) {
+    if (d)
+       $.extend(data, d)
     if (api && api.ui.selection)
       updateJcropOnEnd(null,null,api.getSelection())
   }
