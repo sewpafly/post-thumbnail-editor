@@ -252,6 +252,10 @@ function pte_body( $id ){
 
 	// Generate an image and put into the ptetmp directory
 	if (false === $editor_image = pte_generate_working_image($id)) {
+
+		/**
+		 * Check if WPML is installed. If so, we do not use a question mark.
+		 */
 		if(defined('ICL_SITEPRESS_VERSION'))
 		{
 			$editor_image = sprintf("%s&action=pte_imgedit_preview&amp;_ajax_nonce=%s&amp;postid=%d&amp;rand=%d",
