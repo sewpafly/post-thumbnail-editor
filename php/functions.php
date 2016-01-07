@@ -254,9 +254,14 @@ function pte_body( $id ){
 	if (false === $editor_image = pte_generate_working_image($id)) {
 
 		/**
-		 * Check if WPML is installed. If so, we do not use a question mark.
+		 * Check if a question mark is included in the URL. If so,
+		 * we use an ampersand rather than a question mark. This 
+		 * fix makes it possible to use WPML.
+		 * 
+		 * @author Daniel Koop <daniel@eenvoudmedia.nl>
 		 */
-		if(defined('ICL_SITEPRESS_VERSION'))
+		
+		if(strpos(admin_url('admin-ajax.php'), '?'))
 		{
 			$editor_image = sprintf("%s&action=pte_imgedit_preview&amp;_ajax_nonce=%s&amp;postid=%d&amp;rand=%d",
 				admin_url('admin-ajax.php'),
