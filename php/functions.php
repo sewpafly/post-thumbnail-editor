@@ -252,12 +252,25 @@ function pte_body( $id ){
 
 	// Generate an image and put into the ptetmp directory
 	if (false === $editor_image = pte_generate_working_image($id)) {
-		$editor_image = sprintf("%s?action=pte_imgedit_preview&amp;_ajax_nonce=%s&amp;postid=%d&amp;rand=%d",
-			admin_url('admin-ajax.php'),
-			$nonce,
-			$id,
-			rand(1,99999)
-		);
+		if(defined('ICL_SITEPRESS_VERSION'))
+		{
+			$editor_image = sprintf("%s&action=pte_imgedit_preview&amp;_ajax_nonce=%s&amp;postid=%d&amp;rand=%d",
+				admin_url('admin-ajax.php'),
+				$nonce,
+				$id,
+				rand(1,99999)
+			);
+		}
+		else
+		{
+			$editor_image = sprintf("%s?action=pte_imgedit_preview&amp;_ajax_nonce=%s&amp;postid=%d&amp;rand=%d",
+				admin_url('admin-ajax.php'),
+				$nonce,
+				$id,
+				rand(1,99999)
+			);
+		}
+		
 	}
 
 	require( PTE_PLUGINPATH . "html/pte.php" );
