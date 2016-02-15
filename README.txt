@@ -52,7 +52,7 @@ Before posting a question or requesting support, disable all other plugins to ve
 If you want to post a problem on the [support forums][wp] or at [github][gh] please include the following information:
 
 1. What browser (and version) are you using, or which browsers have you seen the behavior in?
-2. What wordpress version are you using?
+2. What WordPress version are you using?
 3. Does the javascript console report any exceptions/errors?
    * Google Chrome: ctrl+shift+j
    * Firefox: ctrl+shift+j
@@ -74,6 +74,9 @@ If you want to post a problem on the [support forums][wp] or at [github][gh] ple
 5. Save the resized/recropped images by clicking the save icon.
 
 == Changelog ==
+
+= 2.4.7 =
+* Changed capability for options menu from edit_posts to manage_options 
 
 = 2.4.6 =
 * Updated polish translation
