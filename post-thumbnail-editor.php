@@ -394,14 +394,14 @@ add_action( 'admin_menu', 'pte_admin_menu' );
 function pte_admin_menu(){
 	add_options_page( __('Post Thumbnail Editor', PTE_DOMAIN),
 		__('Post Thumbnail Editor', PTE_DOMAIN),
-		'edit_posts',
+		'manage_options',
 		'pte',
 		'pte_launch_options_page'
 	);
 	// The submenu page function does not put a menu item in the wordpress sidebar.
 	add_submenu_page(NULL, __('Post Thumbnail Editor', PTE_DOMAIN),
 		__('Post Thumbnail Editor', PTE_DOMAIN),
-		'edit_posts',
+		'manage_options',
 		'pte-edit',
 		'pte_edit_page'
 	);
@@ -475,4 +475,3 @@ function pte_wp_ajax_imgedit_preview_wrapper(){
 load_plugin_textdomain( PTE_DOMAIN
 	, false
 	, basename( PTE_PLUGINPATH ) . DIRECTORY_SEPARATOR . "i18n" );
-
