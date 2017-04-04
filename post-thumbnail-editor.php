@@ -309,7 +309,7 @@ function pte_check_id( $id ) {
 		return false;
 	}
 	if ( current_user_can( 'edit_post', $id )
-		|| current_user_can( 'pte-edit', $id ) )
+		|| current_user_can( 'pte_edit', $id ) )
 	{
 		return apply_filters( 'pte-capability-check', true, $id );
 	}
